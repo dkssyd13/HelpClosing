@@ -13,7 +13,7 @@ public class Pledge {
     private String content;
 
     //Relationship
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "author_id")
     private User author;
 

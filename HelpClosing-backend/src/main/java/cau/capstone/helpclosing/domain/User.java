@@ -14,8 +14,8 @@ public class User {
     private String profile;
 
     //Relationship
-    @OneToMany(mappedBy = "author")
-    private List<Pledge> pledges;
+    @OneToOne(mappedBy = "author")
+    private Pledge pledge;
 
     @OneToMany(mappedBy = "requester")
     private List<HelpLog> helpRequests;

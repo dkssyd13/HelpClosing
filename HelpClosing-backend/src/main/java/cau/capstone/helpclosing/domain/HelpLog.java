@@ -10,6 +10,7 @@ public class HelpLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment
     private Long id;
     private Date time;
+    //시간은 도움 요청이 받아들여진 시간이 해당
 
     //Relationship
     @ManyToOne

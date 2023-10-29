@@ -15,7 +15,7 @@ public class Location {
     private String address;
 
     //Relationship
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
