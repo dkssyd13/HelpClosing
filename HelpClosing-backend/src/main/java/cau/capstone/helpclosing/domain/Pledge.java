@@ -14,8 +14,8 @@ public class Pledge {
 
     //Relationship
     @OneToOne
-    @JoinColumn(name = "author_id")
-    private User author;
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
     //Constructor

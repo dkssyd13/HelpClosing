@@ -14,7 +14,8 @@ public class User {
     private String profile;
 
     //Relationship
-    @OneToOne(mappedBy = "author")
+    @OneToOne
+    @JoinColumn(name = "pledge_id")
     private Pledge pledge;
 
     @OneToMany(mappedBy = "requester")
