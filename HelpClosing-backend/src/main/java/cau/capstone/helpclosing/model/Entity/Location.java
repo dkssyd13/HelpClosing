@@ -1,12 +1,22 @@
 package cau.capstone.helpclosing.model.Entity;
 
 
+import lombok.*;
+import lombok.experimental.Accessors;
+
 import javax.persistence.*;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@Accessors(chain = true)
+@ToString(exclude = {"user", "userEmail"})
 public class Location {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment
+//    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment
     private Long id;
 
     private String description;
@@ -19,63 +29,5 @@ public class Location {
     @JoinColumn(name = "user_id")
     private User user;
 
-    //Constructor
-    public Location() {
-    }
-    public Location(String description, double latitude, double longitude, String address) {
-        this.description = description;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.address = address;
-    }
 
-    //Getter and Setter
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

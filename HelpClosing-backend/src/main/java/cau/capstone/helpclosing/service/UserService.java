@@ -22,10 +22,9 @@ public class UserService {
         User user=User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .nickname(request.getNickname())
+                .nickName(request.getNickname())
                 .reported_count(0)
                 .reporter_count(3)
-                .language(request.getLanguage())
                 .build();
 
         return userRepository.save(user);
@@ -42,7 +41,7 @@ public class UserService {
 
     public boolean nicknameCheck(String nickname) {
 
-        User findUser= userRepository.findByNickname(nickname);
+        User findUser= userRepository.findByNickName(nickname);
 
         if(findUser!=null)
             return false;
@@ -68,11 +67,8 @@ public class UserService {
 
         return UserProfileResponse.builder()
                 .email(user.getEmail())
-                .nickname(user.getNickname())
-                .department(user.getDepartment())
-                .major(user.getMajor())
+                .nickName(user.getNickName())
                 .image(user.getImage())
-                .language(user.getLanguage())
                 .build();
     }
 
@@ -80,21 +76,17 @@ public class UserService {
                                       UserProfileRequest userProfileRequest) {
         User user = userRepository.findByEmail(email);
 
-        user.setNickname(userProfileRequest.getNickname())
-                .setDepartment(userProfileRequest.getDepartment())
-                .setMajor(userProfileRequest.getMajor())
+        user.setNickName(userProfileRequest.getNickName())
+                .setName(userProfileRequest.getName())
                 .setImage(userProfileRequest.getImage())
-                .setLanguage(userProfileRequest.getLanguage());
 
         userRepository.save(user);
 
         return UserProfileResponse.builder()
                 .email(email)
-                .nickname(user.getNickname())
-                .department(user.getDepartment())
-                .major(user.getMajor())
+                .nickName(user.getNickName())
                 .image(user.getImage())
-                .language(user.getLanguage())
+
                 .build();
 
     }

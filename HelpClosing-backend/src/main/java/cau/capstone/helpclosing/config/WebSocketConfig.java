@@ -1,6 +1,6 @@
 package cau.capstone.helpclosing.config;
 
-import cau.capstone.helpclosing.util.WebSocketHandler;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

@@ -4,7 +4,7 @@ import cau.capstone.helpclosing.model.Entity.ChatRoom;
 import cau.capstone.helpclosing.model.Entity.Invitation;
 import cau.capstone.helpclosing.model.Entity.Matching;
 import cau.capstone.helpclosing.model.Entity.User;
-import cau.capstone.helpclosing.Request.*;
+
 import cau.capstone.helpclosing.model.Request.*;
 import cau.capstone.helpclosing.model.Response.InvitationListResponse;
 import cau.capstone.helpclosing.model.Response.PossibleInvitationList;
@@ -72,7 +72,7 @@ public class MatchingService {
                     .InvitedPerson(user.getEmail())
                     .build();
             invitationRepository.save(invitation);
-            return  "send inviting message to "+user.getNickname();
+            return  "send inviting message to "+user.getNickName();
         }
     }
 
@@ -105,7 +105,7 @@ public class MatchingService {
         User receiver = userRepository.findByEmail(receiverEmail);
 
         //채팅 룸 생성
-        Invitation invitation = invitationRepository.findByInvitedPersonAndInvitePerson(receiverEmail, matchingAcceptRequest.getSender());
+        Invitation invitation = invitationRepository.findByInvitedPersonAndInvitePerson(receiverEmail, matchingAcceptRequest.getSenderEmail());
 
         //새로 매칭일 경우
         if(matchingAcceptRequest.getChatRoomId() == 0L){
@@ -215,18 +215,18 @@ public class MatchingService {
         return PossibleInvitationList.builder().possibleProfileList(profile).build();
     }
 
-    public String inviteToExist(String email, InviteToExistRequest inviteToExistRequest){
-        //초대할 사람 찾기
-        User receiver = userRepository.findByEmail(inviteToExistRequest.getReciever());
-
-        //기존의 그룹에 초대
-        Invitation invitation = Invitation.builder()
-                .invitedPerson(receiver.getEmail())
-                .chatRoomId(inviteToExistRequest.getInviteRoomId())
-                .build();
-
-        invitationRepository.save(invitation);
-
-        return "Successfully send inviting message to "+ receiver.getName();
-    }
-}
+//    public String inviteToExist(String email, InviteToExistRequest inviteToExistRequest){
+//        //초대할 사람 찾기
+//        User receiver = userRepository.findByEmail(inviteToExistRequest.getReciever());
+//
+//        //기존의 그룹에 초대
+//        Invitation invitation = Invitation.builder()
+//                .invitedPerson(receiver.getEmail())
+//                .chatRoomId(inviteToExistRequest.getInviteRoomId())
+//                .build();
+//
+//        invitationRepository.save(invitation);
+//
+//        return "Successfully send inviting message to "+ receiver.getName();
+//    }
+//}

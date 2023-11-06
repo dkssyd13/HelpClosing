@@ -27,13 +27,35 @@ public class ChatController {
 
     @Autowired
     ChatService chatService;
-
     @Autowired
     UserRepository userRepository;
     @Autowired
     ChatRoomRepository chatRoomRepository;
     @Autowired
     ChatMessageRepository chatMessageRepository;
+
+    @MessageMapping("/chat/enter")
+    public void enter(ChatMessageRequest message){
+        message.setTime(LocalDateTime.now());
+        User user = userRepository.findByEmail(message.getEmail());
+        message.setMessage(message.getNickName() + "님이 채팅방에 참여하였습니다.");
+
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(message.getChatRoomId());
+
+        message.setNickName(user.getNickName());
+        message.setName(user.getName());
+
+        messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoomId(), message);
+
+        ChatMessage chatMessage = ChatMessage.builder()
+                .message(message.getMessage())
+                .chatDate(message.getTime())
+                .user(user)
+                .chatRoom(chatRoom)
+                .build();
+
+        chatMessageRepository.save(chatMessage);
+    }
 
     @MessageMapping("/chat/message")
     public void message(ChatMessageRequest message){

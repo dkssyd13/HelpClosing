@@ -3,7 +3,6 @@ package cau.capstone.helpclosing.controller;
 import cau.capstone.helpclosing.model.Entity.User;
 import cau.capstone.helpclosing.model.Header;
 import cau.capstone.helpclosing.model.Request.InviteRequest;
-import cau.capstone.helpclosing.model.Request.InviteToExistRequest;
 import cau.capstone.helpclosing.model.Request.MatchingAcceptRequest;
 import cau.capstone.helpclosing.model.Request.MatchingRejectRequest;
 import cau.capstone.helpclosing.model.Response.InvitationListResponse;
@@ -24,7 +23,7 @@ public class MatchingController {
     public Header invite(@RequestBody InviteRequest inviteRequest){
         try{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = ((User) auth.getPrincipal()).getUsername();
+            String email = ((User) auth.getPrincipal()).getEmail();
 
             return Header.OK(matchingService.invite(email, inviteRequest), "");
         } catch (Exception e){
@@ -32,26 +31,26 @@ public class MatchingController {
         }
     }
 
-    @PostMapping("/invite")
-    //@ApiOperation(value="그룹 안에서 초대", notes = "receiver(email), chatRoomId 필요")
-    public Header InviteToExistMatching(@RequestBody InviteToExistRequest inviteToExistRequest){
-        try{
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = ((User) auth.getPrincipal()).getUsername();
-
-            return Header.OK(matchingService.inviteToExist(email, inviteToExistRequest));
-        }
-        catch (Exception e){
-            return Header.ERROR("Need to login for inviting");
-        }
-    }
-
+//    @PostMapping("/invite")
+//    //@ApiOperation(value="그룹 안에서 초대", notes = "receiver(email), chatRoomId 필요")
+//    public Header InviteToExistMatching(@RequestBody InviteToExistRequest inviteToExistRequest){
+//        try{
+//            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//            String email = ((User) auth.getPrincipal()).getEmail();
+//
+//            return Header.OK(matchingService.inviteToExist(email, inviteToExistRequest));
+//        }
+//        catch (Exception e){
+//            return Header.ERROR("Need to login for inviting");
+//        }
+//    }
+//
     @GetMapping("/possibleinvite")
     //@ApiOperation(value="그룹에 초대 가능한 user목록 출력", notes = "초대 그룹 id 필요")
     public Header<PossibleInvitationList> possibleInvite(Long chatRoomId){
         try{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = ((User) auth.getPrincipal()).getUsername();
+            String email = ((User) auth.getPrincipal()).getEmail();
 
             return Header.OK(matchingService.possibleInvite(chatRoomId),"");
         }
@@ -65,7 +64,7 @@ public class MatchingController {
     public Header<InvitationListResponse> inviteList(){
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = ((User) auth.getPrincipal()).getUsername();
+            String email = ((User) auth.getPrincipal()).getEmail();
 
             return Header.OK(matchingService.inviteList(email), "");
         }
@@ -79,7 +78,7 @@ public class MatchingController {
     public Header accept(@RequestBody MatchingAcceptRequest matchingAcceptRequest){
         try{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String receiver = ((User) auth.getPrincipal()).getUsername();
+            String receiver = ((User) auth.getPrincipal()).getNickName();
 
             return Header.OK(matchingService.accept(matchingAcceptRequest, receiver), "");
         }
@@ -93,7 +92,7 @@ public class MatchingController {
     public Header reject(@RequestBody MatchingRejectRequest matchingRejectRequest){
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String receiver = ((User) auth.getPrincipal()).getUsername();
+            String receiver = ((User) auth.getPrincipal()).getNickName();
 
             return Header.OK(matchingService.reject(matchingRejectRequest, receiver), "");
         }

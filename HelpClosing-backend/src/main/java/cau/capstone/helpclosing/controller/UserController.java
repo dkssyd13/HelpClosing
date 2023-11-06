@@ -26,7 +26,7 @@ public class UserController {
     public Header update(@RequestBody UserProfileRequest userProfileRequest){
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = ((User) auth.getPrincipal()).getUsername();
+            String email = ((User) auth.getPrincipal()).getNickName();
 
             return Header.OK(userService.update(email, userProfileRequest), "Profile has been modified");
         }

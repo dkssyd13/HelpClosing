@@ -31,9 +31,9 @@ public class ChatService {
         for(ChatMessage c : list){
             responseList.add(ChatMessageResponse.builder()
                     .chatDate(c.getChatDate())
-                    .email(c.getUserEmail().getEmail())
+                    .email(c.getUser().getEmail())
                     .message(c.getMessage())
-                    .name(c.getUserEmail().getName())
+                    .nickName(c.getUser().getNickName())
                     .build());
         }
         return responseList;
