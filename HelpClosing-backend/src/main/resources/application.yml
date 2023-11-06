@@ -19,7 +19,7 @@ logging:
       hibernate:
         SQL: debug
         type:
-            descriptor:
-                sql:
-                  BasicBinder: trace
+          descriptor:
+            sql:
+              BasicBinder: trace
 

@@ -8,10 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class RequestDTO {
-    private String targetToken;
+    private String targetToken;  //ID of the device to send the message to
     private String title;
     private String body;
 
