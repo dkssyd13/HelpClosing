@@ -1,4 +1,4 @@
-package cau.capstone.helpclosing.domain;
+package cau.capstone.helpclosing.model.Entity;
 
 
 import javax.persistence.*;
