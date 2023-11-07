@@ -20,13 +20,13 @@ class ChatRoomListPage extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             return ListView.builder(
-              itemCount: snapshot.data!.length,
+              itemCount: chatRoomController.chatRooms.length,
               itemBuilder: (context, index) {
-                final chatRoom = snapshot.data![index];
+                final chatRoom = chatRoomController.chatRooms.value[0];
                 return ListTile(
-                  // title: Text('Room ID: ${chatRoom.chatRoomId}'),
-                  title: Text('Room ID: ${chatRoom.chatRoomId.}'),
-                  subtitle: Text('User List: ${chatRoom.userList.map((user) => user.name).join(', ')}'),
+                  onTap: (){print(chatRoom.userList.map((user)=>user.name));},
+                  leading: const Icon(Icons.account_circle),
+                  title: Text('${chatRoom.userList.map((user)=>user.name)}'),
                 );
               },
             );
