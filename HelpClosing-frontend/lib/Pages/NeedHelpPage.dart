@@ -105,21 +105,6 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
               onPressed: _goToCurrentPosition,
             ),
           ),
-          // Positioned(
-          //   left: 50,
-          //     bottom: 10,
-          //     child: FloatingActionButton(
-          //       onPressed: () async {
-          //         await route.drawRoute(points, 'Test routes',
-          //             Color.fromRGBO(130, 78, 210, 1.0), 'AIzaSyAVkF1MVwblmaf6a8hfP3aXDgtrS6V7UMI',
-          //             travelMode: TravelModes.walking);
-          //         setState(() {
-          //           totalDistance =
-          //               distanceCalculator.calculateRouteDistance(points, decimals: 1);
-          //         });
-          //       },
-          //     )
-          // )
         ],
       ),
     );
