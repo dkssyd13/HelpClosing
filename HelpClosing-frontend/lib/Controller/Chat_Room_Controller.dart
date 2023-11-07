@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:help_closing_frontend/Domain/ChatRoom.dart';
 
 import '../Domain/User.dart';
@@ -6,6 +7,7 @@ import 'dart:convert';
 
 class ChatRoomController {
   //static const String baseUrl = 'http://your_server_url'; // 서버 URL을 입력하세요.
+  RxList chatRooms=[].obs;
 
   Future<List<ChatRoom>> getChatRoomList() async {
     //final response = await http.get(Uri.parse('$baseUrl/chatRoomList'));
@@ -30,12 +32,6 @@ class ChatRoomController {
               "name": "User1",
               "nickName": "U1",
               "image": "image_url_1"
-            },
-            {
-              "email": "user2@example.com",
-              "name": "User2",
-              "nickName": "U2",
-              "image": "image_url_2"
             }
           ]
         },
@@ -47,12 +43,6 @@ class ChatRoomController {
               "name": "User3",
               "nickName": "U3",
               "image": "image_url_3"
-            },
-            {
-              "email": "user4@example.com",
-              "name": "User4",
-              "nickName": "U4",
-              "image": "image_url_4"
             }
           ]
         }
@@ -62,6 +52,10 @@ class ChatRoomController {
 
     final List<dynamic> responseBody = json.decode(response)['data'];
     return responseBody.map((dynamic item) => ChatRoom.fromJson(item)).toList();
+
   }
+
+
+
 }
 
