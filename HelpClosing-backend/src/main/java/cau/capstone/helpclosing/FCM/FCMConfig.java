@@ -1,4 +1,4 @@
-package cau.capstone.helpclosing.config;
+package cau.capstone.helpclosing.FCM;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -16,7 +16,7 @@ import java.util.List;
 public class FCMConfig {
 
     @Bean
-    FirebaseMessaging firbaseMessaging() throws IOException{
+    FirebaseMessaging firebaseMessaging() throws IOException{
         ClassPathResource resource = new ClassPathResource("firebase/serviceAccountKey.json");
 
         InputStream refreshToken = resource.getInputStream();

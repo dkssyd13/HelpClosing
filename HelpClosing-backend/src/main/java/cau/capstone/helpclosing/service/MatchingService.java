@@ -9,10 +9,7 @@ import cau.capstone.helpclosing.model.Request.*;
 import cau.capstone.helpclosing.model.Response.InvitationListResponse;
 import cau.capstone.helpclosing.model.Response.PossibleInvitationList;
 import cau.capstone.helpclosing.model.Response.UserProfileResponse;
-import cau.capstone.helpclosing.model.repository.ChatRoomRepository;
-import cau.capstone.helpclosing.model.repository.InvitationRepository;
-import cau.capstone.helpclosing.model.repository.MatchingRepository;
-import cau.capstone.helpclosing.model.repository.UserRepository;
+import cau.capstone.helpclosing.model.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +19,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class MatchingService {
+
+
+    @Autowired
+    private LocationRepository locationRepository;
+
     @Autowired
     private InvitationRepository invitationRepository;
 
