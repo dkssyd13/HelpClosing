@@ -10,6 +10,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, String> {
     User findByEmail(String email);
 
+    User findByUserId(Long userId);
+
     @Query(value = "SELECT u FROM User u WHERE u.name = ?1")
     User findByName(String name);
 

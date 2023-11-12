@@ -11,4 +11,6 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     Location findByUserEmail(String email);
 
     Location findByLatitudeAndLongitude(double latitude, double longitude);
+
+    Location findByLocationId(Long locationId);
 }
