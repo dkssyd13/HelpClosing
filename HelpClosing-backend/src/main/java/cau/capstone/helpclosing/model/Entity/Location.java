@@ -3,6 +3,8 @@ package cau.capstone.helpclosing.model.Entity;
 
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Type;
+import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
 
@@ -20,8 +22,12 @@ public class Location {
     private Long id;
 
     private String description;
-    private double latitude;
-    private double longitude;
+
+    @Type(type = "org.hibernate.spatial.JTSGeometryType")
+    private Point coordinates;
+
+//    private double latitude;
+//    private double longitude;
     private String address;
 
     //Relationship

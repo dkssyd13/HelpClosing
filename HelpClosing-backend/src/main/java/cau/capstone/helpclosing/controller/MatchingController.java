@@ -25,7 +25,7 @@ public class MatchingController {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String email = ((User) auth.getPrincipal()).getEmail();
 
-            return Header.OK(matchingService.invite(email, inviteRequest), "");
+            return Header.OK(matchingService.inviteAround(inviteRequest), "");
         } catch (Exception e){
             return Header.ERROR("Need to login for matching");
         }
@@ -45,19 +45,19 @@ public class MatchingController {
 //        }
 //    }
 //
-    @GetMapping("/possibleinvite")
-    //@ApiOperation(value="그룹에 초대 가능한 user목록 출력", notes = "초대 그룹 id 필요")
-    public Header<PossibleInvitationList> possibleInvite(Long chatRoomId){
-        try{
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = ((User) auth.getPrincipal()).getEmail();
-
-            return Header.OK(matchingService.possibleInvite(chatRoomId),"");
-        }
-        catch (Exception e){
-            return Header.ERROR("Need to login for seeing possible user for invitation" + e);
-        }
-    }
+//    @GetMapping("/possibleinvite")
+//    //@ApiOperation(value="그룹에 초대 가능한 user목록 출력", notes = "초대 그룹 id 필요")
+//    public Header<PossibleInvitationList> possibleInvite(Long chatRoomId){
+//        try{
+//            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//            String email = ((User) auth.getPrincipal()).getEmail();
+//
+//            return Header.OK(matchingService.possibleInvite(chatRoomId),"");
+//        }
+//        catch (Exception e){
+//            return Header.ERROR("Need to login for seeing possible user for invitation" + e);
+//        }
+//    }
 
     @GetMapping("/invitedList")
     //@ApiOperation(value="초대 받은 목록(invitation) 보기", notes = "")

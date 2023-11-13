@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface PledgeRepository extends JpaRepository<Pledge, Long> {
 
     Pledge findByPledgeId(Long pledgeId);
+
+    Pledge findByUserId(Long userId);
 }
