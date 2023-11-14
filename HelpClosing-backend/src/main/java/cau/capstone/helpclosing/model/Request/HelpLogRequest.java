@@ -14,11 +14,8 @@ import java.time.LocalDateTime;
 @Builder
 public class HelpLogRequest {
 
-    private LocalDateTime time;
     private Long requesterId;
     private Long recipientId;
-    private Long pledgeRequestId;
-    private Long pledgeRecipientId;
-    private Long locationId;
+
 
 }

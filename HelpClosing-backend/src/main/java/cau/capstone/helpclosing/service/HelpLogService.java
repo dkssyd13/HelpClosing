@@ -10,6 +10,7 @@ import cau.capstone.helpclosing.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -49,20 +50,18 @@ public class HelpLogService {
             HelpLog helpLog = HelpLog.builder()
                     .requester(userRepository.findByUserId(helpLogRequest.getRequesterId()))
                     .recipient(userRepository.findByUserId(helpLogRequest.getRecipientId()))
-                    .pledgeRequest(pledgeRepository.findByPledgeId(helpLogRequest.getPledgeRequestId()))
-                    .pledgeRecipient(pledgeRepository.findByPledgeId(helpLogRequest.getPledgeRecipientId()))
-                   // .location(locationRepository.findByLocationId(helpLogRequest.getLocationId()))
-                    .time(helpLogRequest.getTime())
+                    .pledgeRequest(pledgeRepository.findByUserId(helpLogRequest.getRequesterId()))
+                    .pledgeRecipient(pledgeRepository.findByUserId(helpLogRequest.getRecipientId()))
+                   // .location(locationRepository.findByUserId(helpLogRequest.getRecipientId()))
                     .build();
+
+            helpLog.setTime(LocalDateTime.now());
 
             helpLogRepository.save(helpLog);
 
             return HelpLogResponse.builder()
                     .requesterId(helpLogRequest.getRequesterId())
                     .recipientId(helpLogRequest.getRecipientId())
-                    .pledgeRequestId(helpLogRequest.getPledgeRequestId())
-                    .pledgeRecipientId(helpLogRequest.getPledgeRecipientId())
-                   // .locationId(helpLogRequest.getLocation)
                     .build();
     }
 

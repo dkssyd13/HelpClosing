@@ -14,18 +14,26 @@ public class LocationService {
     @Autowired
     private LocationRepository locationRepository;
 
+    double radiusInMeters = 100.0;
+    double radiusInDegrees = radiusInMeters / 111320.0; // 1 degree = 111.32 km
+
+
+    public List<Location> findAllAround(LocationRequest locationRequest){
+        List<Location> locationList = locationRepository.findLocationsWithinRadius(locationRequest.getCoordinates(), radiusInDegrees);
+
+        return locationList;
+    }
 
     public List<Location> findAround100(LocationRequest locationRequest){
         List<Location> locationList = locationRepository.findAll();
         List<Location> returnLocationList = null;
 
         for (Location l : locationList){
-            double distance = calculateDistance(locationRequest.getLatitude(), l.getLatitude(), locationRequest.getLongitude(), l.getLongitude());
+            double distance = calculateDistance(locationRequest.getCoordinates().getX(), l.getCoordinates().getX(), locationRequest.getCoordinates().getY(), l.getCoordinates().getY());
             if (distance <= 100){ //100m 이내
                 returnLocationList.add(l);
             }
         }
-
         return returnLocationList;
     }
 
