@@ -78,7 +78,7 @@ public class UserService {
 
         user.setNickName(userProfileRequest.getNickName())
                 .setName(userProfileRequest.getName())
-                .setImage(userProfileRequest.getImage())
+                .setImage(userProfileRequest.getImage());
 
         userRepository.save(user);
 
