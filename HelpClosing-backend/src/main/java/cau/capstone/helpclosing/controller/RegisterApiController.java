@@ -100,6 +100,7 @@ public class RegisterApiController {
         // 세션에서 꺼낸 originBody가 인증된 사용자인지 검토
         if (originBody.isCheckEmail()) {
 
+            // UserService에 오류가 있는듯??
             if (!UserService.nicknameCheck(request.getNickname())) {
                 return Header.ERROR("이미 존재하는 닉네임입니다.");
             }
