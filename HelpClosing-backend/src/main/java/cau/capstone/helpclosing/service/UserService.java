@@ -39,7 +39,7 @@ public class UserService {
         return true;
     }
 
-    public boolean nicknameCheck(String nickname) {
+    public static boolean nicknameCheck(String nickname) {
 
         User findUser= userRepository.findByNickName(nickname);
 
