@@ -58,6 +58,7 @@ public class FCMService {
     // Firebase Admin SDK를 사용하여 Access Token을 받아옴
     //oath2를 이용해 인증
     // Access Token: Firebase Admin SDK를 사용하여 FCM에 접근할 때 필요한 인증 토큰
+    //전송하는데 필요한 토큰은 별도!
     private String getAccessToken() throws IOException{
         String firebaseConfigPath = "firebase/serviceAccountKey.json";
 
