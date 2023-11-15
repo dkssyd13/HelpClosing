@@ -15,7 +15,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserRepository userRepository;
+    private static UserRepository userRepository;
 
     public User create(RegisterApiRequest request) {
 

@@ -100,7 +100,6 @@ public class RegisterApiController {
         // 세션에서 꺼낸 originBody가 인증된 사용자인지 검토
         if (originBody.isCheckEmail()) {
 
-            // UserService에 오류가 있는듯??
             if (!UserService.nicknameCheck(request.getNickname())) {
                 return Header.ERROR("이미 존재하는 닉네임입니다.");
             }
@@ -121,14 +120,14 @@ public class RegisterApiController {
     /**
      * 프론트에서 유저 삭제하기 위한 api
      */
-    @DeleteMapping("/delete/{email}")
-    @ApiOperation(value = "유저 삭제", notes = "필수 정보: email")
-    public Header delete(@PathVariable String email) {
-        if (userService.delete(email) == true) {
-            return Header.OK("성공적으로 유저를 삭제했습니다.");
-        }
-        else
-            return Header.ERROR("해당 이메일을 가진 유저가 존재하지 않습니다.");
-    }
+    //@DeleteMapping("/delete/{email}")
+    //@ApiOperation(value = "유저 삭제", notes = "필수 정보: email")
+    //public Header delete(@PathVariable String email) {
+    //    if (userService.delete(email) == true) {
+    //        return Header.OK("성공적으로 유저를 삭제했습니다.");
+    //    }
+    //    else
+    //        return Header.ERROR("해당 이메일을 가진 유저가 존재하지 않습니다.");
+    //}
 
 }
