@@ -13,6 +13,7 @@ import java.util.Random;
 @Service
 public class EmailService {
 
+    //MailConfig 필요 - 안함
     @Autowired
     private JavaMailSender mailSender;
 
