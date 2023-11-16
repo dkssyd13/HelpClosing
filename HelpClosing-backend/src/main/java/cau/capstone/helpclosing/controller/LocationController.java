@@ -20,7 +20,6 @@ public class LocationController {
     @Autowired
     private LocationService locationService;
 
-
     @GetMapping("/location/find")
     public Header findAround(@RequestBody LocationRequest locationRequest){
         try{

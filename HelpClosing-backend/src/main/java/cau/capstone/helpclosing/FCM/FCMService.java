@@ -10,6 +10,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonParseException;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,9 @@ public class FCMService {
 
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/cpastone-cau-helpclosing/messages:send";
     private final ObjectMapper objectMapper;
+
+    @Autowired
+    private final FCMCRUD fcmcrud;
 
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
         String message = makeMessage(targetToken, title, body);
@@ -68,6 +72,10 @@ public class FCMService {
 
         googleCredentials.refreshIfExpired();
         return googleCredentials.getAccessToken().getTokenValue();
+    }
+
+    private void saveFCMToken(FCMTokenRequest request) throws IOException {
+
     }
 
 }
