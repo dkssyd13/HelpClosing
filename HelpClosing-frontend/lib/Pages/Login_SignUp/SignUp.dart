@@ -29,10 +29,10 @@ class SignUpPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15)
                     ),
                     child: Padding(
-                      padding: EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 20),
                       child: TextField(
                         controller: emailController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: InputBorder.none, hintText: 'Email',
                         ),
                       ),
@@ -49,11 +49,11 @@ class SignUpPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15)
                     ),
                     child: Padding(
-                      padding: EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 20),
                       child: TextField(
                         controller: passwordController,
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: InputBorder.none, hintText: '비밀번호',
                         ),
                       ),

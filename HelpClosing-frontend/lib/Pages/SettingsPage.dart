@@ -1,7 +1,6 @@
 import 'package:help_closing_frontend/Controller/Auth_Controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
 
 class SettingsPage extends StatefulWidget {

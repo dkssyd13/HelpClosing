@@ -1,38 +1,77 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
-import 'package:help_closing_frontend/Domain/ChatRoom.dart';
+import 'package:get/get.dart';
+import 'package:help_closing_frontend/Controller/User_Controller.dart';
+import 'package:help_closing_frontend/Domain/UserMailandName.dart';
 
 import '../../Controller/Chat_Room_Controller.dart';
 
 class ChatRoomListPage extends StatelessWidget {
-  final ChatRoomController chatRoomController = ChatRoomController();
+  final ChatRoomController _chatRoomController = Get.put(ChatRoomController());
+
+  ChatRoomListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<ChatRoom>>(
-        future: chatRoomController.getChatRoomList(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return ListView.builder(
-              itemCount: chatRoomController.chatRooms.length,
-              itemBuilder: (context, index) {
-                final chatRoom = chatRoomController.chatRooms.value[0];
-                return ListTile(
-                  onTap: (){print(chatRoom.userList.map((user)=>user.name));},
-                  leading: const Icon(Icons.account_circle),
-                  title: Text('${chatRoom.userList.map((user)=>user.name)}'),
-                );
-              },
+      body: Obx(
+            () => ListView.builder(
+          itemCount: _chatRoomController.chatRoomList.length,
+          itemBuilder: (context, index) {
+            final chatRoom = _chatRoomController.chatRoomList[index]; // -> chatRoom id, userList
+            return Card(
+              color: Colors.white,
+              elevation: 0,
+              child: ListTile(
+                onTap: (){},
+                leading: getPhoto(chatRoom.userList), //
+                title: Text(nameOfOther(chatRoom.userList)),
+              ),
             );
-          }
-        },
+          },
+        ),
       ),
     );
+  }
+
+  Widget getPhoto(List<UserMailandName> chatRoomUserList){
+    for(UserMailandName otherUser in chatRoomUserList) {
+      if(otherUser.email != UserController.to.getUserEmail()) {
+        if(Uri.parse(otherUser.image).isAbsolute){
+          return CircleAvatar(
+            backgroundImage: NetworkImage(otherUser.image),
+          );
+        } else {
+          return const CircleAvatar(
+            child: Icon(Icons.account_circle),
+          );
+        }
+      }
+    }
+    return const CircleAvatar(
+      child: Icon(Icons.account_circle),
+    );
+  }
+
+
+  String nameOfOther(List<UserMailandName> chatRoomUserList) {
+    for(UserMailandName otherUser in chatRoomUserList) {
+      if(otherUser.email != UserController.to.getUserEmail()) {
+        return otherUser.name;
+      }
+    }
+
+    return "None";
+  }
+}
+
+
+
+class ChatRoom extends StatelessWidget {
+  const ChatRoom({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:help_closing_frontend/Domain/User.dart';
 
 class UserController {
-  static User? _currentUser = null;
+  static User? _currentUser;
   static UserController get to => Get.find();
 
 
@@ -24,6 +24,9 @@ class UserController {
     return _currentUser?.name;
   }
 
+  String? getUserEmail(){
+    return _currentUser?.email;
+  }
 
 
 

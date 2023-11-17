@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class HelpController extends GetxController {
-  var _helpFlag = false.obs;
+  final _helpFlag = false.obs;
 
   get helpFlag => _helpFlag.value;
 

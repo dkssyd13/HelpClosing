@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:help_closing_frontend/Controller/Auth_Controller.dart';
-import 'package:help_closing_frontend/Controller/User_Controller.dart';
 import 'package:help_closing_frontend/Pages/Chat/ChatRoomPage.dart';
-import 'package:help_closing_frontend/Pages/NeedHelpPage.dart';
+import 'package:help_closing_frontend/Pages/Req_Help/NeedHelpPage.dart';
 import 'package:help_closing_frontend/Pages/SettingsPage.dart';
 
 import '../Controller/Help_Controller.dart';
@@ -19,7 +17,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int pageIndex=0;
   // var pagesList=[HomePage(),const Text('메세지'),const Text('기록'),const Settings()];
-  var pagesList=[HomePage(),ChatRoomListPage(),const Text('기록'),const SettingsPage()];
+  var pagesList=[HomePage(), ChatRoomListPage(),const Text('기록'),const SettingsPage()];
   final pagesTitle=[const Text('도움닿기', style: TextStyle(fontWeight: FontWeight.bold)),const Text('메세지',style: TextStyle(fontWeight: FontWeight.bold)),const Text('기록',style: TextStyle(fontWeight: FontWeight.bold)),const Text('설정',style: TextStyle(fontWeight: FontWeight.bold))];
 
   @override
@@ -79,14 +77,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return Obx((){
-      // return _helpController.helpFlag?NeedHelpBody() : DoesntNeedHelpBody();
-      return _helpController.helpFlag?NeedHelpBody(): DoesntNeedHelpBody();
+      return _helpController.helpFlag?const NeedHelpBody() : const DoesntNeedHelpBody();
     });
   }
 }
 
 class DoesntNeedHelpBody extends StatelessWidget {
-  DoesntNeedHelpBody({
+  const DoesntNeedHelpBody({
     super.key,
   });
 
@@ -97,7 +94,6 @@ class DoesntNeedHelpBody extends StatelessWidget {
           width: 200,
           height: 100,
           child: ElevatedButton(
-            child: Text("도움 요청하기"),
             onPressed: (){
               showModalBottomSheet(
                   context: context,
@@ -111,6 +107,7 @@ class DoesntNeedHelpBody extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100))
             ),
+            child: const Text("도움 요청하기"),
           ),
         )
     );
@@ -163,6 +160,7 @@ class _TimerWidgetState extends State<TimerWidget> {
         _timer?.cancel();
         _currentColor=Colors.green;
         helpController.requestHelp();
+        _cancelHelpFlag=false;
         print("도움 요청 완료");
         setState(() {
           _currentSituation="도움 요청 됐습니다! 조금만 기다려주세요~!";
@@ -195,9 +193,11 @@ class _TimerWidgetState extends State<TimerWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red,elevation: 50,shadowColor: myColorDark),
-              onPressed: (){
-              _cancelHelp();
+            style: ElevatedButton.styleFrom(backgroundColor: _currentColor,elevation: 50,shadowColor: myColorDark),
+              onPressed: () {
+                if (!helpController.helpFlag) {
+                  _cancelHelp();
+                }
               },
               child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,

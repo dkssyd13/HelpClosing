@@ -12,7 +12,7 @@ class AuthController extends GetxController{
   static AuthController get to => Get.find();
   UserController userController = UserController();
   late Rx<User?> _currentUser;
-  RxBool _rememberUser=false.obs;
+  final RxBool _rememberUser=false.obs;
 
   bool get rememberUser => _rememberUser.value;
 
@@ -32,9 +32,9 @@ class AuthController extends GetxController{
   _moveToPage(User? user) {
     print(_currentUser.value);
     if(user==null) {
-      Get.offAll(()=>LoginPage());
+      Get.offAll(()=>const LoginPage());
     }else {
-      Get.offAll(()=>MainPage());
+      Get.offAll(()=>const MainPage());
     }
   }
 
@@ -51,7 +51,7 @@ class AuthController extends GetxController{
             backgroundColor: Colors.red[50],
             snackPosition: SnackPosition.BOTTOM,
             titleText: const Text("회원가입 실패"),
-            messageText: Text("ㅇㅇ 안됨")
+            messageText: const Text("ㅇㅇ 안됨")
         );
     }
     // 문제 없을때
@@ -60,22 +60,36 @@ class AuthController extends GetxController{
   }
 
   void login(String email, String password) async {
-    // final Uri serverUrl = Uri.parse('https://server.com/login');
-    //
-    // final response = await http.get(
-    //   serverUrl.replace(queryParameters: {'email': email, 'password': password}),
+    // final response = await http.post(
+    //   Uri.parse('http://서버_주소.com/login'),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(<String, String>{
+    //     'email': email,
+    //     'password': password,
+    //   }),
     // );
-    // print(serverUrl.toString());
     //
     // if (response.statusCode == 200) {
     //   print('Login successful');
-    //   // 로그인 성공 후 유저 정보 생성
-    //   var data = jsonDecode(response.body);
-    //   userController.createUser(data['name'], data['email'], data['nickname'], data['profile']);
-    //   _user.value=UserController.user;
+    //   final responseJson = jsonDecode(response.body);
+    //
+    //   // 서버에서 받아온 사용자 정보를 사용.
+    //   String name = responseJson['name'];
+    //   String nickname = responseJson['nickName'];
+    //   String profile = responseJson['image'];
+    //   String email = responseJson['email'];
+    //
+    //
+    //   // 로그인이 성공하면 createUser 메서드를 호출합니다.
+    //   userController.createUser(name, email, nickname, profile);
+    //   print(UserController.currentUser);
+    //   _currentUser.value=UserController.currentUser;
     // } else {
-    //   print('Login failed');
+    //   throw Exception('Failed to login');
     // }
+
     userController.createUser('김중앙', email, 'hd', 'profile');
     print(UserController.currentUser);
     _currentUser.value=UserController.currentUser;

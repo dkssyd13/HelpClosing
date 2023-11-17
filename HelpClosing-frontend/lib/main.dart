@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
-import 'package:help_closing_frontend/Pages/MainPage.dart';
 
 import 'Controller/Auth_Controller.dart';
 import 'Pages/Login_SignUp/Login.dart';
 
-void main() {
+void main(){
   Get.put(AuthController());
   Get.put(UserController());
   runApp(const MyApp());
@@ -26,7 +25,6 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.system,
       home: const LoginPage(),
-      // home: const MainPage(),
     );
   }
 }

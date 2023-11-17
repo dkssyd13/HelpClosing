@@ -28,27 +28,53 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    myColor=Theme.of(context).primaryColor;
-    mediaSize=MediaQuery.of(context).size;
+    myColor = Theme
+        .of(context)
+        .primaryColor;
+    mediaSize = MediaQuery
+        .of(context)
+        .size;
 
 
-    return Container(
-      decoration: BoxDecoration(
-        color: myColor,
-        image: DecorationImage(
-            image: const AssetImage("assets/images/login_Help_image.jpg"),
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(myColor.withOpacity(0.2), BlendMode.dstATop)
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            Positioned(top: 80,child: _buildTop()),
-            Positioned(bottom:0,child: _buildBottom())
-          ],
-        ),
+    // return Container(
+    //   decoration: BoxDecoration(
+    //     color: myColor,
+    //     image: DecorationImage(
+    //         image: const AssetImage("assets/images/login_Help_image.jpg"),
+    //       fit: BoxFit.cover,
+    //       colorFilter: ColorFilter.mode(myColor.withOpacity(0.2), BlendMode.dstATop)
+    //     ),
+    //   ),
+    //   child: Scaffold(
+    //     backgroundColor: Colors.transparent,
+    //     body: Stack(
+    //       children: [
+    //         Positioned(top: 80,child: _buildTop()),
+    //         Positioned(bottom:0,child: _buildBottom())
+    //       ],
+    //     ),
+    //   ),
+    // );
+
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(bottom: 450),
+              decoration: BoxDecoration(
+                color: myColor,
+                image: DecorationImage(
+                    image: const AssetImage(
+                        "assets/images/login_Help_image.jpg"),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                        myColor.withOpacity(0.2), BlendMode.dstATop)
+                ),
+              )),
+          Positioned(top: 80, child: _buildTop()),
+          Positioned(bottom: 0, child: _buildBottom())
+        ],
       ),
     );
   }
@@ -77,10 +103,11 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       width: mediaSize.width,
       child: Card(
+        margin: EdgeInsets.zero,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(5),
-            topRight: Radius.circular(5)
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30)
           )
         ),
         child: Padding(
@@ -152,6 +179,25 @@ class _LoginPageState extends State<LoginPage> {
                         color: Colors.blue,
                       ),
                     )
+                ),
+              ),
+              const SizedBox(height: 20,),
+              Center(
+                child: Column(
+                  children: [
+                    _buildGreyText("다른 방법으로 로그인하기"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: (){print("구글로 로그인하기");},
+                          child: Tab(
+                            icon: Image.asset("assets/images/google_logo.png"),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
               )
             ],

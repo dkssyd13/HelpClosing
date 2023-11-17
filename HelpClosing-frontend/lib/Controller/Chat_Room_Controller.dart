@@ -1,61 +1,74 @@
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Domain/ChatRoom.dart';
 
-import '../Domain/User.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ChatRoomController {
-  //static const String baseUrl = 'http://your_server_url'; // 서버 URL을 입력하세요.
-  RxList chatRooms=[].obs;
+class ChatRoomController extends GetxController {
+  var chatRoomList = List<ChatRoom>.empty(growable: true).obs;
+  var isLoading = true.obs;
 
-  Future<List<ChatRoom>> getChatRoomList() async {
-    //final response = await http.get(Uri.parse('$baseUrl/chatRoomList'));
+  @override
+  void onInit() {
+    fetchChatRoomList();
+    super.onInit();
+  }
 
-    // if (response.statusCode == 200) {
-    //   final List<dynamic> responseBody = json.decode(response.body)['data'];
-    //   return responseBody.map((dynamic item) => ChatRoom.fromJson(item)).toList();
-    // } else {
-    //   throw Exception('Failed to load chat room list');
+  void fetchChatRoomList() async {
+    //   try {
+    //     isLoading(true);
+    //     var response = await http.get(Uri.parse('http://yourserver.com/chatRoomList'));
+    //     if (response.statusCode == 200) {
+    //       var jsonString = response.body;
+    //       var jsonMap = json.decode(jsonString);
+    //       chatRoomList.value = List<ChatRoom>.from(jsonMap['data'].map((i) => ChatRoom.fromJson(i)));
+    //     }
+    //   } catch (Exception) {
+    //     print('Need to login for seeing chat room list');
+    //   } finally {
+    //     isLoading(false);
+    //   }
     // }
-    // 예제 JSON 응답
-    const String response = '''
+    var jsonString = '''{
+  "data": [
     {
-      "resultCode": "OK",
-      "description": "매칭룸목록(roomid)",
-      "data": [
+      "chatRoomId": "room1",
+      "userList": [
         {
-          "chatRoomId": "room1",
-          "userList": [
-            {
-              "email": "user1@example.com",
-              "name": "User1",
-              "nickName": "U1",
-              "image": "image_url_1"
-            }
-          ]
+          "email": "123",
+          "name": "User 1-현재 사용자",
+          "nickName": "user1",
+          "image": "https://example.com/user1.jpg"
         },
         {
-          "chatRoomId": "room2",
-          "userList": [
-            {
-              "email": "user3@example.com",
-              "name": "User3",
-              "nickName": "U3",
-              "image": "image_url_3"
-            }
-          ]
+          "email": "user2@example.com",
+          "name": "User 2",
+          "nickName": "user2",
+          "image": "https://cdn-icons-png.flaticon.com/256/190/190648.png"
+        }
+      ]
+    },
+    {
+      "chatRoomId": "room2",
+      "userList": [
+        {
+          "email": "user3@example.com",
+          "name": "User 3",
+          "nickName": "user3",
+          "image": "https://cdn-icons-png.flaticon.com/512/219/219969.png"
+        },
+        {
+          "email": "123",
+          "name": "User 1-현재 사용자",
+          "nickName": "user1",
+          "image": "https://example.com/user1.jpg"
         }
       ]
     }
-    ''';
-
-    final List<dynamic> responseBody = json.decode(response)['data'];
-    return responseBody.map((dynamic item) => ChatRoom.fromJson(item)).toList();
-
-  }
-
-
-
+  ]
 }
-
+''';
+    var jsonMap = json.decode(jsonString);
+    chatRoomList.value =
+    List<ChatRoom>.from(jsonMap['data'].map((i) => ChatRoom.fromJson(i)));
+  }
+}

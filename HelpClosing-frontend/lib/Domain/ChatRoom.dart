@@ -7,9 +7,12 @@ class ChatRoom {
   ChatRoom({required this.chatRoomId, required this.userList});
 
   factory ChatRoom.fromJson(Map<String, dynamic> json) {
+    var userListFromJson = json['userList'] as List;
+    List<UserMailandName> userList = userListFromJson.map((i) => UserMailandName.fromJson(i)).toList();
+
     return ChatRoom(
       chatRoomId: json['chatRoomId'],
-      userList: (json['userList'] as List).map((i) => UserMailandName.fromJson(i)).toList(),
+      userList: userList,
     );
   }
 }
