@@ -23,7 +23,6 @@ public class HelpLog {
     //시간은 도움 요청이 받아들여진 시간이 해당
     private LocalDateTime time;
 
-
     //Relationship
     @ManyToOne
     @JoinColumn(name = "requester_id")

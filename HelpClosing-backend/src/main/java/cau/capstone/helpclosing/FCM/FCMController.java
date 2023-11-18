@@ -17,7 +17,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class FCMController {
 
-
     private final FCMService fcmService;
     private final FCMCRUD fcmcrud;
 

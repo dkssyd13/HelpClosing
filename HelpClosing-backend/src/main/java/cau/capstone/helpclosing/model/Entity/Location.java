@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
 import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.io.WKTReader;
 
 import javax.persistence.*;
 
@@ -23,11 +24,11 @@ public class Location {
 
     private String description;
 
-    @Type(type = "org.hibernate.spatial.JTSGeometryType")
     private Point coordinates;
 
-//    private double latitude;
-//    private double longitude;
+    private double latitude;
+    private double longitude;
+
     private String address;
 
     //Relationship
@@ -35,5 +36,8 @@ public class Location {
     @JoinColumn(name = "user_id")
     private User user;
 
-
+    public Location(double degree, double degree1) {
+        this.latitude = degree;
+        this.longitude = degree1;
+    }
 }

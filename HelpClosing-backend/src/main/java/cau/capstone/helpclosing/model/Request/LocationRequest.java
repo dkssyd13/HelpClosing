@@ -15,5 +15,9 @@ public class LocationRequest {
 
     private String userEmail;
 
-    private Point coordinates;
+    private double latitude;
+
+    private double longitude;
+
+    private double distance;
 }

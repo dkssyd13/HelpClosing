@@ -26,7 +26,7 @@ public class LocationController {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String email = ((User) auth.getPrincipal()).getEmail();
 
-            return Header.OK(locationService.findAllAround(locationRequest),"list of users around 100m");
+            return Header.OK(locationService.getNearByPlaces(locationRequest.getLatitude(), locationRequest.getLongitude(), locationRequest.getDistance()),"list of users around 100m");
         }
         catch(Exception e){
             return Header.ERROR("Need to login for finding around");

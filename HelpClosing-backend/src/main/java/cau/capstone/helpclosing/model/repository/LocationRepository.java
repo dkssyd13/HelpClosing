@@ -13,6 +13,7 @@ import java.util.List;
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
     List<Location> findAll();
+
     Location findByUserEmail(String email);
 
     Location findByLatitudeAndLongitude(double latitude, double longitude);
@@ -26,4 +27,23 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     @Query("SELECT l FROM Location l WHERE dwithin(l.coordinates, :point, :radius) = true")
     List<Location> findLocationsWithinRadius(@Param("point") Point point, @Param("radius") double radius);
 
+    @Query("SELECT l FROM Location l " +
+            "WHERE MBRContains(" +
+            "    GeomFromText(" +
+            "        CONCAT('POLYGON((' , " +
+            "            :minLongitude , ' ' , :minLatitude , ',' , " +
+            "            :maxLongitude , ' ' , :minLatitude , ',' , " +
+            "            :maxLongitude , ' ' , :maxLatitude , ',' , " +
+            "            :minLongitude , ' ' , :maxLatitude , ',' , " +
+            "            :minLongitude , ' ' , :minLatitude , " +
+            "        '))')" +
+            "    ), " +
+            "    Point(l.longitude, l.latitude)" +
+            ") = true")
+    List<Location> findLocationsWithinDistance(
+            @Param("minLatitude") double minLatitude,
+            @Param("minLongitude") double minLongitude,
+            @Param("maxLatitude") double maxLatitude,
+            @Param("maxLongitude") double maxLongitude
+    );
 }

@@ -6,12 +6,20 @@ spring:
     password: qkqnxod132
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    open-in-view: false
-    show-sql: true
+    open-in-view: true
     hibernate:
-      ddl-auto: create
-      format_sql: true
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      use-new-id-generator-mappings: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        spatial:
+          enabled: true
+
 
 logging:
   level:

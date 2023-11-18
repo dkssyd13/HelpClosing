@@ -7,16 +7,15 @@ import cau.capstone.helpclosing.model.Entity.User;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
 
-    User findByUserId(Long userId);
+    User findByUserId(Long id);
 
     @Query(value = "SELECT u FROM User u WHERE u.name = ?1")
     User findByName(String name);
 
     List<User> findUsersByEmailNotIn(List<String> existedList);
-
 
     User findByNickName(String nickname);
 

@@ -18,7 +18,7 @@ public class Matching {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long mathcingId;
+    private Long matchingId;
 
     @ManyToOne
     private User user;
