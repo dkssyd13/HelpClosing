@@ -82,7 +82,7 @@ public class ChatController {
 
     }
 
-    @GetMapping("/chatList")
+    @GetMapping("/chat/chatList")
     @ApiOperation(value = "채팅 목록", notes = "채팅방 목록을 조회한다.") //SWagger
     public Header<List<ChatMessageResponse>> chatList(Long chatRoomId){
         try{

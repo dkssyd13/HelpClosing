@@ -18,7 +18,7 @@ public class MatchingController {
     @Autowired
     private MatchingService matchingService;
 
-    @PostMapping("/matching")
+    @PostMapping("/matching/invite")
     //@ApiOperation(value= "Add friends", notes = "")
     public Header invite(@RequestBody InviteRequest inviteRequest){
         try{
@@ -59,7 +59,7 @@ public class MatchingController {
 //        }
 //    }
 
-    @GetMapping("/invitedList")
+    @GetMapping("/matching/invitedList")
     //@ApiOperation(value="초대 받은 목록(invitation) 보기", notes = "")
     public Header<InvitationListResponse> inviteList(){
         try {
@@ -73,7 +73,7 @@ public class MatchingController {
         }
     }
 
-    @PostMapping("/accept")
+    @PostMapping("/matching/accept")
     //@ApiOperation(value="초대 수락", notes ="sender email, chatRoomId: null일 경우 0으로 줘야함.")
     public Header accept(@RequestBody MatchingAcceptRequest matchingAcceptRequest){
         try{
@@ -87,7 +87,7 @@ public class MatchingController {
         }
     }
 
-    @DeleteMapping("/reject")
+    @DeleteMapping("/matching/reject")
     // @ApiOperation(value = "초대 거절", notes = "sender email, roomid: null일 경우 0으로 줘야함. ")
     public Header reject(@RequestBody MatchingRejectRequest matchingRejectRequest){
         try {

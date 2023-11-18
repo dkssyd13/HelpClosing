@@ -15,7 +15,9 @@ public class ChatMessageResponse {
 
     private String message;
 
-    private LocalDateTime chatDate;
+    private LocalDateTime time;
+
+    private Long chatRoomId;
 
     private String name;
 

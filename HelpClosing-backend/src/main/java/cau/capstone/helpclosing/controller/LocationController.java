@@ -1,5 +1,6 @@
 package cau.capstone.helpclosing.controller;
 
+import cau.capstone.helpclosing.model.Entity.Location;
 import cau.capstone.helpclosing.model.Entity.User;
 import cau.capstone.helpclosing.model.Header;
 import cau.capstone.helpclosing.model.Request.LocationRequest;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -21,7 +24,7 @@ public class LocationController {
     private LocationService locationService;
 
     @GetMapping("/location/find")
-    public Header findAround(@RequestBody LocationRequest locationRequest){
+    public Header<List<Location>> findAround(@RequestBody LocationRequest locationRequest){
         try{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String email = ((User) auth.getPrincipal()).getEmail();

@@ -42,7 +42,7 @@ public class HelpLogController {
         }
     }
 
-    @PostMapping("helpLog/create")
+    @PostMapping("/helpLog/create")
     public Header<HelpLogResponse> createHelpLog(HelpLogRequest helpLogRequest){
         try{
             return Header.OK(helpLogService.createHelpLog(helpLogRequest),"create help log");

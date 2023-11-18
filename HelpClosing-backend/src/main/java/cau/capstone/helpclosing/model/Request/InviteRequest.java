@@ -17,6 +17,6 @@ public class InviteRequest {
 
     private String invitedPerson;
 
-    private Long chatRoomId;
+//    private Long chatRoomId;
 
 }

@@ -23,7 +23,6 @@ public class Location {
     private Long id;
 
     private String description;
-
     private Point coordinates;
 
     private double latitude;
@@ -33,7 +32,7 @@ public class Location {
 
     //Relationship
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user")
     private User user;
 
     public Location(double degree, double degree1) {

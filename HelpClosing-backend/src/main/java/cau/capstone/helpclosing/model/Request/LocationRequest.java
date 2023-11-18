@@ -13,8 +13,6 @@ import org.locationtech.jts.geom.Point;
 @Builder
 public class LocationRequest {
 
-    private String userEmail;
-
     private double latitude;
 
     private double longitude;
