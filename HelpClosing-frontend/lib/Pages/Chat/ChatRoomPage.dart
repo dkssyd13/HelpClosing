@@ -36,7 +36,7 @@ class ChatRoomListPage extends StatelessWidget {
 
   Widget getPhoto(List<UserMailandName> chatRoomUserList){
     for(UserMailandName otherUser in chatRoomUserList) {
-      if(otherUser.email != UserController.to.getUserEmail()) {
+      if(otherUser.email != UserController.to.getUserEmail() && otherUser.nickName != UserController.to.getUserNickname()) {
         if(Uri.parse(otherUser.image).isAbsolute){
           return CircleAvatar(
             backgroundImage: NetworkImage(otherUser.image),
@@ -56,7 +56,7 @@ class ChatRoomListPage extends StatelessWidget {
 
   String nameOfOther(List<UserMailandName> chatRoomUserList) {
     for(UserMailandName otherUser in chatRoomUserList) {
-      if(otherUser.email != UserController.to.getUserEmail()) {
+      if(otherUser.email != UserController.to.getUserEmail() && otherUser.nickName != UserController.to.getUserNickname()) {
         return otherUser.name;
       }
     }

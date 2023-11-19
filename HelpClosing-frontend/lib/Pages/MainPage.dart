@@ -2,10 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Pages/Chat/ChatRoomPage.dart';
+import 'package:help_closing_frontend/Pages/Notification/NotificationPage.dart';
 import 'package:help_closing_frontend/Pages/Req_Help/NeedHelpPage.dart';
 import 'package:help_closing_frontend/Pages/SettingsPage.dart';
 
 import '../Controller/Help_Controller.dart';
+import 'Record/RecordPage.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -17,8 +19,11 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int pageIndex=0;
   // var pagesList=[HomePage(),const Text('메세지'),const Text('기록'),const Settings()];
-  var pagesList=[HomePage(), ChatRoomListPage(),const Text('기록'),const SettingsPage()];
-  final pagesTitle=[const Text('도움닿기', style: TextStyle(fontWeight: FontWeight.bold)),const Text('메세지',style: TextStyle(fontWeight: FontWeight.bold)),const Text('기록',style: TextStyle(fontWeight: FontWeight.bold)),const Text('설정',style: TextStyle(fontWeight: FontWeight.bold))];
+  var pagesList=[HomePage(), ChatRoomListPage(), RecordPage(),const SettingsPage()];
+  final pagesTitle=[const Text('도움닿기', style: TextStyle(fontWeight: FontWeight.bold)),
+    const Text('메세지',style: TextStyle(fontWeight: FontWeight.bold)),
+    const Text('기록',style: TextStyle(fontWeight: FontWeight.bold)),
+    const Text('설정',style: TextStyle(fontWeight: FontWeight.bold))];
 
   @override
   void initState() {
@@ -36,7 +41,7 @@ class _MainPageState extends State<MainPage> {
         titleTextStyle: const TextStyle(fontSize: 40,fontWeight: FontWeight.bold),
         actions: [
           // IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationPage()));},
-          IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => const Placeholder()));},
+          IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationPage()));},
               icon: const Icon(Icons.notifications)),
         ],
       ),
@@ -159,9 +164,9 @@ class _TimerWidgetState extends State<TimerWidget> {
       else{
         _timer?.cancel();
         _currentColor=Colors.green;
+        print("도움 요청 완료");
         helpController.requestHelp();
         _cancelHelpFlag=false;
-        print("도움 요청 완료");
         setState(() {
           _currentSituation="도움 요청 됐습니다! 조금만 기다려주세요~!";
         });

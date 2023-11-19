@@ -28,6 +28,13 @@ class UserController {
     return _currentUser?.email;
   }
 
+  String? getUserId(){
+    return _currentUser?.id;
+  }
+  String? getUserNickname(){
+    return _currentUser?.nickname;
+  }
+
 
 
   bool isUserExists(){

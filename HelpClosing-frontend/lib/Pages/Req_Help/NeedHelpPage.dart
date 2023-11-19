@@ -70,7 +70,6 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
   @override
   Widget build(BuildContext context) {
     Color myColorDark=Theme.of(context).primaryColorDark;
-    _showMenu();
     return SafeArea(
       child: Stack(
         children: [

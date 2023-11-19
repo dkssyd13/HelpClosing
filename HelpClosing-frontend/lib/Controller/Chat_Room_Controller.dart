@@ -37,7 +37,7 @@ class ChatRoomController extends GetxController {
           "email": "123",
           "name": "User 1-현재 사용자",
           "nickName": "user1",
-          "image": "https://example.com/user1.jpg"
+          "image": "null"
         },
         {
           "email": "user2@example.com",
@@ -60,7 +60,7 @@ class ChatRoomController extends GetxController {
           "email": "123",
           "name": "User 1-현재 사용자",
           "nickName": "user1",
-          "image": "https://example.com/user1.jpg"
+          "image": "null"
         }
       ]
     }
