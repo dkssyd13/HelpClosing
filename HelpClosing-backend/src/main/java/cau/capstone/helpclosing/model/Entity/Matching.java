@@ -24,5 +24,5 @@ public class Matching {
     private User user;
 
     @ManyToOne
-    private ChatRoom chatRoomId;
+    private ChatRoom chatRoom;
 }

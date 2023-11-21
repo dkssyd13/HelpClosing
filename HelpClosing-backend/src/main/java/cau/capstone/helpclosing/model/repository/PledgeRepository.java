@@ -2,6 +2,7 @@ package cau.capstone.helpclosing.model.repository;
 
 
 import cau.capstone.helpclosing.model.Entity.Pledge;
+import cau.capstone.helpclosing.model.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +11,5 @@ public interface PledgeRepository extends JpaRepository<Pledge, Long> {
 
     Pledge findByPledgeId(Long pledgeId);
 
-    Pledge findByUserId(Long userId);
+    Pledge findByUser(User user);
 }

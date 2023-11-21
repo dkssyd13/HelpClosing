@@ -50,8 +50,8 @@ public class HelpLogService {
             HelpLog helpLog = HelpLog.builder()
                     .requester(userRepository.findByUserId(helpLogRequest.getRequesterId()))
                     .recipient(userRepository.findByUserId(helpLogRequest.getRecipientId()))
-                    .pledgeRequest(pledgeRepository.findByUserId(helpLogRequest.getRequesterId()))
-                    .pledgeRecipient(pledgeRepository.findByUserId(helpLogRequest.getRecipientId()))
+                    .pledgeRequest(pledgeRepository.findByUser(userRepository.findByUserId(helpLogRequest.getRequesterId())))
+                    .pledgeRecipient(pledgeRepository.findByUser(userRepository.findByUserId(helpLogRequest.getRecipientId())))
                    // .location(locationRepository.findByUserId(helpLogRequest.getRecipientId()))
                     .build();
 
@@ -66,11 +66,11 @@ public class HelpLogService {
     }
 
     public List<HelpLog> getHelpLogListRequest(Long userId){
-        return helpLogRepository.findAllByRequesterId(userId, userId);
+        return helpLogRepository.findAllByRequester(userRepository.findByUserId(userId));
     }
 
     public List<HelpLog> getHelpLogListResponse(Long userId){
-        return helpLogRepository.findAllByRecipientId(userId, userId);
+        return helpLogRepository.findAllByRecipient(userRepository.findByUserId(userId));
     }
 
 

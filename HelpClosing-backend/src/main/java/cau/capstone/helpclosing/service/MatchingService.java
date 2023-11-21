@@ -111,10 +111,10 @@ public class MatchingService {
         User user = userRepository.findByEmail(invitation.getInvitePerson());
 
         return InvitationList.builder()
-                .invitePerson(invitation.getInvitePerson())
-                .invitePersonImage(user.getImage())
-                .invitePersonName(user.getName())
-                .chatRoomId(invitation.getChatRoomId())
+                .invitedEmail(invitation.getInvitePerson())
+                .invitedPersonImage(user.getImage())
+                .invitedName(user.getName())
+//                .chatRoomId(invitation.getChatRoomId())
                 .build();
 
     }
@@ -133,12 +133,12 @@ public class MatchingService {
             chatRoomRepository.save(chatRoom);
 
             Matching senderMatching = Matching.builder()
-                    .chatRoomId(chatRoom)
+                    .chatRoom(chatRoom)
                     .user(sender)
                     .build();
 
             Matching receiverMatching = Matching.builder()
-                    .chatRoomId(chatRoom)
+                    .chatRoom(chatRoom)
                     .user(receiver)
                     .build();
 
@@ -191,7 +191,7 @@ public class MatchingService {
 
             //이미 매칭 된 사람들 중에 receiver가 있는지 확인
             for (Matching m : list) {
-                if (matchingRepository.findByChatRoomIdAndUserEmail(m.getChatRoomId(), receiver.getEmail()) != null) {
+                if (matchingRepository.findByChatRoomAndUserEmail(m.getChatRoom(), receiver.getEmail()) != null) {
                     return true;
                 }
             }

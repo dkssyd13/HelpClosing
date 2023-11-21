@@ -20,7 +20,6 @@ import java.io.IOException;
  * client의 request를 intercept해서 header에 토큰이 유효한지 검증
  */
 
-@Component
 public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -28,6 +27,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private CustomUserDetailService customUserDetailService;
+
+    public JwtFilter(JwtUtil jwtUtil){
+        this.jwtUtil = jwtUtil;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

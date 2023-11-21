@@ -26,8 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomUserDetailService customUserDetailService;
 
-    @Autowired
-    private JwtFilter jwtFilter;
+//    @Autowired
+//    private JwtFilter jwtFilter;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -47,7 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()   // 보안에 관한 것
-                .authorizeRequests().antMatchers("/authenticate",
+                .authorizeRequests() //HttpServletRequest를 사용한 요정들에 대한 접근제한
+                .antMatchers("/authenticate",
                 "/v3/api-docs/**",
                 "/swagger-ui/**",
                 "/v2/api-docs",
@@ -67,14 +68,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/reject",
                 "/profile/**"
                 ,"/ws-stomp/**"
-                ).permitAll()
-                .anyRequest().authenticated()
+                ).permitAll()  //해당 url은 인증없이 접근 허용
+                .anyRequest().authenticated() //나머지 요청들은 인증되어야 한다.
                 .and()
                 .exceptionHandling()
                 .and()
                 .sessionManagement()    // 세션에 대해 관리
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
@@ -82,6 +83,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public JwtFilter jwtFilter() {
+        return new JwtFilter(jwtUtil());
+    }
     @Bean
     public JwtUtil jwtUtil() {
         return new JwtUtil(secret);

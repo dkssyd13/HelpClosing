@@ -27,7 +27,7 @@ public class RegisterApiController {
     UserService userService;
 
     @ApiOperation(value = "이메일 코드 전송", notes = "이메일 코드 전송")
-    @GetMapping("/email")
+    @GetMapping("/register/email")
     @CrossOrigin(origins = "*", maxAge = 3600)
     public Header email(@ApiParam(value = "이메일주소", required = true, example = "test") @RequestParam String email,
                         @ApiIgnore() HttpSession httpSession)
@@ -55,7 +55,7 @@ public class RegisterApiController {
     }
 
     @ApiOperation(value = "이메일 코드 인증", notes = "이메일 코드 인증")
-    @GetMapping("/verify")
+    @GetMapping("/register/verify")
     @CrossOrigin(origins = "*", maxAge = 3600)
     public Header verify(@ApiParam(value = "이메일주소", required = true, example = "test") @RequestParam String email,
                          @ApiParam(value = "이메일 인증코드", required = true) @RequestParam String code,

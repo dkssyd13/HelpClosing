@@ -25,24 +25,24 @@ public class HelpLog {
 
     //Relationship
     @ManyToOne
-    @JoinColumn(name = "requester_id")
+    @JoinColumn(name = "requester")
     private User requester;
 
     @ManyToOne
-    @JoinColumn(name = "recipient_id")
+    @JoinColumn(name = "recipient")
     private User recipient;
 
     @ManyToOne
-    @JoinColumn(name = "request_pledge_id")
+    @JoinColumn(name = "request_pledge")
     private Pledge pledgeRequest;
 
     @ManyToOne
-    @JoinColumn(name = "response_pledge_id")
+    @JoinColumn(name = "response_pledge")
     private Pledge pledgeRecipient;
 
 
     @ManyToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "location")
     private Location location;
 
 }

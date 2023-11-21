@@ -19,8 +19,8 @@ import javax.persistence.*;
 @ToString(exclude = {"user", "userEmail"})
 public class Location {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment
+    private Long locationId;
 
     private String description;
     private Point coordinates;
