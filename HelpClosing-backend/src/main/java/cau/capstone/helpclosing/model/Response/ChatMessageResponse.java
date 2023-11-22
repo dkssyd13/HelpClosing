@@ -17,6 +17,8 @@ public class ChatMessageResponse {
 
     private LocalDateTime chatDate;
 
+    private Long chatRoomId;
+
     private String name;
 
     private String nickName;

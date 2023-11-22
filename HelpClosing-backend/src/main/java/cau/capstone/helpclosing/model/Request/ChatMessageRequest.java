@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ChatMessageRequest {
+
     private String message;
     private Long chatRoomId;
     private String email;
