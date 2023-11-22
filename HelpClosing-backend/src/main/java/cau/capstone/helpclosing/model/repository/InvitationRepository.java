@@ -20,7 +20,7 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
     @Query("select u from Invitation  u where u.invitedPerson=?1 and u.chatRoomId=?2")
     Invitation findByInvitedPersonAndChatRoomId(String InvitedPerson, Long chatRoomId);
 
-    @Query("select u from Invitation u where (u.invitedPerson = ?1 and u.invitePerson = ?2) or (u.invitedPerson = ?2 and u.IinvitePerson = ?1)")
+    @Query("select u from Invitation u where (u.invitedPerson = ?1 and u.invitePerson = ?2) or (u.invitedPerson = ?2 and u.invitePerson = ?1)")
     Invitation alreadyMatching(String InvitedPerson, String InvitePerson);
 
     @Query("select u from Invitation  u where u.invitePerson=?1 and u.chatRoomId=?2")

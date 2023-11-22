@@ -1,21 +1,20 @@
-package cau.capstone.helpclosing.dto;
+package cau.capstone.helpclosing.FCM;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
-public class RequestDTO {
+public class FCMRequestDTO {
     private String targetToken;  //ID of the device to send the message to
     private String title;
     private String body;
+    //private String image;
 
     @JsonCreator
-    private RequestDTO(@JsonProperty("targetToken") String targetToken,@JsonProperty("title") String title,@JsonProperty("body") String body) {
+    private FCMRequestDTO(@JsonProperty("targetToken") String targetToken, @JsonProperty("title") String title, @JsonProperty("body") String body) {
         this.targetToken = targetToken;
         this.title = title;
         this.body = body;

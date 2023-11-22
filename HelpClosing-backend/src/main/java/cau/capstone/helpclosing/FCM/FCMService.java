@@ -1,17 +1,16 @@
-package cau.capstone.helpclosing.service;
+package cau.capstone.helpclosing.FCM;
 
 
-import cau.capstone.helpclosing.FcmMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.net.HttpHeaders;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.Message;
 
 import com.google.gson.JsonParseException;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,9 @@ public class FCMService {
 
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/cpastone-cau-helpclosing/messages:send";
     private final ObjectMapper objectMapper;
-    private final FirebaseMessaging firebaseMessaging;
+
+    @Autowired
+    private final FCMCRUD fcmcrud;
 
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
         String message = makeMessage(targetToken, title, body);
@@ -45,14 +46,13 @@ public class FCMService {
         System.out.println(response.body().string());
     }
 
-    private String makeMessage(String targetToken, String title, String body) throws JsonParseException, JsonProcessingException{
+    private String makeMessage(String targetToken, String title, String body) throws JsonProcessingException{
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
                         .notification(FcmMessage.Notification.builder()
                                 .title(title)
                                 .body(body)
-                                .image(null)
                                 .build()
                         ).build()).validateOnly(false).build();
 
@@ -60,7 +60,9 @@ public class FCMService {
     }
 
     // Firebase Admin SDK를 사용하여 Access Token을 받아옴
+    //oath2를 이용해 인증
     // Access Token: Firebase Admin SDK를 사용하여 FCM에 접근할 때 필요한 인증 토큰
+    //전송하는데 필요한 토큰은 별도!
     private String getAccessToken() throws IOException{
         String firebaseConfigPath = "firebase/serviceAccountKey.json";
 
@@ -70,6 +72,10 @@ public class FCMService {
 
         googleCredentials.refreshIfExpired();
         return googleCredentials.getAccessToken().getTokenValue();
+    }
+
+    private void saveFCMToken(FCMTokenRequest request) throws IOException {
+
     }
 
 }

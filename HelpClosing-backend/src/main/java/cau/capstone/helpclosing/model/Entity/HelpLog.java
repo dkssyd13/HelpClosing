@@ -1,56 +1,48 @@
 package cau.capstone.helpclosing.model.Entity;
 
 
+import lombok.*;
+import lombok.experimental.Accessors;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@Accessors(chain=true)
 public class HelpLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment
     private Long id;
-    private Date time;
+
     //시간은 도움 요청이 받아들여진 시간이 해당
+    private LocalDateTime time;
 
     //Relationship
     @ManyToOne
-    @JoinColumn(name = "requester_id")
+    @JoinColumn(name = "requester")
     private User requester;
 
     @ManyToOne
-    @JoinColumn(name = "recipient_id")
+    @JoinColumn(name = "recipient")
     private User recipient;
 
     @ManyToOne
-    @JoinColumn(name = "pledge_id")
-    private Pledge pledge;
+    @JoinColumn(name = "request_pledge")
+    private Pledge pledgeRequest;
 
     @ManyToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "response_pledge")
+    private Pledge pledgeRecipient;
+
+
+    @ManyToOne
+    @JoinColumn(name = "location")
     private Location location;
 
-    //Constructor
-    public HelpLog() {
-    }
-    public HelpLog(Date time) {
-        this.time = time;
-    }
-
-    //Getter and Setter
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
 }

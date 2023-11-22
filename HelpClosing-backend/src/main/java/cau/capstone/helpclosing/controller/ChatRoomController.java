@@ -16,7 +16,7 @@ public class ChatRoomController {
     private ChatRoomService chatRoomService;
 
     //@ApiOperation(value = "사용자의 채팅룸 목록 조회")
-    @GetMapping("/chatRoomList")
+    @GetMapping("/chatRoom/chatRoomList")
     @CrossOrigin(origins="*", maxAge=3600)
     public Header chatRoomList(){
         try {
@@ -31,7 +31,7 @@ public class ChatRoomController {
     }
 
     //@ApiOperation(value="매칭룸 정보 수정")
-    @PostMapping("/updateRoom")
+    @PostMapping("/chatRoom/updateRoom")
     public Header updateChatRoom(@RequestBody ChatRoomRequest chatRoomRequest){
         try{
             return Header.OK(chatRoomService.update(chatRoomRequest),"");

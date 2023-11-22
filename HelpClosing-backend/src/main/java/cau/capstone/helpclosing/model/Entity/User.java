@@ -3,10 +3,7 @@ package cau.capstone.helpclosing.model.Entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +18,10 @@ import java.util.List;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userId")
+    private Long userId;
+
     private String email;
 
     private String password;
@@ -39,10 +40,10 @@ public class User {
 
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    List<Matching> matchingList1 = new ArrayList<>();
+    List<Matching> matchingList = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userEmail")
-    List<ChatMessage> chatList = new ArrayList<>();
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userEmail")
+//    List<ChatMessage> chatList = new ArrayList<>();
 
 //    @Override
 //    public Collection<? extends GrantedAuthority> getAuthorities() {
