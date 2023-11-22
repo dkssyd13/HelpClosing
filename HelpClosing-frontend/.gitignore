@@ -50,3 +50,4 @@ assets/.env
 # .gitignore
 assets/.env
 web/
+pubspec.lock
