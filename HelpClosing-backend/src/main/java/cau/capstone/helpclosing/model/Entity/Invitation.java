@@ -22,7 +22,6 @@ public class Invitation {
     private Long invitationId;
 
     private String invitePerson;
-
     private String invitedPerson;
 
     private Long chatRoomId;

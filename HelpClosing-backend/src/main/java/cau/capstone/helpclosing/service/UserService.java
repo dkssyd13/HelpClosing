@@ -15,7 +15,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserRepository userRepository;
+    private static UserRepository userRepository;
 
     public User create(RegisterApiRequest request) {
 
@@ -39,7 +39,7 @@ public class UserService {
         return true;
     }
 
-    public boolean nicknameCheck(String nickname) {
+    public static boolean nicknameCheck(String nickname) {
 
         User findUser= userRepository.findByNickName(nickname);
 
@@ -78,7 +78,7 @@ public class UserService {
 
         user.setNickName(userProfileRequest.getNickName())
                 .setName(userProfileRequest.getName())
-                .setImage(userProfileRequest.getImage())
+                .setImage(userProfileRequest.getImage());
 
         userRepository.save(user);
 
