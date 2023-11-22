@@ -20,10 +20,10 @@ class _MainPageState extends State<MainPage> {
   int pageIndex=0;
   // var pagesList=[HomePage(),const Text('메세지'),const Text('기록'),const Settings()];
   var pagesList=[HomePage(), ChatRoomListPage(), RecordPage(),const SettingsPage()];
-  final pagesTitle=[const Text('도움닿기', style: TextStyle(fontWeight: FontWeight.bold)),
-    const Text('메세지',style: TextStyle(fontWeight: FontWeight.bold)),
-    const Text('기록',style: TextStyle(fontWeight: FontWeight.bold)),
-    const Text('설정',style: TextStyle(fontWeight: FontWeight.bold))];
+  final pagesTitle=[const Text('도움닿기'),
+    const Text('메세지'),
+    const Text('기록'),
+    const Text('설정')];
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         centerTitle: true,
         title: pagesTitle[pageIndex],
-        titleTextStyle: const TextStyle(fontSize: 40,fontWeight: FontWeight.bold),
+        titleTextStyle: const TextStyle(fontSize: 40,fontWeight: FontWeight.bold,color: Colors.blue),
         actions: [
           // IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationPage()));},
           IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationPage()));},

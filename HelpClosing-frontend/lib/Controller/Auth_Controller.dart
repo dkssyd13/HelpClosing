@@ -60,23 +60,34 @@ class AuthController extends GetxController{
 
 
   void register(String email, password) async {
-    //회원가입에 대한 get 요청 가정.
-    var registerRequest = await http.get(Uri.parse("https://사이트_url.com/register.json"));
-    final int statusCode = registerRequest.statusCode;
-    if(statusCode < 200 || statusCode > 400){
-      //통신이 안됐을 때, 에러가 났을때
-        Get.snackbar(
-            "Error Message  ",
-            "User Message",
-            backgroundColor: Colors.red[50],
-            snackPosition: SnackPosition.BOTTOM,
-            titleText: const Text("회원가입 실패"),
-            messageText: const Text("ㅇㅇ 안됨")
-        );
-    }
-    // 문제 없을때
-    var data = jsonDecode(registerRequest.body);
-    userController.createCurrentUser(data['name'], data['email'], data['nickname'], data['image']);
+    // final response = await http.post(
+    //   Uri.parse('http://서버_주소.com/register'),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(<String, String>{
+    //     'password': password,
+    //     'email': email,
+    //   }),
+    // );
+    //
+    // final int statusCode = response.statusCode;
+    // if (statusCode == 200) {
+    //   print('Register successful');
+    //   final responseJson = jsonDecode(response.body);
+    // }
+    //
+    // if(statusCode < 200 || statusCode > 400){
+    //   //통신이 안됐을 때, 에러가 났을때
+    //     Get.snackbar(
+    //         "Error Message  ",
+    //         "User Message",
+    //         backgroundColor: Colors.red[50],
+    //         snackPosition: SnackPosition.BOTTOM,
+    //         titleText: const Text("회원가입 실패"),
+    //         messageText: const Text("ㅇㅇ 안됨")
+    //     );
+    // }
   }
 
   void checkEmail(String email)async{
@@ -93,45 +104,46 @@ class AuthController extends GetxController{
   }
 
   void login(String email, String password) async {
-    final response = await http.post(
-      Uri.parse('http://서버_주소.com/login'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'password': password,
-        'email': email,
-      }),
-    );
+    // final response = await http.post(
+    //   Uri.parse('http://서버_주소.com/login'),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(<String, String>{
+    //     'password': password,
+    //     'email': email,
+    //   }),
+    // );
+    //
+    // if (response.statusCode == 200) {
+    //   print('Login successful');
+    //   final responseJson = jsonDecode(response.body);
+    //
+    //   // 서버에서 받아온 사용자 정보를 사용.
+    //   // String token = responseJson['jwtToken'];
+    //   String name = responseJson['name'];
+    //   String nickname = responseJson['nickName'];
+    //   String image = responseJson['image'];
+    //   String email = responseJson['email'];
+    //
+    //   await storage.write(key: 'login', value: responseJson);
+    //
+    //   // 로그인이 성공하면 createCurrentUser 메서드를 호출합니다.
+    //   userController.createCurrentUser(name, email, nickname, image);
+    //   print(UserController.currentUser);
+    //   _currentUser.value=UserController.currentUser;
+    // } else {
+    //   throw Exception('Failed to login');
+    // }
 
-    if (response.statusCode == 200) {
-      print('Login successful');
-      final responseJson = jsonDecode(response.body);
-
-      // 서버에서 받아온 사용자 정보를 사용.
-      // String token = responseJson['jwtToken'];
-      String name = responseJson['name'];
-      String nickname = responseJson['nickName'];
-      String image = responseJson['image'];
-      String email = responseJson['email'];
-
-      await storage.write(key: 'login', value: responseJson);
-
-      // 로그인이 성공하면 createCurrentUser 메서드를 호출합니다.
-      userController.createCurrentUser(name, email, nickname, image);
-      print(UserController.currentUser);
-      _currentUser.value=UserController.currentUser;
-    } else {
-      throw Exception('Failed to login');
-    }
-
-    // userController.createCurrentUser('김중앙', email, 'hd', 'image');
-    // print(UserController.currentUser);
-    // _currentUser.value=UserController.currentUser;
+    userController.createCurrentUser('김중앙', email, 'hd', 'image');
+    print(UserController.currentUser);
+    _currentUser.value=UserController.currentUser;
   }
 
   void logout() async{
     //로그아웃
+    //자동 로그인 정보 삭제
     await storage.delete(key: "login");
     _currentUser.value=null;
   }

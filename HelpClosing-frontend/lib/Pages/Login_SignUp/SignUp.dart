@@ -96,7 +96,7 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("안녕하세요!",style: TextStyle(
+              Text("회원가입",style: TextStyle(
                   color: myColor,
                   fontSize: 32,
                   fontWeight: FontWeight.bold
@@ -109,7 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     suffixIcon: Icon(Icons.person)
                 ),
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(height: 10,),
               _buildGreyText("이메일"),
               TextField(
                 controller: emailController,
@@ -117,7 +117,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     suffixIcon: Icon(Icons.email_outlined)
                 ),
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(height: 10,),
               _buildGreyText("비밀번호"),
               TextField(
                 controller: passwordController,
@@ -129,7 +129,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 obscureText: _hidePassword,
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(height: 10,),
               ElevatedButton(onPressed: (){AuthController.to.register(emailController.text.trim(), passwordController.text.trim());},
                   style: ElevatedButton.styleFrom(
                     shadowColor: myColor,
@@ -138,7 +138,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   child: const Text("회원가입하기")
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 10,),
               Center(
                 child: TextButton(
                     onPressed: (){
@@ -152,7 +152,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     )
                 ),
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 10,),
             ],
           ),
         ),

@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
@@ -6,15 +5,18 @@ import 'package:help_closing_frontend/Fcm/fcmSettings.dart';
 import 'Controller/Auth_Controller.dart';
 import 'Pages/Login_SignUp/Login.dart';
 import 'Pages/MainPage.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 
 void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  // notification 설정
+  String? firebaseToken = await fcmSetting();
+
+
   Get.put(AuthController());
   Get.put(UserController());
 
-  // notification 설정
-  String? firebaseToken = await fcmSetting();
+  // // notification 설정
   await AuthController.to.storage.write(key: 'fcmToken', value: firebaseToken);
 
   runApp(const MyApp());

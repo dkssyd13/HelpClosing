@@ -35,27 +35,6 @@ class _LoginPageState extends State<LoginPage> {
         .of(context)
         .size;
 
-
-    // return Container(
-    //   decoration: BoxDecoration(
-    //     color: myColor,
-    //     image: DecorationImage(
-    //         image: const AssetImage("assets/images/login_Help_image.jpg"),
-    //       fit: BoxFit.cover,
-    //       colorFilter: ColorFilter.mode(myColor.withOpacity(0.2), BlendMode.dstATop)
-    //     ),
-    //   ),
-    //   child: Scaffold(
-    //     backgroundColor: Colors.transparent,
-    //     body: Stack(
-    //       children: [
-    //         Positioned(top: 80,child: _buildTop()),
-    //         Positioned(bottom:0,child: _buildBottom())
-    //       ],
-    //     ),
-    //   ),
-    // );
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
@@ -128,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                   suffixIcon: Icon(Icons.email_outlined)
                 ),
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(height: 10,),
               _buildGreyText("비밀번호"),
               TextField(
                 controller: passwordController,
@@ -140,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 obscureText: _hidePassword,
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(height: 10,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -158,16 +137,16 @@ class _LoginPageState extends State<LoginPage> {
                   TextButton(onPressed: (){}, child: _buildGreyText("비밀번호 찾기"))
                 ],
               ),
-              const SizedBox(height: 40,),
+              const SizedBox(height: 10,),
               ElevatedButton(onPressed: (){AuthController.to.login(emailController.text.trim(), passwordController.text.trim());},
                   style: ElevatedButton.styleFrom(
                     shadowColor: myColor,
                     elevation: 20,
-                    minimumSize: const Size.fromHeight(60),
+                    minimumSize: const Size.fromHeight(40),
                   ),
                   child: const Text("로그인하기")
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 10,),
               Center(
                 child: TextButton(
                     onPressed: (){
@@ -181,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                     )
                 ),
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 5,),
               Center(
                 child: Column(
                   children: [

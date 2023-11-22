@@ -1,13 +1,21 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:help_closing_frontend/firebase_options.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp(
+  //     options: const FirebaseOptions(apiKey: "AIzaSyC9y2GRaxUouH6R98jYDlPXg2UvWLhExMo",
+  //         appId: "1:716861651082:web:e55f0a705bf2801e48d573",
+  //         messagingSenderId: "716861651082",
+  //         projectId: "cpastone-cau-helpclosing")
+  // );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   print("Handling a background message: ${message.messageId}");
 }
@@ -38,17 +46,13 @@ void saveFCMToken(String email, String token) async {
 }
 
 Future<String?> fcmSetting() async {
-  // firebase core 기능 사용을 위한 필수 initializing
-  await Firebase.initializeApp();
+  // // firebase core 기능 사용을 위한 필수 initializing
+  await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform
+  );
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-  await messaging.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
 
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
@@ -59,6 +63,14 @@ Future<String?> fcmSetting() async {
     provisional: false,
     sound: true,
   );
+
+  await messaging.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+
 
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
     print('권한 O');

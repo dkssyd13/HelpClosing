@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'package:help_closing_frontend/Domain/Location.dart';
 import 'package:help_closing_frontend/Domain/Pledge.dart';
 import 'package:help_closing_frontend/Domain/User.dart';
