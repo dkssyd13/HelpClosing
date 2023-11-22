@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:help_closing_frontend/Domain/Location.dart';
 
 List<User> userFromJson(String str) => List<User>.from(json.decode(str).map((x) => User.fromJson(x)));
 
@@ -9,7 +10,7 @@ class User {
   String? name;
   String? email;
   String? nickname;
-  String? profile; //사진
+  String? image; //사진
   Location? location;
   String? address;
 
@@ -20,7 +21,7 @@ class User {
     required this.name,
     required this.email,
     required this.nickname,
-    required this.profile,
+    required this.image,
     required this.location,
     required this.address,
   });
@@ -30,7 +31,7 @@ class User {
     name: json["name"],
     email: json["email"],
     nickname: json["nickname"],
-    profile: json["profile"],
+    image: json["profile"],
     location: Location.fromJson(json["location"]),
     address: json["address"],
   );
@@ -40,32 +41,10 @@ class User {
     "name": name,
     "email": email,
     "nickname": nickname,
-    "profile": profile,
+    "image": image,
     "location": location?.toJson(),
     "address": address,
   };
 }
 
-class Location {
-  String description;
-  double latitude;
-  double longitude;
 
-  Location({
-    required this.description,
-    required this.latitude,
-    required this.longitude,
-  });
-
-  factory Location.fromJson(Map<String, dynamic> json) => Location(
-    description: json["description"],
-    latitude: json["latitude"]?.toDouble(),
-    longitude: json["longitude"]?.toDouble(),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "description": description,
-    "latitude": latitude,
-    "longitude": longitude,
-  };
-}

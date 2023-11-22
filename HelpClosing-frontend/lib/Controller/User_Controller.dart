@@ -8,12 +8,24 @@ class UserController {
 
   static User? get currentUser => _currentUser;
 
-  void createUser(String name, String email, String nickname,String profile){
+  void createCurrentUser(String name, String email, String nickname,String image){
     _currentUser = User(
         name: name,
         email: email,
         nickname: nickname,
-        profile: profile,
+        image: image,
+        id: '',
+        location: null,
+        address: ''
+    );
+  }
+
+  User createUser(String name, String email, String nickname,String image){
+    return User(
+        name: name,
+        email: email,
+        nickname: nickname,
+        image: image,
         id: '',
         location: null,
         address: ''

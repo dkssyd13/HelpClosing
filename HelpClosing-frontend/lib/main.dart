@@ -1,13 +1,22 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
+import 'package:help_closing_frontend/Fcm/fcmSettings.dart';
 import 'Controller/Auth_Controller.dart';
 import 'Pages/Login_SignUp/Login.dart';
 import 'Pages/MainPage.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main(){
+
+void main() async{
   Get.put(AuthController());
   Get.put(UserController());
+
+  // notification 설정
+  String? firebaseToken = await fcmSetting();
+  await AuthController.to.storage.write(key: 'fcmToken', value: firebaseToken);
+
   runApp(const MyApp());
 }
 
