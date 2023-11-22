@@ -24,7 +24,7 @@ public class ChatService {
     public List<ChatMessageResponse> chatList(Long chatRoomId){
         ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRoomId);
 
-        List<ChatMessage> list = chatMessageRepository.findAllByChatRoomId(chatRoom);
+        List<ChatMessage> list = chatMessageRepository.findAllByChatRoom(chatRoom);
 
         List<ChatMessageResponse> responseList = new ArrayList<>();
 

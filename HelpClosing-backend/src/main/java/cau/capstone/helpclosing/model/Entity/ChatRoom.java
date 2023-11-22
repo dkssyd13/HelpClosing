@@ -21,11 +21,7 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatRoomId;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chatRoomId")
-    private List<Matching> matchingList = new ArrayList<>();
-
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chatRoomId")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chatRoom")
     private List<ChatMessage> chatList = new ArrayList<>();
 
 //
