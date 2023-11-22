@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "716861651082",
+    "firebase_url": "https://cpastone-cau-helpclosing-default-rtdb.firebaseio.com",
+    "project_id": "cpastone-cau-helpclosing",
+    "storage_bucket": "cpastone-cau-helpclosing.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716861651082:android:60c86fd4f1ee477b48d573",
+        "android_client_info": {
+          "package_name": "com.example.help_closing_frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "716861651082-d3cl42lrnjs7t77dssfpsahe6sdo223o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7c1VGlOBHn_U-tuaF5bGZ-lHfX0NuSvI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716861651082-d3cl42lrnjs7t77dssfpsahe6sdo223o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "716861651082-dmj2vrohrv0jq3kufqgmpckcb9s2i5ph.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.helpClosingFrontend"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
