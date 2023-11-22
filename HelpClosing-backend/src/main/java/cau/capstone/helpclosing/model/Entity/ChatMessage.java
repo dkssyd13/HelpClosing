@@ -22,6 +22,7 @@ public class ChatMessage {
     private Long chatMessageId;
     private String message;
     private LocalDateTime chatDate;
+
     @ManyToOne
     private ChatRoom chatRoom;
     @ManyToOne

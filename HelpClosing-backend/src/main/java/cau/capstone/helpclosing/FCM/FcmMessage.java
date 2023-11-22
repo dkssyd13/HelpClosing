@@ -1,4 +1,4 @@
-package cau.capstone.helpclosing;
+package cau.capstone.helpclosing.FCM;
 
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
@@ -27,6 +27,6 @@ public class FcmMessage {
     public static class Notification{
         private String title;
         private String body;
-        private String image;
+        //private String image;
     }
 }

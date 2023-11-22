@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiController {
     @GetMapping("hello")
     @CrossOrigin(origins = "*", maxAge = 3600)
-    public String hello() {
+    public String hello()
+    {
+        System.out.println("hello");
         return "hello";
     }
 }

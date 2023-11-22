@@ -10,6 +10,7 @@ import cau.capstone.helpclosing.model.repository.ChatMessageRepository;
 import cau.capstone.helpclosing.model.repository.ChatRoomRepository;
 import cau.capstone.helpclosing.model.repository.UserRepository;
 import cau.capstone.helpclosing.service.ChatService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -81,8 +82,8 @@ public class ChatController {
 
     }
 
-    @GetMapping("/chatList")
-    //@ApiOperation(value = "채팅 목록", notes = "채팅방 목록을 조회한다.") //SWagger
+    @GetMapping("/chat/chatList")
+    @ApiOperation(value = "채팅 목록", notes = "채팅방 목록을 조회한다.") //SWagger
     public Header<List<ChatMessageResponse>> chatList(Long chatRoomId){
         try{
             return Header.OK(chatService.chatList(chatRoomId), "chatlist for chatRoomId " + chatRoomId);

@@ -36,8 +36,8 @@ public class ChatRoomService {
         if(!matchingList.isEmpty()){
             System.out.println("matchingList is not empty");
             for (Matching m : matchingList){
-                ChatRoom r = m.getChatRoomId();
-                List<Matching> sameChatRoom = matchingRepository.findByChatRoomId(r);
+                ChatRoom r = m.getChatRoom();
+                List<Matching> sameChatRoom = matchingRepository.findByChatRoom(r);
 
                 List<UserMailandName> userList = new ArrayList<>();
                 if(!sameChatRoom.isEmpty()){

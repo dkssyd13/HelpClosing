@@ -16,6 +16,6 @@ public interface MatchingRepository extends JpaRepository<Matching, Long> {
     List<Matching> findByUserEmail(String userEmail);
     List<Matching> findByUser(User user);
     List<Matching> findAllByUser(User user);
-    List<Matching> findByChatRoomId(ChatRoom chatRoom);
-    Matching findByChatRoomIdAndUserEmail(ChatRoom chatRoom, User user);
+    List<Matching> findByChatRoom(ChatRoom chatRoom);
+    Matching findByChatRoomAndUserEmail(ChatRoom chatRoom, String email);
 }
