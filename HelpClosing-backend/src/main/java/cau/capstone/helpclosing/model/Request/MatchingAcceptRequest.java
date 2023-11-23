@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MatchingAcceptRequest {
-    private String senderEmail;
 
+    private String senderEmail;
+    private String recipientEmail;
     private Long chatRoomId;
+
 }

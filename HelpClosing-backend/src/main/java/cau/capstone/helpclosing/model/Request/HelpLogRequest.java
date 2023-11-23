@@ -17,5 +17,4 @@ public class HelpLogRequest {
     private Long requesterId;
     private Long recipientId;
 
-
 }

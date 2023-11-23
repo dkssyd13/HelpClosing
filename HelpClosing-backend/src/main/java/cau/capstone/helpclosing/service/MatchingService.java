@@ -34,13 +34,13 @@ public class MatchingService {
     //한명씩 반복해서 초대와 푸시를 보내는 수밖에 없는 것 같다.
     public String inviteAround(InviteRequest inviteRequest) {
 
-        User sender = userRepository.findByEmail(inviteRequest.getInvitePerson());
+        User sender = userRepository.findByEmail(inviteRequest.getInviteEmail());
 
         //매칭할 사람 찾기
-        User receiver = userRepository.findByEmail(inviteRequest.getInvitedPerson());
+        User receiver = userRepository.findByEmail(inviteRequest.getInvitedEmail());
 
 
-        if (receiver == null) {
+        if (receiver == null || sender == null) {
             return "There is no user who meets condition.";
         } else {
             Invitation invitation = Invitation.builder()
@@ -112,7 +112,6 @@ public class MatchingService {
 
         return InvitationList.builder()
                 .invitedEmail(invitation.getInvitePerson())
-                .invitedPersonImage(user.getImage())
                 .invitedName(user.getName())
 //                .chatRoomId(invitation.getChatRoomId())
                 .build();
@@ -120,12 +119,12 @@ public class MatchingService {
     }
 
     //초대 수락
-    public String accept(MatchingAcceptRequest matchingAcceptRequest, String receiverEmail) {
+    public String accept(MatchingAcceptRequest matchingAcceptRequest) {
         User sender = userRepository.findByEmail(matchingAcceptRequest.getSenderEmail());
-        User receiver = userRepository.findByEmail(receiverEmail);
+        User receiver = userRepository.findByEmail(matchingAcceptRequest.getRecipientEmail());
 
         //채팅 룸 생성
-        Invitation invitation = invitationRepository.findByInvitedPersonAndInvitePerson(receiverEmail, matchingAcceptRequest.getSenderEmail());
+        Invitation invitation = invitationRepository.findByInvitedPersonAndInvitePerson(matchingAcceptRequest.getRecipientEmail(), matchingAcceptRequest.getSenderEmail());
 
         //새로 매칭일 경우
         if (matchingAcceptRequest.getChatRoomId() == 0L) {

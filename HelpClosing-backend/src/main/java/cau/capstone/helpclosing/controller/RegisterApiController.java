@@ -24,7 +24,7 @@ public class RegisterApiController {
     private EmailService emailService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @ApiOperation(value = "이메일 코드 전송", notes = "이메일 코드 전송")
     @GetMapping("/register/email")
@@ -51,7 +51,7 @@ public class RegisterApiController {
         // 세션 만료 시간 3600
         httpSession.setAttribute(body.getEmail(), body);
 
-        return Header.OK("인증 코드가 발송 되었습니다.");
+        return Header.OK(body,"인증 코드가 발송 되었습니다.");
     }
 
     @ApiOperation(value = "이메일 코드 인증", notes = "이메일 코드 인증")
@@ -86,6 +86,28 @@ public class RegisterApiController {
         }
     }
 
+    @ApiOperation(value = "단순 회원가입", notes = "필수 정보: email, password, confirmPw, nickname")
+    @PostMapping("/register/simple")
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    public Header createSimple(@RequestBody RegisterApiRequest request) {
+
+        if (!userService.emailCheck(request.getEmail())) { //있으면 false
+            return Header.ERROR("이메일이 이미 존재합니다.");
+        }
+
+        if (!request.getConfirmPw().equals(request.getPassword())) {
+            return Header.ERROR("입력한 비밀번호가 일치하는지 확인해주세요.");
+        }
+
+        if (!userService.nicknameCheck(request.getNickname())) {//있으면 false
+            return Header.ERROR("닉네임이 이미 존재합니다");
+        }
+
+        User user = userService.create(request);
+        return Header.OK("회원가입이 성공적으로 완료되었습니다.");
+
+    }
+
     @ApiOperation(value = "인증 후 회원가입", notes = "필수 정보: email, password, confirmPw, nickname")
     @PostMapping("/register")
     @CrossOrigin(origins = "*", maxAge = 3600)
@@ -100,7 +122,7 @@ public class RegisterApiController {
         // 세션에서 꺼낸 originBody가 인증된 사용자인지 검토
         if (originBody.isCheckEmail()) {
 
-            if (!UserService.nicknameCheck(request.getNickname())) {
+            if (!userService.nicknameCheck(request.getNickname())) {
                 return Header.ERROR("이미 존재하는 닉네임입니다.");
             }
 
