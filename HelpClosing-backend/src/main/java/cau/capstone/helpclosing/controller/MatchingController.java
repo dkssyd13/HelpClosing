@@ -80,7 +80,7 @@ public class MatchingController {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String receiver = ((User) auth.getPrincipal()).getNickName();
 
-            return Header.OK(matchingService.accept(matchingAcceptRequest, receiver), "");
+            return Header.OK(matchingService.accept(matchingAcceptRequest), "");
         }
         catch(Exception e){
             return Header.ERROR(("Need to login for accepting matching" + e));

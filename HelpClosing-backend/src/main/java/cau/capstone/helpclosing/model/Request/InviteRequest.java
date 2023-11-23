@@ -13,9 +13,8 @@ import java.util.List;
 @Builder
 public class InviteRequest {
 
-    private String invitePerson;
-
-    private String invitedPerson;
+    private String inviteEmail;
+    private String invitedEmail;
 
 //    private Long chatRoomId;
 
