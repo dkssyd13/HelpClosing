@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -79,7 +80,7 @@ Future<String?> fcmSetting() async {
 
   // foreground에서의 푸시 알림 표시를 위한 알림 중요도 설정 (안드로이드)
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'high_importance_channel',
+      'high_importance_channel_id',
       'High Importance Notification',
       description: 'This channel is used for important notifications.',
       importance: Importance.high
@@ -106,7 +107,6 @@ Future<String?> fcmSetting() async {
     print('type : ${message.category}');
 
     if (message.notification != null && android != null) {
-      print("1");
       await flutterLocalNotificationsPlugin.show(
           notification.hashCode,
           notification?.title,
@@ -125,7 +125,7 @@ Future<String?> fcmSetting() async {
       print('알림 내용 : ${message.notification?.body}');
     }
   });
-
+// 앱이 백그라운드 상태에서 알림을 탭하여 앱을 열었을 때 호출됨
 
 
   return firebaseToken;
