@@ -14,8 +14,6 @@ import org.locationtech.jts.geom.Point;
 public class LocationRequest {
 
     private double latitude;
-
     private double longitude;
-
     private double distance;
 }

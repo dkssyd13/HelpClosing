@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private static UserRepository userRepository;
+    private UserRepository userRepository;
 
     public User create(RegisterApiRequest request) {
 
@@ -39,12 +41,13 @@ public class UserService {
         return true;
     }
 
-    public static boolean nicknameCheck(String nickname) {
+    public boolean nicknameCheck(String nickname) {
 
         User findUser= userRepository.findByNickName(nickname);
 
         if(findUser!=null)
             return false;
+
         return true;
     }
 

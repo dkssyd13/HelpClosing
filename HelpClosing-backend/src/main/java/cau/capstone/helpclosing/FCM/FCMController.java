@@ -5,6 +5,8 @@ import cau.capstone.helpclosing.FCM.FCMService;
 import cau.capstone.helpclosing.model.Header;
 import com.google.api.client.auth.oauth2.TokenRequest;
 import lombok.RequiredArgsConstructor;
+import okhttp3.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,14 +21,29 @@ public class FCMController {
 
     @PostMapping("/fb/fcm")
     public ResponseEntity pushMessage(@RequestBody FCMRequestDTO FCMRequestDTO) throws IOException{
-        System.out.println(FCMRequestDTO.getTargetToken() + " " + FCMRequestDTO.getTitle() + " " + FCMRequestDTO.getBody());
+//        System.out.println(FCMRequestDTO.getTargetToken() + " " + FCMRequestDTO.getTitle() + " " + FCMRequestDTO.getBody());
 
-        fcmService.sendMessageTo(
-                FCMRequestDTO.getTargetToken(),
-                FCMRequestDTO.getTitle(),
-                FCMRequestDTO.getBody());
+        FCMResponseDTO fcmResponseDTO = new FCMResponseDTO();
 
-        return ResponseEntity.ok().build();
+        try{
+            Response response = fcmService.sendMessageTo(
+                    FCMRequestDTO.getTargetToken(),
+                    FCMRequestDTO.getTitle(),
+                    FCMRequestDTO.getBody());
+
+            if (response.isSuccessful()) {
+                fcmResponseDTO.setResponse("Message sent successfully");
+                return ResponseEntity.ok(fcmResponseDTO);
+            } else {
+                fcmResponseDTO.setResponse("Failed to send message");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(fcmResponseDTO);
+            }
+        }
+        catch (Exception e){
+            fcmResponseDTO.setResponse("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(fcmResponseDTO);
+        }
+
     }
 
     @PostMapping("/fb/saveFCMToken")
