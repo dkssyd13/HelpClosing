@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
 import 'package:help_closing_frontend/Fcm/fcmSettings.dart';
@@ -6,6 +7,7 @@ import 'Controller/Auth_Controller.dart';
 import 'Pages/Login_SignUp/Login.dart';
 import 'Pages/MainPage.dart';
 
+// late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
