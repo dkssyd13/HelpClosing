@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class InvitationList {
+
+
     private String invitedEmail;
-
-    private String invitedPersonImage;
-
     private String invitedName;
 
 //    private Long chatRoomId ;

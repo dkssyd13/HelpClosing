@@ -29,7 +29,7 @@ public class FCMService {
     @Autowired
     private final FCMCRUD fcmcrud;
 
-    public void sendMessageTo(String targetToken, String title, String body) throws IOException {
+    public Response sendMessageTo(String targetToken, String title, String body) throws IOException {
         String message = makeMessage(targetToken, title, body);
 
         OkHttpClient client = new OkHttpClient();
@@ -43,7 +43,7 @@ public class FCMService {
 
         Response response = client.newCall(request).execute();
 
-        System.out.println(response.body().string());
+        return response;
     }
 
     private String makeMessage(String targetToken, String title, String body) throws JsonProcessingException{
@@ -54,13 +54,14 @@ public class FCMService {
                                 .title(title)
                                 .body(body)
                                 .build()
-                        ).build()).validateOnly(false).build();
+                        ).build()).validateOnly(false).build(); //false로 해야 실제로 메시지가 전송됨
 
         return objectMapper.writeValueAsString(fcmMessage);
     }
 
     // Firebase Admin SDK를 사용하여 Access Token을 받아옴
     //oath2를 이용해 인증
+    //FCM Token: FCM을 사용하기 위해 앱을 등록할 때 발급받는 토큰, access token과는 다름
     // Access Token: Firebase Admin SDK를 사용하여 FCM에 접근할 때 필요한 인증 토큰
     //전송하는데 필요한 토큰은 별도!
     private String getAccessToken() throws IOException{
@@ -72,10 +73,6 @@ public class FCMService {
 
         googleCredentials.refreshIfExpired();
         return googleCredentials.getAccessToken().getTokenValue();
-    }
-
-    private void saveFCMToken(FCMTokenRequest request) throws IOException {
-
     }
 
 }
