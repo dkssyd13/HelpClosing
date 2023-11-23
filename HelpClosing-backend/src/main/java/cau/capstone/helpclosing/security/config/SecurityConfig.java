@@ -49,6 +49,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()   // 보안에 관한 것
                 .authorizeRequests() //HttpServletRequest를 사용한 요정들에 대한 접근제한
                 .antMatchers("/authenticate",
+                "/fb/**",
+                "/register/**",
+                "/matching/**",
+                "/hello",
                 "/v3/api-docs/**",
                 "/swagger-ui/**",
                 "/v2/api-docs",
@@ -62,7 +66,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/verify",
                 "/register",
                 "/delete/**",
-                "/matching",
                 "/upload",
                 "/accept",
                 "/reject",

@@ -19,4 +19,5 @@ public class ChatMessageRequest {
     private String name;
     private String nickName;
     private LocalDateTime time;
+
 }
