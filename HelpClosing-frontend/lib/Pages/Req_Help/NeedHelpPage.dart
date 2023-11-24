@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_routes/google_maps_routes.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 
 class NeedHelpBody extends StatefulWidget {
@@ -35,6 +37,17 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
     getLocation();
   }
 
+  getAddr(lat,long) async{
+    //google api 위도 경도 -> 주소
+    final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyAVkF1MVwblmaf6a8hfP3aXDgtrS6V7UMI';
+    var responseAddr=await http.get(Uri.parse(url));
+    print("json body(위경도 -> 주소) : ${jsonDecode(responseAddr.body)}");
+
+    var addr='130-1+Cheongna-dong,+Seo-gu,+Incheon,+South+Korea';
+    var responseLatLong=await  http.get(Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?address=${addr}&key=AIzaSyAVkF1MVwblmaf6a8hfP3aXDgtrS6V7UMI'));
+    print("json body(주소 -> 위도 경도) : ${jsonDecode(responseLatLong.body)}");
+  }
+
   getLocation() async {
     LocationPermission permission;
     permission = await Geolocator.requestPermission();
@@ -43,10 +56,11 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
         desiredAccuracy: LocationAccuracy.high);
     double lat = position.latitude;
     double long = position.longitude;
+    await getAddr(lat, long);
 
     LatLng location = LatLng(lat, long);
 
-    setState(() {
+    setState((){
       _currentPosition = location;
       _isLoading = false;
     });
@@ -84,11 +98,11 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
                 markerId: const MarkerId('내위치'),
                 position: _currentPosition!,
               ),
-                // Marker(
-                //   markerId: const MarkerId("중앙대학교 310관"),
-                //   position: const LatLng(37.504815334545874, 126.95534935119163),
-                //   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
-                // ),
+                Marker(
+                  markerId: const MarkerId("중앙대학교 310관"),
+                  position: const LatLng(37.504815334545874, 126.95534935119163),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
+                ),
               },
               initialCameraPosition: CameraPosition(
                 target: _currentPosition!,
