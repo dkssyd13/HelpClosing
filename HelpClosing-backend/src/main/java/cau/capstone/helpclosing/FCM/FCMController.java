@@ -46,6 +46,21 @@ public class FCMController {
 
     }
 
+    @PostMapping("/fb/notification")
+    public Header pushNotification(@RequestBody FCMRequestDTO FCMRequestDTO) throws IOException{
+        try {
+            fcmService.sendPushNotification(FCMRequestDTO.getTargetToken(), FCMRequestDTO.getTitle(), FCMRequestDTO.getBody());
+            return Header.OK("Notification Sent");
+
+        }
+        catch (Exception e){
+            return Header.ERROR("Notification Failed");
+        }
+
+
+    }
+
+
     @PostMapping("/fb/saveFCMToken")
     public Header saveFCMToken(@RequestBody FCMTokenRequest tokenRequest) throws Exception {
         System.out.println(tokenRequest.getEmail() + " " + tokenRequest.getFCMToken());

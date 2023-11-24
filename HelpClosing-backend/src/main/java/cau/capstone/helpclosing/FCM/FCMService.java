@@ -7,6 +7,9 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.net.HttpHeaders;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import com.google.gson.JsonParseException;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
@@ -25,9 +28,37 @@ public class FCMService {
 
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/cpastone-cau-helpclosing/messages:send";
     private final ObjectMapper objectMapper;
+    @Autowired
+    private final FirebaseMessaging firebaseMessaging;
 
     @Autowired
     private final FCMCRUD fcmcrud;
+
+    public void sendPushNotification(String token, String title, String body) throws JsonProcessingException {
+        Message message = makeMessage2(token, title, body);
+
+        try {
+            String response = firebaseMessaging.send(message);
+            // 푸시 메시지 전송 후 반환된 응답 처리
+            System.out.println("Successfully sent message: " + response);
+        } catch (FirebaseMessagingException e) {
+            // FirebaseMessagingException 발생 시 예외 처리
+            System.err.println("Error sending message: " + e.getMessage());
+        }
+    }
+
+    public Message makeMessage2(String token, String title, String body) {
+        Notification notification = Notification.builder()
+                .setTitle(title)
+                .setBody(body)
+                .build();
+
+        // Create the message with the token and notification
+        return Message.builder()
+                .setToken(token)
+                .setNotification(notification)
+                .build();
+    }
 
     public Response sendMessageTo(String targetToken, String title, String body) throws IOException {
         String message = makeMessage(targetToken, title, body);
@@ -42,6 +73,7 @@ public class FCMService {
                 .build();
 
         Response response = client.newCall(request).execute();
+
 
         return response;
     }
@@ -58,6 +90,7 @@ public class FCMService {
 
         return objectMapper.writeValueAsString(fcmMessage);
     }
+
 
     // Firebase Admin SDK를 사용하여 Access Token을 받아옴
     //oath2를 이용해 인증

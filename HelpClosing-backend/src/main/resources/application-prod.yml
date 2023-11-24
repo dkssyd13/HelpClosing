@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_DATBASE_URL}
-    username: ${MYSQL_DATABASE_USERNAME}
-    password: ${MYSQL_DATABASE_PASSWORD}
+    url: rds-mysql-helpclosing.coy7ux4usksb.ap-northeast-2.rds.amazonaws.com
+    username: root
+    password: 20230603
 
   jpa:
     open-in-view: true

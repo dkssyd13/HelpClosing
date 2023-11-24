@@ -4,6 +4,10 @@ spring:
     url: jdbc:mysql://localhost:3306/springbasic?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
     password: qkqnxod132
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: rds-mysql-helpclosing.coy7ux4usksb.ap-northeast-2.rds.amazonaws.com
+#    username: root
+#    password: 20230603
 
   jpa:
     open-in-view: true
@@ -45,6 +49,11 @@ jwt:
 
 cloud:
   aws:
+#    s3:
+#      bucket:
+#    credentials:
+#      accessKey:
+#      secretKey:
     stack:
       auto: false
     region:
