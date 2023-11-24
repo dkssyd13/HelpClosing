@@ -1,35 +1,88 @@
 package cau.capstone.helpclosing.service;
 
+import cau.capstone.helpclosing.model.Entity.Authority;
 import cau.capstone.helpclosing.model.Entity.User;
-import cau.capstone.helpclosing.model.Request.RegisterApiRequest;
+import cau.capstone.helpclosing.model.Request.LoginRequest;
+import cau.capstone.helpclosing.model.Request.RegisterRequest;
 import cau.capstone.helpclosing.model.Request.UserProfileRequest;
+import cau.capstone.helpclosing.model.Response.LoginResponse;
 import cau.capstone.helpclosing.model.Response.UserProfileResponse;
 import cau.capstone.helpclosing.model.repository.UserRepository;
+import cau.capstone.helpclosing.security.entity.JwtProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class UserService {
 
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JwtProvider jwtProvider;
 
-    public User create(RegisterApiRequest request) {
+    public LoginResponse login(LoginRequest request) throws Exception {
+        User user = userRepository.findByEmail(request.getEmail());
 
-        User user=User.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .nickName(request.getNickname())
-                .reported_count(0)
-                .reporter_count(3)
+        if (user == null) {
+            throw new Exception("존재하지 않는 이메일입니다.");
+        }
+
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
+            throw new Exception("비밀번호가 일치하지 않습니다.");
+        }
+
+        return LoginResponse.builder()
+                .email(user.getEmail())
+                .userId(user.getUserId())
+                .nickName(user.getNickName())
+                .name(user.getName())
+                .jwtToken(jwtProvider.createToken(user.getEmail(), user.getRoles()))
                 .build();
+    }
 
-        return userRepository.save(user);
+
+    public boolean register(RegisterRequest request) throws Exception{
+        try{
+            User user = User.builder()
+                    .email(request.getEmail())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .name(request.getName())
+                    .nickName(request.getNickName())
+                    .build();
+
+            user.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+            userRepository.save(user);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            throw new Exception("회원가입 실패");
+        }
+        return true;
+    }
+
+    public LoginResponse getUser(String email) throws Exception{
+        User user = userRepository.findByEmail(email);
+
+        if(user == null){
+            throw new Exception("존재하지 않는 이메일입니다.");
+        }
+
+        return LoginResponse.builder()
+                .email(user.getEmail())
+                .userId(user.getUserId())
+                .nickName(user.getNickName())
+                .name(user.getName())
+                .jwtToken(jwtProvider.createToken(user.getEmail(), user.getRoles()))
+                .build();
     }
 
     public boolean emailCheck(String email){

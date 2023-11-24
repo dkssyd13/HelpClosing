@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegisterApiRequest {
+public class RegisterRequest {
 
     private String email;
 
@@ -17,6 +17,8 @@ public class RegisterApiRequest {
 
     private String confirmPw;
 
-    private String nickname;
+    private String nickName;
+
+    private String name;
 
 }
