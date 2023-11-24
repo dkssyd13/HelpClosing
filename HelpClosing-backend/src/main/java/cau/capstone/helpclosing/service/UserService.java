@@ -52,6 +52,16 @@ public class UserService {
 
 
     public boolean register(RegisterRequest request) throws Exception{
+        if(!emailCheck(request.getEmail())){
+            throw new Exception("이미 존재하는 이메일입니다.");
+        }
+        if(!nicknameCheck(request.getNickName())){
+            throw new Exception("이미 존재하는 닉네임입니다.");
+        }
+        if(!request.getPassword().equals(request.getConfirmPw())){
+            throw new Exception("비밀번호가 일치하지 않습니다.");
+        }
+
         try{
             User user = User.builder()
                     .email(request.getEmail())

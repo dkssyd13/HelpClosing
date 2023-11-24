@@ -23,10 +23,12 @@ public class User {
     @Column(name = "userId")
     private Long userId;
 
+    @Column(unique = true)
     private String email;
 
     private String password;
 
+    @Column(unique = true)
     private String name;
 
     private String nickName;
