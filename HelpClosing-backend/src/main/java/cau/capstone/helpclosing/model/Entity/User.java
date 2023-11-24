@@ -2,6 +2,7 @@ package cau.capstone.helpclosing.model.Entity;
 
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -42,6 +43,14 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     List<Matching> matchingList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Authority> roles = new ArrayList<>();
+
+    public void setRoles(List<Authority> roles) {
+        this.roles = roles;
+        roles.forEach(o -> o.setUser(this));
+    }
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userEmail")
 //    List<ChatMessage> chatList = new ArrayList<>();
 
