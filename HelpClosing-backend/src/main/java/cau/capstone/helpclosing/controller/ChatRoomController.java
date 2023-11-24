@@ -18,16 +18,10 @@ public class ChatRoomController {
     //@ApiOperation(value = "사용자의 채팅룸 목록 조회")
     @GetMapping("/chatRoom/chatRoomList")
     @CrossOrigin(origins="*", maxAge=3600)
-    public Header chatRoomList(){
-        try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = ((User) auth.getPrincipal()).getEmail();
+    public Header chatRoomList(@RequestParam String email){
 
             return Header.OK(chatRoomService.roomList(email), "매칭룸목록(roomid");
-        }
-        catch(Exception e){
-            return Header.ERROR("Need to login for seeing chat room list");
-        }
+
     }
 
     //@ApiOperation(value="매칭룸 정보 수정")

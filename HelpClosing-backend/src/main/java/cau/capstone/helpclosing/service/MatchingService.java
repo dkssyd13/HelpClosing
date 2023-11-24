@@ -51,7 +51,7 @@ public class MatchingService {
                     .build();
             invitationRepository.save(invitation);
         }
-        return "send inviting message around people" + receiver.getNickName();
+        return "send inviting message around people \" " + receiver.getNickName() + "\"";
 
     }
 

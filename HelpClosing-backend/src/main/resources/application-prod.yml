@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: rds-mysql-helpclosing.coy7ux4usksb.ap-northeast-2.rds.amazonaws.com
+    url: helpclosing-server-db.coy7ux4usksb.ap-northeast-2.rds.amazonaws.com
     username: root
     password: 20230603
 
