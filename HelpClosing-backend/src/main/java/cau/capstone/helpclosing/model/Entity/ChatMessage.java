@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @Accessors(chain=true)
-@ToString(exclude = {"chatRoomId", "senderEmail"})
+@ToString
 public class ChatMessage {
 
     @Id

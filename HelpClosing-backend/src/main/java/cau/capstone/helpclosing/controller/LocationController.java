@@ -8,6 +8,7 @@ import cau.capstone.helpclosing.model.Request.LocationRequest;
 import cau.capstone.helpclosing.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,12 +39,13 @@ public class LocationController {
     }
 
     @PostMapping("/location/add")
-    public Header<Location> addLocation(@RequestBody LocationRegisterRequest locationRegisterRequest){
+    public ResponseEntity<Location> addLocation(@RequestBody LocationRegisterRequest locationRegisterRequest){
         try{
-            return Header.OK(locationService.addLocation(locationRegisterRequest),"");
+            return ResponseEntity.ok(locationService.addLocation(locationRegisterRequest));
         }
         catch(Exception e){
-            return Header.ERROR("Need to login for adding location");
+            return ResponseEntity.badRequest().build();
         }
+
     }
 }

@@ -15,6 +15,7 @@ import javax.persistence.Id;
 @Setter
 @Builder
 @Accessors(chain = true)
+@ToString
 public class Invitation {
 
     @Id

@@ -1,5 +1,6 @@
 package cau.capstone.helpclosing.model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Fetch;
@@ -15,7 +16,7 @@ import java.util.List;
 @Setter
 @Builder
 @Accessors(chain = true)
-@ToString(exclude = {"user", "userEmail"})
+@ToString
 public class User {
 
     @Id
@@ -35,13 +36,14 @@ public class User {
 
     private String image;
 
-    private int reporter_count;
+//    private int reporter_count;
+//
+//    private int reported_count;
+//
+//    private int matchingCount;
 
-    private int reported_count;
 
-    private int matchingCount;
-
-
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     List<Matching> matchingList = new ArrayList<>();
 

@@ -15,6 +15,7 @@ import java.util.Date;
 @Setter
 @Builder
 @Accessors(chain=true)
+@ToString
 public class HelpLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment

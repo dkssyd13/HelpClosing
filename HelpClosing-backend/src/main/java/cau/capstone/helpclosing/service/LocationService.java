@@ -27,15 +27,25 @@ public class LocationService {
     private final EntityManager em;
 
     public Location addLocation(LocationRegisterRequest locationRegisterRequest){
-        Location location = Location.builder()
-                .description(locationRegisterRequest.getDescription())
-                .address(locationRegisterRequest.getAddress())
-                .longitude(locationRegisterRequest.getLongitude())
-                .latitude(locationRegisterRequest.getLatitude())
-                .user(userRepository.findByEmail(locationRegisterRequest.getEmail()))
-                .build();
 
-        return locationRepository.save(location);
+        try{
+            Location location = Location.builder()
+                    .description(locationRegisterRequest.getDescription())
+                    .address(locationRegisterRequest.getAddress())
+                    .longitude(locationRegisterRequest.getLongitude())
+                    .latitude(locationRegisterRequest.getLatitude())
+                    .user(userRepository.findByEmail(locationRegisterRequest.getEmail()))
+                    .build();
+
+            System.out.println(location.toString());
+
+            return locationRepository.save(location);
+
+        }
+        catch (Exception e){
+            return null;
+        }
+
     }
 //
 //    double radiusInMeters = 100.0;

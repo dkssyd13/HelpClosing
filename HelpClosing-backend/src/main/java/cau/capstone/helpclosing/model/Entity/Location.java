@@ -16,14 +16,13 @@ import javax.persistence.*;
 @Setter
 @Builder
 @Accessors(chain = true)
-@ToString(exclude = {"user", "userEmail"})
+@ToString
 public class Location {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment
+    @GeneratedValue(strategy = GenerationType.AUTO) // Auto Increment
     private Long locationId;
 
     private String description;
-    private Point coordinates;
 
     private double latitude;
     private double longitude;

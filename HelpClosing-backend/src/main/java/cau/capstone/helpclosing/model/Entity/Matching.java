@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @Builder
 @Accessors(chain = true)
-@ToString(exclude = {"user", "chatRoomId"})
+@ToString(exclude = {"user"})
 public class Matching {
 
     @Id
