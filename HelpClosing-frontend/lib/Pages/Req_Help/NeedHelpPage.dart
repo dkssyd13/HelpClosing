@@ -79,10 +79,17 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
               onMapCreated: _onMapCreated,
               polylines: route.routes,
               //
-              markers: {Marker(
+              markers: {
+                Marker(
                 markerId: const MarkerId('내위치'),
                 position: _currentPosition!,
-              )},
+              ),
+                // Marker(
+                //   markerId: const MarkerId("중앙대학교 310관"),
+                //   position: const LatLng(37.504815334545874, 126.95534935119163),
+                //   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
+                // ),
+              },
               initialCameraPosition: CameraPosition(
                 target: _currentPosition!,
                 zoom: 16.0,
