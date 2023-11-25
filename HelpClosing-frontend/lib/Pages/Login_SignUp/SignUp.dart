@@ -336,7 +336,7 @@ class _PledgeSecondScreenState extends State<PledgeSecondScreen> {
                       )
                   ),
                   TextFormField(
-                      decoration: InputDecoration(labelText: 'EnterYourName'),
+                      decoration: InputDecoration(labelText: '이름 입력'),
                       keyboardType: TextInputType.text,
                       onChanged: (value) {
                         setState(() {
@@ -345,7 +345,7 @@ class _PledgeSecondScreenState extends State<PledgeSecondScreen> {
                       }
                   ),
                   TextFormField(
-                      decoration: InputDecoration(labelText: 'Enter the date'),
+                      decoration: InputDecoration(labelText: '날짜 입력'),
                       onChanged: (value) {
                         setState(() {
                           date = value;

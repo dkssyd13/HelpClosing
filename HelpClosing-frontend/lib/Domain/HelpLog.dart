@@ -9,6 +9,8 @@ class HelpLog {
   final User recipient;
   final Pledge pledgeRequest;
   final Pledge pledgeRecipient;
+  // final String pledgeRequestImg;
+  // final String pledgeRecipientImg;
   final Location location;
 
   HelpLog({
@@ -18,6 +20,8 @@ class HelpLog {
     required this.recipient,
     required this.pledgeRequest,
     required this.pledgeRecipient,
+    // required this.pledgeRecipientImg,
+    // required this.pledgeRequestImg,
     required this.location,
   });
 
