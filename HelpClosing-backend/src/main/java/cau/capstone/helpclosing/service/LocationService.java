@@ -2,15 +2,15 @@ package cau.capstone.helpclosing.service;
 
 import cau.capstone.helpclosing.model.Entity.Direction;
 import cau.capstone.helpclosing.model.Entity.Location;
-import cau.capstone.helpclosing.model.Request.LocationRequest;
+import cau.capstone.helpclosing.model.Request.LocationRegisterRequest;
 import cau.capstone.helpclosing.model.repository.LocationRepository;
+import cau.capstone.helpclosing.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.util.List;
 
 @Service
@@ -20,7 +20,23 @@ public class LocationService {
 
     @Autowired
     private LocationRepository locationRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     private final EntityManager em;
+
+    public Location addLocation(LocationRegisterRequest locationRegisterRequest){
+        Location location = Location.builder()
+                .description(locationRegisterRequest.getDescription())
+                .address(locationRegisterRequest.getAddress())
+                .longitude(locationRegisterRequest.getLongitude())
+                .latitude(locationRegisterRequest.getLatitude())
+                .user(userRepository.findByEmail(locationRegisterRequest.getEmail()))
+                .build();
+
+        return locationRepository.save(location);
+    }
 //
 //    double radiusInMeters = 100.0;
 //    double radiusInDegrees = radiusInMeters / 111320.0; // 1 degree = 111.32 km

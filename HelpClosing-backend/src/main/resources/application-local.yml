@@ -49,7 +49,7 @@ jwt:
 cloud:
   aws:
 #    s3:
-#      bucket:
+#      bucket: helpclosing-bucket
 #    credentials:
 #      accessKey:
 #      secretKey:
