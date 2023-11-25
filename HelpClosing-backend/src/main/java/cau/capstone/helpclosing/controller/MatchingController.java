@@ -20,15 +20,9 @@ public class MatchingController {
 
     @PostMapping("/matching/invite")
     //@ApiOperation(value= "Add friends", notes = "")
-    public Header invite(@RequestBody InviteRequest inviteRequest){
-        try{
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = ((User) auth.getPrincipal()).getEmail();
+    public String invite(@RequestBody InviteRequest inviteRequest){
 
-            return Header.OK(matchingService.inviteAround(inviteRequest), "");
-        } catch (Exception e){
-            return Header.ERROR("Need to login for matching");
-        }
+        return matchingService.inviteAround(inviteRequest);
     }
 
 //    @PostMapping("/invite")
@@ -76,15 +70,10 @@ public class MatchingController {
     @PostMapping("/matching/accept")
     //@ApiOperation(value="초대 수락", notes ="sender email, chatRoomId: null일 경우 0으로 줘야함.")
     public Header accept(@RequestBody MatchingAcceptRequest matchingAcceptRequest){
-        try{
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String receiver = ((User) auth.getPrincipal()).getNickName();
+
 
             return Header.OK(matchingService.accept(matchingAcceptRequest), "");
-        }
-        catch(Exception e){
-            return Header.ERROR(("Need to login for accepting matching" + e));
-        }
+
     }
 
     @DeleteMapping("/matching/reject")

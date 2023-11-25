@@ -36,6 +36,7 @@ public class ChatController {
     ChatMessageRepository chatMessageRepository;
 
     @MessageMapping("/chat/enter")
+    @ApiOperation(value = "채팅방 입장", notes = "채팅방 입장시 채팅방에 입장 메시지를 보내고, DB에 저장한다.")
     public void enter(ChatMessageRequest message){
         message.setTime(LocalDateTime.now());
         User user = userRepository.findByEmail(message.getEmail());
@@ -59,6 +60,7 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/message")
+    @ApiOperation(value = "채팅 메시지", notes = "채팅방에 메시지를 보내고, DB에 저장한다.")
     public void message(ChatMessageRequest message){
         //message,chatRoom, email
         message.setTime(LocalDateTime.now());

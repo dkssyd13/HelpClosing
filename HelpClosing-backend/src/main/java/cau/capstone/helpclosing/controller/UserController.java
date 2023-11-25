@@ -3,9 +3,12 @@ package cau.capstone.helpclosing.controller;
 import cau.capstone.helpclosing.model.Entity.User;
 import cau.capstone.helpclosing.model.Header;
 import cau.capstone.helpclosing.model.Request.UserProfileRequest;
+import cau.capstone.helpclosing.model.Response.LoginResponse;
 import cau.capstone.helpclosing.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -34,5 +37,10 @@ public class UserController {
         catch (Exception e){
             return Header.ERROR("Need to login for updating profile");
         }
+    }
+
+    @GetMapping("/user/get")
+    public ResponseEntity<LoginResponse> getUser(@RequestParam String email) throws Exception {
+        return new ResponseEntity<>( userService.getUser(email), HttpStatus.OK);
     }
 }

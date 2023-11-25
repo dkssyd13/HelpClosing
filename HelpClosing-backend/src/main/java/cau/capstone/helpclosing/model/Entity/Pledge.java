@@ -18,8 +18,7 @@ public class Pledge {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment
     private Long pledgeId;
     private Date time;
-    @Lob // Large Object
-    private String content;
+    private String image;
 
     //Relationship
     @OneToOne
