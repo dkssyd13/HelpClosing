@@ -6,25 +6,33 @@ List<User> userFromJson(String str) => List<User>.from(json.decode(str).map((x) 
 String userToJson(List<User> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class User {
-  String? id;
-  String? name;
-  String? email;
-  String? nickname;
-  String? image; //사진
-  Location? location;
-  String? address;
+  String _id;
+  String _name;
+  String _email;
+  String _nickname;
+  String? _image; //사진
+  Location? _location;
+  String? _address;
 
 
+  String get id => _id;
 
   User({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.nickname,
-    required this.image,
-    required this.location,
-    required this.address,
-  });
+    required String id,
+    required String name,
+    required String email,
+    required String nickname,
+    required String? image,
+    required Location? location,
+    required String? address,
+  })  : _id = id,
+        _name = name,
+        _email = email,
+        _nickname = nickname,
+        _image = image,
+        _location = location,
+        _address = address;
+
 
   factory User.fromJson(Map<String, dynamic> json) => User(
     id: json["id"],
@@ -37,14 +45,26 @@ class User {
   );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "email": email,
-    "nickname": nickname,
-    "image": image,
-    "location": location?.toJson(),
-    "address": address,
+    "id": _id,
+    "name": _name,
+    "email": _email,
+    "nickname": _nickname,
+    "image": _image,
+    "location": _location?.toJson(),
+    "address": _address,
   };
+
+  String get name => _name;
+
+  String get email => _email;
+
+  String get nickname => _nickname;
+
+  String? get image => _image;
+
+  Location? get location => _location;
+
+  String? get address => _address;
 }
 
 

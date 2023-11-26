@@ -80,6 +80,24 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "firebase_analytics",
+      "rootUri": "file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_analytics-10.7.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_analytics_platform_interface",
+      "rootUri": "file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_analytics_platform_interface-3.8.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_analytics_web",
+      "rootUri": "file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_analytics_web-0.5.5+8",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "firebase_core",
       "rootUri": "file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core-2.23.0",
       "packageUri": "lib/",
@@ -204,6 +222,12 @@
       "rootUri": "file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_windows-3.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_slidable",
+      "rootUri": "file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_slidable-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "flutter_test",
@@ -536,6 +560,12 @@
       "languageVersion": "3.1"
     },
     {
+      "name": "web_socket_channel",
+      "rootUri": "file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/web_socket_channel-2.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
       "name": "win32",
       "rootUri": "file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/win32-5.1.0",
       "packageUri": "lib/",
@@ -560,7 +590,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2023-11-22T18:43:22.578093Z",
+  "generated": "2023-11-26T07:08:48.949090Z",
   "generator": "pub",
   "generatorVersion": "3.1.5"
 }

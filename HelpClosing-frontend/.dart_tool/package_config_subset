@@ -142,6 +142,10 @@ flutter_secure_storage_windows
 2.12
 file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_windows-3.0.0/
 file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage_windows-3.0.0/lib/
+flutter_slidable
+2.17
+file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_slidable-3.0.1/
+file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_slidable-3.0.1/lib/
 geolocator
 2.15
 file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/geolocator-10.1.0/
@@ -350,6 +354,10 @@ web
 3.1
 file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.1.4-beta/
 file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.1.4-beta/lib/
+web_socket_channel
+2.15
+file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/web_socket_channel-2.4.0/
+file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/web_socket_channel-2.4.0/lib/
 win32
 3.1
 file:///C:/Users/vladk/AppData/Local/Pub/Cache/hosted/pub.dev/win32-5.1.0/
