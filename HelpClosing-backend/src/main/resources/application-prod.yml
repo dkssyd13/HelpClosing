@@ -39,12 +39,13 @@ jwt:
 
 cloud:
   aws:
-    #    s3:
-    #      bucket: helpclosing-bucket
-    #    credentials:
-    #      accessKey:
-    #      secretKey:
-    stack:
-      auto: false
-    region:
-      static: ap-northeast-2
+    s3:
+      bucket: helpclosing-bucket
+      region:
+        static: ap-northeast-2
+        auto: false
+      stack:
+        auto: false
+      credentials:
+        access-key:
+        secret-key:
