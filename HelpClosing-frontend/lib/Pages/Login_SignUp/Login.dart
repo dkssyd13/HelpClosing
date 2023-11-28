@@ -117,6 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                     icon: const Icon(Icons.remove_red_eye_outlined),
                   ),
                 ),
+                keyboardType: TextInputType.emailAddress,
                 obscureText: _hidePassword,
               ),
               const SizedBox(height: 10,),

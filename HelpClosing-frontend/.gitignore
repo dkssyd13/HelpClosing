@@ -51,3 +51,4 @@ assets/.env
 assets/.env
 web/
 pubspec.lock
+lib/GoogleApiKey.dart

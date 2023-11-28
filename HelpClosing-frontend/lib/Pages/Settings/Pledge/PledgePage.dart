@@ -22,15 +22,18 @@ class PledgePage extends StatelessWidget {
         title: const Text("계약서"),
         titleTextStyle: const TextStyle(fontSize: 40,fontWeight: FontWeight.bold,color: Colors.blue),
       ),
-      body: Center(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Text(
-              pledgeText,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Text(
+                pledgeText,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600
+              ),
             ),
           ),
         ),

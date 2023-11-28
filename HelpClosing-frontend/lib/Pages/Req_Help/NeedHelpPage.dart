@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_routes/google_maps_routes.dart';
@@ -233,10 +234,27 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
                 onPressed: (){
                   showModalBottomSheet(context: context, builder: (context) {
                     return SizedBox(
-                      height: 200,
+                      height: 400,
                       width: MediaQuery.of(context).size.width,
-                      child: const Center(
-                        child: Text("상태를 입력하세요"),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.all(10),
+                                child: IconButton(
+                                  onPressed: (){
+                                    Get.back();
+                                  },
+                                  icon: const Icon(Icons.close),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Text("현재 상태를 입력해주세요",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),),
+
+                        ],
                       ),
                     );
                   });

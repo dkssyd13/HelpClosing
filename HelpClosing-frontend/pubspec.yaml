@@ -50,6 +50,7 @@ dependencies:
   firebase_analytics: ^10.7.1
   flutter_slidable: ^3.0.1
   web_socket_channel: ^2.4.0
+  flutter_polyline_points: ^1.0.0
 
 dev_dependencies:
   flutter_test:

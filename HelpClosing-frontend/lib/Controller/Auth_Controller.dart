@@ -2,6 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Domain/User.dart';
 import 'package:help_closing_frontend/Fcm/fcmSettings.dart';
+import 'package:help_closing_frontend/ServerUrl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../Pages/Login_SignUp/Login.dart';
@@ -38,7 +39,7 @@ class AuthController extends GetxController{
     // user의 정보가 있다면 로그인 후 들어가는 첫 페이지로 넘어가게 합니다.
     if (userInfoJson != null) {
       Map<String, dynamic> userInfo = jsonDecode(userInfoJson);
-      userController.createCurrentUser(userInfo["name"], userInfo["email"], userInfo["nickname"], userInfo["image"]);
+      userController.createCurrentUser(userInfo["name"], userInfo["email"], userInfo["nickname"], userInfo["image"], userInfo['userId']);
       var fcmToken = await storage.read(key: "fcmToken");
       saveFCMToken(userInfo["email"], fcmToken!);
     }
@@ -59,53 +60,62 @@ class AuthController extends GetxController{
   }
 
 
-  void register(String email, password) async {
-    // final response = await http.post(
-    //   Uri.parse('http://서버_주소.com/register'),
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(<String, String>{
-    //     'password': password,
-    //     'email': email,
-    //   }),
-    // );
-    //
-    // final int statusCode = response.statusCode;
-    // if (statusCode == 200) {
-    //   print('Register successful');
-    //   final responseJson = jsonDecode(response.body);
-    // }
-    //
+  void register(String email, password, confirmPw, nickName) async {
+    final response = await http.post(
+      Uri.parse('${ServerUrl.baseUrl}/register/simple'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'password': password,
+        'confirmPw' : confirmPw,
+        'nickname' : nickName,
+      }),
+    );
+    print(response.body);
+    print(response.statusCode);
+    print('Response headers: ${response.headers}');
+
+    final int statusCode = response.statusCode;
+    if (statusCode == 200) {
+      print('Register successful');
+      final responseJson = jsonDecode(response.body);
+    }else{
+      Get.snackbar(
+          "Error Message  ",
+          "User Message",
+          backgroundColor: Colors.red[50],
+          snackPosition: SnackPosition.BOTTOM,
+          titleText: const Text("회원가입 실패"),
+          messageText: const Text("ㅇㅇ 안됨")
+      );
+    }
+
     // if(statusCode < 200 || statusCode > 400){
     //   //통신이 안됐을 때, 에러가 났을때
-    //     Get.snackbar(
-    //         "Error Message  ",
-    //         "User Message",
-    //         backgroundColor: Colors.red[50],
-    //         snackPosition: SnackPosition.BOTTOM,
-    //         titleText: const Text("회원가입 실패"),
-    //         messageText: const Text("ㅇㅇ 안됨")
-    //     );
+    //
     // }
   }
 
-  void checkEmail(String email)async{
+  Future<bool> checkEmail(String email)async{
     final response = await http.get(
-      Uri.parse('http://서버_주소.com/register/email?email=$email'),
+      Uri.parse('${ServerUrl.baseUrl}/register/email?email=$email'),
     );
 
     if (response.statusCode==200){
       Get.snackbar(backgroundColor: Colors.green,"이메일 코드 전송 완료", "이메일로 인증 코드를 보냈습니다.");
+      return true;
     }
     else{
       Get.snackbar(backgroundColor: Colors.red,"이메일 코드 전송 실패", "이메일로 인증 코드를 보내는데 문제가 생김.");
+      return false;
     }
   }
 
   void login(String email, String password) async {
     // final response = await http.post(
-    //   Uri.parse('http://서버_주소.com/login'),
+    //   Uri.parse('${ServerUrl.baseUrl}/login'),
     //   headers: <String, String>{
     //     'Content-Type': 'application/json; charset=UTF-8',
     //   },
@@ -114,29 +124,39 @@ class AuthController extends GetxController{
     //     'email': email,
     //   }),
     // );
+    //
+    // print(jsonDecode(response.body));
     //
     // if (response.statusCode == 200) {
     //   print('Login successful');
     //   final responseJson = jsonDecode(response.body);
     //
     //   // 서버에서 받아온 사용자 정보를 사용.
-    //   // String token = responseJson['jwtToken'];
+    //   String token = responseJson['jwtToken'];
+    //   String id = responseJson['userId'].toString();
     //   String name = responseJson['name'];
     //   String nickname = responseJson['nickName'];
-    //   String image = responseJson['image'];
+    //   String image;
+    //   if(responseJson['image'] == null){
+    //     image = '';
+    //   }
+    //   else{
+    //     image = responseJson['image'];
+    //   }
     //   String email = responseJson['email'];
-    //
-    //   await storage.write(key: 'login', value: responseJson);
+    //   await storage.write(key: 'login', value: responseJson.toString());
+    //   print(storage.read(key: 'login'));
     //
     //   // 로그인이 성공하면 createCurrentUser 메서드를 호출합니다.
-    //   userController.createCurrentUser(name, email, nickname, image);
+    //   userController.createCurrentUser(name, email, nickname, image,id);
     //   print(UserController.currentUser);
     //   _currentUser.value=UserController.currentUser;
     // } else {
+    //   Get.snackbar("로그인 실패", "입력한 정보를 다시 한번 확인해주세요",snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.redAccent[100]);
     //   throw Exception('Failed to login');
     // }
 
-    userController.createCurrentUser('김중앙', email, 'hd', 'image');
+    userController.createCurrentUser('김중앙', email, 'hd', 'image','');
     print(UserController.currentUser);
     _currentUser.value=UserController.currentUser;
   }

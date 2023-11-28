@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:help_closing_frontend/ChatService/ChatService.dart';
 import 'package:help_closing_frontend/Domain/ChatMessageResponse.dart';
 import 'package:help_closing_frontend/Domain/ChatRoom.dart';
 import 'dart:convert';
@@ -17,6 +18,8 @@ class ChatRoomController extends GetxController {
   late Rx<String> currentChatRoomId;
   Timer? _timer;
   late RxList<ChatMessageResponse> messages;
+
+  ChatService chatService = ChatService();
 
   @override
   void onInit() {
@@ -40,6 +43,10 @@ class ChatRoomController extends GetxController {
     _timer = Timer.periodic(Duration(seconds: 5), (timer) { // 5초마다 fetchMessageList를 호출합니다.
       fetchMessageList();
     });
+  }
+
+  void sendMessage(String message){
+    // messages.add(message);
   }
 
 

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
 import 'package:help_closing_frontend/Pages/Settings/Contacts/EmergencyContactsPage.dart';
+import 'package:help_closing_frontend/Pages/Settings/Inforamtion/ChangeInformationPage.dart';
 import 'package:help_closing_frontend/Pages/Settings/Pledge/PledgePage.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -80,12 +81,12 @@ class ChangeSettings extends StatelessWidget {
             leading: Container(
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
-                  color: Colors.deepPurple.shade100,
+                  color: Colors.blue.shade100,
                   shape: BoxShape.circle
               ),
               child: const Icon(
                 Icons.description,
-                color: Colors.deepPurple,
+                color: Colors.blue,
                 size: 35,
               ),
             ),
@@ -105,12 +106,12 @@ class ChangeSettings extends StatelessWidget {
             leading: Container(
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
-                  color: Colors.green.shade100,
+                  color: Colors.blue.shade100,
                   shape: BoxShape.circle
               ),
               child: const Icon(
                 Icons.contact_emergency,
-                color: Colors.green,
+                color: Colors.blue,
                 size: 35,
               ),
             ),
@@ -124,7 +125,9 @@ class ChangeSettings extends StatelessWidget {
           const SizedBox(height: 20,),
 
           ListTile(
-            onTap: (){},
+            onTap: (){
+              Get.to(()=>ChangeInformationPage());
+            },
             leading: Container(
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
@@ -154,12 +157,12 @@ class ChangeSettings extends StatelessWidget {
             leading: Container(
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
-                  color: Colors.redAccent.shade100,
+                  color: Colors.blue.shade100,
                   shape: BoxShape.circle
               ),
               child: const Icon(
                 Icons.logout,
-                color: Colors.redAccent,
+                color: Colors.blue,
                 size: 35,
               ),
             ),

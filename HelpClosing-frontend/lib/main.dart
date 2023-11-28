@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
 import 'package:help_closing_frontend/Fcm/fcmSettings.dart';
-import 'package:help_closing_frontend/Pages/Chat/ChatRoomPage.dart';
-import 'package:help_closing_frontend/Pages/MainPage.dart';
-import 'package:help_closing_frontend/Pages/Settings/SettingsPage.dart';
 import 'Controller/Auth_Controller.dart';
 import 'Pages/Login_SignUp/Login.dart';
 
 // late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 void main() async{
-  // WidgetsFlutterBinding.ensureInitialized();
-  // // notification 설정
-  // String? firebaseToken = await fcmSetting();
-  //
-  //
+  WidgetsFlutterBinding.ensureInitialized();
+  // notification 설정
+  String? firebaseToken = await fcmSetting();
+
+
   Get.put(AuthController());
   Get.put(UserController());
-  //
-  // // // notification 설정
-  // await AuthController.to.storage.write(key: 'fcmToken', value: firebaseToken);
+
+  // // notification 설정
+  await AuthController.to.storage.write(key: 'fcmToken', value: firebaseToken);
 
   runApp(const MyApp());
 }
@@ -40,7 +36,6 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.system,
       home: const LoginPage(),
-      // home: const ChatRoomPage(),
     );
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:help_closing_frontend/Controller/Help_Controller.dart';
 
 
 class NotificationPage extends StatelessWidget {
-  const NotificationPage({super.key});
+  NotificationPage({super.key});
+  HelpController helpController = Get.put(HelpController());
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,10 @@ class NotificationPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              helpController.giveHelp();
+                              Get.back();
+                            },
                             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                             child: const Icon(Icons.check,color: Colors.white,)),
                         const SizedBox(width: 5,),

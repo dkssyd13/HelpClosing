@@ -15,14 +15,24 @@ class _SignUpPageState extends State<SignUpPage> {
   late Size mediaSize;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordCheckController = TextEditingController();
   TextEditingController nameController = TextEditingController();
+  TextEditingController nickNameController = TextEditingController();
   bool _hidePassword=true;
   bool _rememberMe=false;
+  bool _flagCheckPass=true;
+  bool _checkEmail = false;
 
 
   void _togglePassword(){
     setState(() {
       _hidePassword=!_hidePassword;
+    });
+  }
+
+  void _CheckPassword(){
+    setState(() {
+      _flagCheckPass=passwordCheckController.text.trim() == passwordController.text.trim() ? true : false;
     });
   }
 
@@ -110,11 +120,24 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               const SizedBox(height: 10,),
+              _buildGreyText("닉네임"),
+              TextField(
+                controller: nickNameController,/////////////////////////////////////
+                decoration: const InputDecoration(
+                    suffixIcon: Icon(Icons.person_add_alt_outlined)
+                ),
+              ),
+              const SizedBox(height: 10,),
               _buildGreyText("이메일"),
               TextField(
                 controller: emailController,
-                decoration: const InputDecoration(
-                    suffixIcon: Icon(Icons.email_outlined)
+                decoration: InputDecoration(
+                    suffixIcon: IconButton(onPressed: ()  async{
+                      var flag = await AuthController.to.checkEmail(emailController.text.trim());
+                      setState(()  {
+                        _checkEmail = flag;
+                      });
+                    }, icon: const Icon(Icons.email_outlined), color: _checkEmail? Colors.green : Colors.red),
                 ),
               ),
               const SizedBox(height: 10,),
@@ -130,9 +153,33 @@ class _SignUpPageState extends State<SignUpPage> {
                 obscureText: _hidePassword,
               ),
               const SizedBox(height: 10,),
+              _buildGreyText("비밀번호 확인"),
+              TextField(
+                onChanged: (text){
+                  _CheckPassword();
+                },
+                controller: passwordCheckController,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    onPressed: (){_CheckPassword();},
+                    icon: _flagCheckPass ? const Icon(Icons.check) : const Icon(Icons.do_not_disturb_alt),
+                  ),
+                ),
+                obscureText: _hidePassword,
+              ),
+              const SizedBox(height: 10,),
               ElevatedButton(onPressed: (){
-                AuthController.to.register(emailController.text.trim(), passwordController.text.trim());
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const PledgeScreen()));
+                if(_flagCheckPass){
+                  var email = emailController.text.trim();
+                  var password = passwordController.text.trim();
+                  var confirmPw = passwordCheckController.text.trim();
+                  var nickname = nickNameController.text.trim();
+                  AuthController.to.register(email, password, confirmPw, nickname);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PledgeScreen()));
+                }
+                else{
+                  Get.snackbar("비밀번호 불일치", "비밀번호를 확인해주세요",snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.redAccent[100]);
+                }
               },
                   style: ElevatedButton.styleFrom(
                     shadowColor: myColor,

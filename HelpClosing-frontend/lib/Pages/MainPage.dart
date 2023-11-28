@@ -43,7 +43,7 @@ class _MainPageState extends State<MainPage> {
         titleTextStyle: const TextStyle(fontSize: 40,fontWeight: FontWeight.bold,color: Colors.blue),
         actions: [
           // IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationPage()));},
-          IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationPage()));},
+          IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationPage()));},
               icon: const Icon(Icons.notifications)),
         ],
       ),
@@ -84,7 +84,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return Obx((){
-      return _helpController.helpFlag?const NeedHelpBody() : const DoesntNeedHelpBody();
+      return _helpController.navigateHomePage();
     });
   }
 }

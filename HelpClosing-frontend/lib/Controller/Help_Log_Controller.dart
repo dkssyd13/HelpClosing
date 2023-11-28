@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
+import 'package:help_closing_frontend/ServerUrl.dart';
 import 'package:http/http.dart' as http;
 import '../Domain/HelpLog.dart';
 
@@ -9,7 +10,7 @@ import '../Domain/HelpLog.dart';
 
 class HelpLogController extends GetxController {
   var recipientHelpLogs = List<HelpLog>.empty(growable: true).obs;
-  static const String baseUrl = "http://your-backend-api-url";
+  static const String baseUrl = ServerUrl.baseUrl;
   var isLoading = true.obs;
   final UserController _userController = Get.find();
 
