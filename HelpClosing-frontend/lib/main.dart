@@ -12,7 +12,6 @@ void main() async{
   // notification 설정
   String? firebaseToken = await fcmSetting();
 
-
   Get.put(AuthController());
   Get.put(UserController());
 
