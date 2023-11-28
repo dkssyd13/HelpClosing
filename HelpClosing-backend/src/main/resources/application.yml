@@ -1,3 +1,16 @@
 spring:
   profiles:
     active: ${profile}
+
+cloud:
+  aws:
+    s3:
+      bucket: helpclosing-bucket
+      region:
+        static: ap-northeast-2
+        auto: false
+      stack:
+        auto: false
+      credentials:
+        access-key:
+        secret-key:
