@@ -10,6 +10,9 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Component
@@ -19,11 +22,14 @@ public class StompHandler implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message , MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        System.out.println("message:" + message);
+        System.out.println("헤더 : " + message.getHeaders());
+        System.out.println("토큰" + accessor.getNativeHeader("Authorization"));
 
-        if(accessor.getCommand() == StompCommand.CONNECT){
-            if(!jwtProvider.validateToken(accessor.getFirstNativeHeader("Authorization")))
-                throw new AccessDeniedException("Access Denied");
+        if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+            jwtProvider.validateToken(Objects.requireNonNull(accessor.getFirstNativeHeader("Authorization")).substring(7));
         }
+
         return message;
     }
 

@@ -71,7 +71,7 @@ public class ChatController {
         message.setNickName(user.getNickName());
         message.setName(user.getName());
 
-        messagingTemplate.convertAndSend("/pub/chat/room/" + message.getChatRoomId(), message);
+        messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoomId(), message);
 
         ChatMessage chatMessage = ChatMessage.builder()
                 .message(message.getMessage())
