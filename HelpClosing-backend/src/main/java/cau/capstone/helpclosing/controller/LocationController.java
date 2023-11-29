@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,9 +25,9 @@ public class LocationController {
     private LocationService locationService;
 
     @GetMapping("/location/find")
-    public Header<List<Location>> findAround(@RequestBody LocationRequest locationRequest){
+    public Header<List<Location>> findAround(@RequestParam double latitude, @RequestParam double longitude, @RequestParam double distance){
         try{
-            return Header.OK(locationService.getNearByPlaces(locationRequest.getLatitude(), locationRequest.getLongitude(), locationRequest.getDistance()),"list of users around 100m");
+            return Header.OK(locationService.getNearByPlaces(latitude, longitude, distance),"list of users around 100m");
         }
         catch(Exception e){
             return Header.ERROR("Need to login for finding around");
@@ -39,9 +36,9 @@ public class LocationController {
     }
 
     @GetMapping("/location/distance")
-    public List<LocationResponse> findAroundDistance(@RequestBody LocationRequest locationRequest){
+    public List<LocationResponse> findAroundDistance(@RequestParam double latitude, @RequestParam double longitude, @RequestParam double distance){
         try{
-            return locationService.getRankedLocations(locationRequest.getLatitude(), locationRequest.getLongitude(), locationRequest.getDistance());
+            return locationService.getRankedLocations(latitude, longitude, distance);
         }
         catch(Exception e){
             return null;
