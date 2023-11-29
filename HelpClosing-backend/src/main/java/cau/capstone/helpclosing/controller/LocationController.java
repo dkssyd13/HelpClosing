@@ -29,7 +29,6 @@ public class LocationController {
     @GetMapping("/location/find")
     public Header<List<Location>> findAround(@RequestBody LocationRequest locationRequest){
         try{
-
             return Header.OK(locationService.getNearByPlaces(locationRequest.getLatitude(), locationRequest.getLongitude(), locationRequest.getDistance()),"list of users around 100m");
         }
         catch(Exception e){

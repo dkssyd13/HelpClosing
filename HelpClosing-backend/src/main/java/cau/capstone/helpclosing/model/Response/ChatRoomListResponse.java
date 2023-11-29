@@ -15,7 +15,7 @@ public class ChatRoomListResponse {
 
     private Long chatRoomId;
 
-    private List<UserMailandName> userList;
+//    private List<UserMailandName> userList;
 
 
 }

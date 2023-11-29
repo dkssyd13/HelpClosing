@@ -31,27 +31,28 @@ public class ChatRoomService {
     public List<ChatRoomListResponse> roomList(String email){
         User user = userRepository.findByEmail(email);
         List<Matching> matchingList = matchingRepository.findByUser(user);
+
         List<ChatRoomListResponse> roomList = new ArrayList<>();
 
         if(!matchingList.isEmpty()){
             System.out.println("matchingList is not empty");
             for (Matching m : matchingList){
                 ChatRoom r = m.getChatRoom();
-                List<Matching> sameChatRoom = matchingRepository.findByChatRoom(r);
+//                List<Matching> sameChatRoom = matchingRepository.findByChatRoom(r);
 
-                List<UserMailandName> userList = new ArrayList<>();
-                if(!sameChatRoom.isEmpty()){
-                    for (Matching s : sameChatRoom){
-                        userList.add(UserMailandName.builder()
-                                .email(s.getUser().getEmail())
-                                .name(s.getUser().getName())
-                                .build());
-                    }
+//                List<UserMailandName> userList = new ArrayList<>();
+//                if(!sameChatRoom.isEmpty()){
+//                    for (Matching s : sameChatRoom){
+//                        userList.add(UserMailandName.builder()
+//                                .email(s.getUser().getEmail())
+//                                .name(s.getUser().getName())
+//                                .build());
+//                    }
                     roomList.add(ChatRoomListResponse.builder()
                             .chatRoomId(r.getChatRoomId())
-                            .userList(userList)
+//                            .userList(userList)
                             .build());
-                }
+//                }
             }
         }
         else{

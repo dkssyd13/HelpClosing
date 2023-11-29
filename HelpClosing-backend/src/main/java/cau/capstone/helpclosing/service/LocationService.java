@@ -91,6 +91,7 @@ public class LocationService {
 //
 //
 
+    //100m 미터 검색하려면 distance = 0.1
     @Transactional(readOnly = true)
     public List<Location> getNearByPlaces(double latitude, double longitude, double distance){
         Location northEast = calculate(latitude, longitude, distance, Direction.NORTHEAST.getBearing());

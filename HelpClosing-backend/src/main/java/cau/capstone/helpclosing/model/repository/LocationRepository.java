@@ -22,7 +22,7 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
     @Query("SELECT l FROM Location l " +
             "WHERE MBRContains(" +
-            "    GeomFromText(" +
+            "    ST_GeomFromText(" +
             "        CONCAT('POLYGON((' , " +
             "            :minLongitude , ' ' , :minLatitude , ',' , " +
             "            :maxLongitude , ' ' , :minLatitude , ',' , " +
