@@ -32,6 +32,14 @@ logging:
             sql:
               BasicBinder: trace
 
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+
 
 jwt:
   secret:
@@ -49,3 +57,5 @@ cloud:
       credentials:
         access-key: AKIAVFL2SVMF4CP3BBW4
         secret-key: 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
+
+

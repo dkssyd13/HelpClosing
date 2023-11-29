@@ -3,6 +3,7 @@ package cau.capstone.helpclosing.service;
 import cau.capstone.helpclosing.model.Entity.Direction;
 import cau.capstone.helpclosing.model.Entity.Location;
 import cau.capstone.helpclosing.model.Request.LocationRegisterRequest;
+import cau.capstone.helpclosing.model.Response.LocationResponse;
 import cau.capstone.helpclosing.model.repository.LocationRepository;
 import cau.capstone.helpclosing.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,9 @@ public class LocationService {
     private UserRepository userRepository;
 
     private final EntityManager em;
+
+
+    private static final double EARTH_RADIUS_KM = 6371.01;
 
     public Location addLocation(LocationRegisterRequest locationRegisterRequest){
 
@@ -118,6 +124,42 @@ public class LocationService {
 
         longitude = normalizeLongitude(longitude);
         return new Location(toDegree(latitude), toDegree(longitude));
+    }
+
+    public List<LocationResponse> getRankedLocations(double baseLatitude, double baseLongitude, double distance) {
+        List<Location> nearbyLocations = getNearByPlaces(baseLatitude, baseLongitude, distance);
+
+        // Calculate distances and sort by closeness
+        List<LocationResponse> rankedLocations = nearbyLocations.stream()
+                .map(location -> new LocationResponse(location.getUser().getEmail(), location.getLatitude(), location.getLongitude(), 0))
+                .sorted((loc1, loc2) -> Double.compare(
+                        calculateDistance(baseLatitude, baseLongitude, loc1.getLatitude(), loc1.getLongitude()),
+                        calculateDistance(baseLatitude, baseLongitude, loc2.getLatitude(), loc2.getLongitude())
+                ))
+                .collect(Collectors.toList());
+
+        // Assign ranks
+        IntStream.range(0, rankedLocations.size())
+                .forEach(index -> rankedLocations.get(index).setClosenessRank(index + 1));
+
+        return rankedLocations;
+    }
+
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        double radianLat1 = Math.toRadians(lat1);
+        double radianLon1 = Math.toRadians(lon1);
+        double radianLat2 = Math.toRadians(lat2);
+        double radianLon2 = Math.toRadians(lon2);
+
+        double lonDiff = radianLon2 - radianLon1;
+        double latDiff = radianLat2 - radianLat1;
+
+        double a = Math.pow(Math.sin(latDiff / 2), 2)
+                + Math.cos(radianLat1) * Math.cos(radianLat2) * Math.pow(Math.sin(lonDiff / 2), 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS_KM * c;
     }
 
     private static double toRadian(double coordinate){

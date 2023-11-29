@@ -5,6 +5,7 @@ import cau.capstone.helpclosing.model.Entity.User;
 import cau.capstone.helpclosing.model.Header;
 import cau.capstone.helpclosing.model.Request.LocationRegisterRequest;
 import cau.capstone.helpclosing.model.Request.LocationRequest;
+import cau.capstone.helpclosing.model.Response.LocationResponse;
 import cau.capstone.helpclosing.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,17 @@ public class LocationController {
         }
         catch(Exception e){
             return Header.ERROR("Need to login for finding around");
+        }
+
+    }
+
+    @GetMapping("/location/distance")
+    public List<LocationResponse> findAroundDistance(@RequestBody LocationRequest locationRequest){
+        try{
+            return locationService.getRankedLocations(locationRequest.getLatitude(), locationRequest.getLongitude(), locationRequest.getDistance());
+        }
+        catch(Exception e){
+            return null;
         }
 
     }

@@ -44,7 +44,6 @@ public class RegisterController {
             return Header.ERROR("닉네임이 이미 존재합니다");
         }
 
-
         return Header.OK( userService.register(request), "회원가입이 성공적으로 완료되었습니다.");
 
     }

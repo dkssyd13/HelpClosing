@@ -46,6 +46,12 @@ jwt:
   secret:
     key: x!A%D*G-KaPdSgVkYp3s5v8y/B?E(H+M
 
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 cloud:
   aws:

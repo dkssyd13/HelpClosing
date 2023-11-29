@@ -20,7 +20,7 @@ public class ChatRoomController {
     @CrossOrigin(origins="*", maxAge=3600)
     public Header chatRoomList(@RequestParam String email){
 
-            return Header.OK(chatRoomService.roomList(email), "매칭룸목록(roomid");
+            return Header.OK(chatRoomService.roomList(email), "매칭룸목록(roomid)");
 
     }
 
