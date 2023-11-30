@@ -58,25 +58,13 @@ server:
 
 cloud:
   aws:
-    #    s3:
-    #      bucket: helpclosing-bucket
-    #    credentials:
-    #      accessKey:
-    #      secretKey:
-    stack:
-      auto: false
-    region:
-      static: ap-northeast-2
-#
-#cloud:
-#  aws:
-#    s3:
-#      bucket: helpclosing-bucket
-#      region:
-#        static: ap-northeast-2
-#        auto: false
-#      stack:
-#        auto: false
-#      credentials:
-#        access-key:
-#        secret-key:
+    s3:
+      bucket: helpclosing-bucket
+      region:
+        static: ap-northeast-2
+        auto: false
+      stack:
+        auto: false
+      credentials:
+        access-key: AKIAVFL2SVMF4CP3BBW4
+        secret-key: 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

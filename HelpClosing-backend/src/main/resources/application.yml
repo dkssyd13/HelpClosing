@@ -1,16 +1,17 @@
 spring:
   profiles:
     active: ${profile}
-#
-#cloud:
-#  aws:
-#    s3:
-#      bucket: helpclosing-bucket
-#      region:
-#        static: ap-northeast-2
-#        auto: false
-#      stack:
-#        auto: false
-#      credentials:
-#        access-key:
-#        secret-key:
+server:
+  port: 80
+---
+spring:
+  profiles:
+    active: local
+server:
+  port: 8080
+---
+spring:
+  profiles:
+    active: prod
+server:
+  port: 8081
