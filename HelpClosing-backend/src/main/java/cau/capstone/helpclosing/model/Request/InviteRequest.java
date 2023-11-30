@@ -15,6 +15,8 @@ public class InviteRequest {
 
     private String inviteEmail;
     private String invitedEmail;
+    private int closenessRank;
+
 
 //    private Long chatRoomId;
 

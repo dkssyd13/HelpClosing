@@ -48,6 +48,7 @@ public class MatchingService {
             Invitation invitation = Invitation.builder()
                     .invitePerson(sender.getEmail())
                     .invitedPerson(receiver.getEmail())
+                    .closenessRank(inviteRequest.getClosenessRank())
                     .build();
             invitationRepository.save(invitation);
         }
