@@ -1,4 +1,7 @@
 spring:
+  config:
+    activate:
+      on-profile: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: helpclosing-server-db.coy7ux4usksb.ap-northeast-2.rds.amazonaws.com

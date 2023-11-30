@@ -98,7 +98,7 @@ public class MatchingService {
 //        }
 //    }
 
-    //초대 받은 목록 return - 도움 받은 사람이 확인하는 거
+    //초대 받은 목록 return - 도움 주는 사람이 확인하는 거, 알림 창에 초대 목록이 뜸
     public InvitationListResponse inviteList(String email) {
         List<Invitation> list = invitationRepository.findByInvitedPerson(email);
         List<InvitationList> invitationList = list.stream().map(invitation -> response(invitation))
