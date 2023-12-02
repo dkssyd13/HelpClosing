@@ -5,7 +5,7 @@ plugins {
 }
 
 bootJar {
-	mainClass = 'com.example.ExampleApplication'
+	mainClass = 'cau.capstone.helpclosing.HelpclosingBackendApplication'
 }
 
 group = 'cau.capstone'
@@ -13,6 +13,10 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	sourceCompatibility = '17'
+}
+
+jar {
+	enabled = false
 }
 
 configurations {

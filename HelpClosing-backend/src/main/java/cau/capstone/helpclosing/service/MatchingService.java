@@ -41,6 +41,11 @@ public class MatchingService {
         //매칭할 사람 찾기
         User receiver = userRepository.findByEmail(inviteRequest.getInvitedEmail());
 
+        Invitation inv = invitationRepository.findByInvitedPersonAndInvitePerson(receiver.getEmail(), sender.getEmail());
+
+        if(inv != null) {
+            return "Already invited to" + receiver.getNickName();
+        }
 
         if (receiver == null || sender == null) {
             return "There is no user who meets condition.";
@@ -191,9 +196,10 @@ public class MatchingService {
         } else {
             List<Matching> list = matchingRepository.findByUser(sender);//sender가 이미 매칭된 사람들
 
+            User recieverUser = userRepository.findByEmail(receiver.getEmail());
             //이미 매칭 된 사람들 중에 receiver가 있는지 확인
             for (Matching m : list) {
-                if (matchingRepository.findByChatRoomAndUserEmail(m.getChatRoom(), receiver.getEmail()) != null) {
+                if (matchingRepository.findByChatRoomAndUser(m.getChatRoom(), recieverUser) != null) {
                     return true;
                 }
             }

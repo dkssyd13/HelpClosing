@@ -4,11 +4,13 @@ import cau.capstone.helpclosing.model.Entity.User;
 import cau.capstone.helpclosing.model.Header;
 import cau.capstone.helpclosing.model.Request.ChatRoomRequest;
 import cau.capstone.helpclosing.service.ChatRoomService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 public class ChatRoomController {
 
@@ -32,6 +34,16 @@ public class ChatRoomController {
         }
         catch(Exception e){
             return Header.ERROR("update chat room error: "+e);
+        }
+    }
+
+    @DeleteMapping("/chatRoom/exit")
+    public Header exitChatRoom(@RequestParam String userEmail, @RequestParam Long chatRoomId){
+        try{
+            return Header.OK(chatRoomService.exitChatRoom(userEmail, chatRoomId),"");
+        }
+        catch(Exception e){
+            return Header.ERROR("exit chat room error: "+e);
         }
     }
 }

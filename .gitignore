@@ -1,3 +1,7 @@
 HelpClosing-frontend/web/
 serviceAccountKey.json
 .env
+application-prod.yml
+application.yml
+application-local.yml
+

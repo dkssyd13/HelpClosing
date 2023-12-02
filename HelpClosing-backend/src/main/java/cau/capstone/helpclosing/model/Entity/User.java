@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @Builder
 @Accessors(chain = true)
-@ToString(exclude = {"matchingList"})
+@ToString(exclude = {"password", "matchingList"})
 public class User {
 
     @Id
