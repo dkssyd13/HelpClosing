@@ -23,7 +23,8 @@ public class Invitation {
 
     private String invitePerson;
     private String invitedPerson;
-
+    private int closenessRank;
+//
     private Long chatRoomId;
 
 }
