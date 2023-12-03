@@ -2,6 +2,7 @@ package cau.capstone.helpclosing.model.Entity;
 
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,6 +21,11 @@ public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatRoomId;
+
+
+    @Builder.Default
+    private boolean isDone = false;
+
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "chatRoom")
     private List<ChatMessage> chatList = new ArrayList<>();
