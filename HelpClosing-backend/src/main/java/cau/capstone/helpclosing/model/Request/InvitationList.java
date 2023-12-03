@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class InvitationList {
 
-
     private String invitedEmail;
     private String invitedName;
+    private int clossnessRank;
 
 //    private Long chatRoomId ;
 

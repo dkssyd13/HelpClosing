@@ -14,7 +14,11 @@ import java.util.List;
 @Setter
 @Builder
 @Accessors(chain = true)
+<<<<<<< HEAD
 @ToString(exclude = {"user", "userEmail"})
+=======
+@ToString(exclude = {"password", "matchingList"})
+>>>>>>> 3ca3b45e503cd48976cbada1f1fa5d1ecf4ae4e8
 public class User {
 
     @Id

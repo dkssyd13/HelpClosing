@@ -39,6 +39,11 @@ public class MatchingService {
         //매칭할 사람 찾기
         User receiver = userRepository.findByEmail(inviteRequest.getInvitedEmail());
 
+        Invitation inv = invitationRepository.findByInvitedPersonAndInvitePerson(receiver.getEmail(), sender.getEmail());
+
+        if(inv != null) {
+            return "Already invited to" + receiver.getNickName();
+        }
 
         if (receiver == null || sender == null) {
             return "There is no user who meets condition.";
@@ -46,6 +51,7 @@ public class MatchingService {
             Invitation invitation = Invitation.builder()
                     .invitePerson(sender.getEmail())
                     .invitedPerson(receiver.getEmail())
+                    .closenessRank(inviteRequest.getClosenessRank())
                     .build();
             invitationRepository.save(invitation);
         }
@@ -96,7 +102,7 @@ public class MatchingService {
 //        }
 //    }
 
-    //초대 받은 목록 return - 도움 받은 사람이 확인하는 거
+    //초대 받은 목록 return - 도움 주는 사람이 확인하는 거, 알림 창에 초대 목록이 뜸
     public InvitationListResponse inviteList(String email) {
         List<Invitation> list = invitationRepository.findByInvitedPerson(email);
         List<InvitationList> invitationList = list.stream().map(invitation -> response(invitation))
@@ -188,9 +194,10 @@ public class MatchingService {
         } else {
             List<Matching> list = matchingRepository.findByUser(sender);//sender가 이미 매칭된 사람들
 
+            User recieverUser = userRepository.findByEmail(receiver.getEmail());
             //이미 매칭 된 사람들 중에 receiver가 있는지 확인
             for (Matching m : list) {
-                if (matchingRepository.findByChatRoomAndUserEmail(m.getChatRoom(), receiver.getEmail()) != null) {
+                if (matchingRepository.findByChatRoomAndUser(m.getChatRoom(), recieverUser) != null) {
                     return true;
                 }
             }

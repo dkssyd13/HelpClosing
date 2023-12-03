@@ -16,6 +16,7 @@ import java.util.Date;
 public class Pledge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increment
+    @Column(name = "pledge_id")
     private Long pledgeId;
     private Date time;
     @Lob // Large Object

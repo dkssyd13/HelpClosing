@@ -61,11 +61,8 @@ public class MatchingController {
 
     @GetMapping("/matching/invitedList")
     //@ApiOperation(value="초대 받은 목록(invitation) 보기", notes = "")
-    public Header<InvitationListResponse> inviteList(){
+    public Header<InvitationListResponse> inviteList(@RequestParam String email){
         try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = ((User) auth.getPrincipal()).getEmail();
-
             return Header.OK(matchingService.inviteList(email), "");
         }
         catch (Exception e){

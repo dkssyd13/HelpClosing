@@ -19,4 +19,12 @@ public class FCMToken {
 
     String email;
     String FCMToken;
+
+    public String getFcmtoken() {
+        return FCMToken;
+    }
+
+    public void setFcmtoken(String fcmtoken) {
+        this.FCMToken = fcmtoken;
+    }
 }

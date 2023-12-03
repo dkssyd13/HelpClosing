@@ -2,7 +2,12 @@ package cau.capstone.helpclosing.service;
 
 import cau.capstone.helpclosing.model.Entity.Direction;
 import cau.capstone.helpclosing.model.Entity.Location;
+<<<<<<< HEAD
 import cau.capstone.helpclosing.model.Request.LocationRequest;
+=======
+import cau.capstone.helpclosing.model.Request.LocationRegisterRequest;
+import cau.capstone.helpclosing.model.Response.LocationResponse;
+>>>>>>> 3ca3b45e503cd48976cbada1f1fa5d1ecf4ae4e8
 import cau.capstone.helpclosing.model.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +27,34 @@ public class LocationService {
     @Autowired
     private LocationRepository locationRepository;
     private final EntityManager em;
+<<<<<<< HEAD
+=======
+
+
+    private static final double EARTH_RADIUS_KM = 6371.01;
+
+    public Location addLocation(LocationRegisterRequest locationRegisterRequest){
+
+        try{
+            Location location = Location.builder()
+                    .description(locationRegisterRequest.getDescription())
+                    .address(locationRegisterRequest.getAddress())
+                    .longitude(locationRegisterRequest.getLongitude())
+                    .latitude(locationRegisterRequest.getLatitude())
+                    .user(userRepository.findByEmail(locationRegisterRequest.getEmail()))
+                    .build();
+
+            System.out.println(location.toString());
+
+            return locationRepository.save(location);
+
+        }
+        catch (Exception e){
+            return null;
+        }
+
+    }
+>>>>>>> 3ca3b45e503cd48976cbada1f1fa5d1ecf4ae4e8
 //
 //    double radiusInMeters = 100.0;
 //    double radiusInDegrees = radiusInMeters / 111320.0; // 1 degree = 111.32 km
@@ -64,6 +99,7 @@ public class LocationService {
 //
 //
 
+    //100m 미터 검색하려면 distance = 0.1
     @Transactional(readOnly = true)
     public List<Location> getNearByPlaces(double latitude, double longitude, double distance){
         Location northEast = calculate(latitude, longitude, distance, Direction.NORTHEAST.getBearing());
@@ -90,6 +126,42 @@ public class LocationService {
 
         longitude = normalizeLongitude(longitude);
         return new Location(toDegree(latitude), toDegree(longitude));
+    }
+
+    public List<LocationResponse> getRankedLocations(double baseLatitude, double baseLongitude, double distance) {
+        List<Location> nearbyLocations = getNearByPlaces(baseLatitude, baseLongitude, distance);
+
+        // Calculate distances and sort by closeness
+        List<LocationResponse> rankedLocations = nearbyLocations.stream()
+                .map(location -> new LocationResponse(location.getUser().getEmail(), location.getLatitude(), location.getLongitude(), 0))
+                .sorted((loc1, loc2) -> Double.compare(
+                        calculateDistance(baseLatitude, baseLongitude, loc1.getLatitude(), loc1.getLongitude()),
+                        calculateDistance(baseLatitude, baseLongitude, loc2.getLatitude(), loc2.getLongitude())
+                ))
+                .collect(Collectors.toList());
+
+        // Assign ranks
+        IntStream.range(0, rankedLocations.size())
+                .forEach(index -> rankedLocations.get(index).setClosenessRank(index + 1));
+
+        return rankedLocations;
+    }
+
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        double radianLat1 = Math.toRadians(lat1);
+        double radianLon1 = Math.toRadians(lon1);
+        double radianLat2 = Math.toRadians(lat2);
+        double radianLon2 = Math.toRadians(lon2);
+
+        double lonDiff = radianLon2 - radianLon1;
+        double latDiff = radianLat2 - radianLat1;
+
+        double a = Math.pow(Math.sin(latDiff / 2), 2)
+                + Math.cos(radianLat1) * Math.cos(radianLat2) * Math.pow(Math.sin(lonDiff / 2), 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS_KM * c;
     }
 
     private static double toRadian(double coordinate){
