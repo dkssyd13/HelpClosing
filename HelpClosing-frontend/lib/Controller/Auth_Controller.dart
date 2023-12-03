@@ -60,7 +60,10 @@ class AuthController extends GetxController{
   }
 
 
-  void register(String email, password, confirmPw, nickName) async {
+  Future<bool> register(String email, password, confirmPw, nickName,name) async {
+    print("register_start");
+    print("email = $email");
+    print("pass = $password");
     final response = await http.post(
       Uri.parse('${ServerUrl.baseUrl}/register/simple'),
       headers: <String, String>{
@@ -70,7 +73,8 @@ class AuthController extends GetxController{
         'email': email,
         'password': password,
         'confirmPw' : confirmPw,
-        'nickname' : nickName,
+        'nickName' : nickName,
+        'name' : name,
       }),
     );
     print(response.body);
@@ -79,8 +83,20 @@ class AuthController extends GetxController{
 
     final int statusCode = response.statusCode;
     if (statusCode == 200) {
-      print('Register successful');
       final responseJson = jsonDecode(response.body);
+      print(responseJson['result']);
+      if(responseJson['result']==false){
+        Get.snackbar(
+            "Error Message  ",
+            "User Message",
+            backgroundColor: Colors.red[50],
+            snackPosition: SnackPosition.BOTTOM,
+            titleText: const Text("회원가입 실패"),
+            messageText: Text("${responseJson["description"]}")
+        );
+        return false;
+      }
+      return true;
     }else{
       Get.snackbar(
           "Error Message  ",
@@ -90,12 +106,8 @@ class AuthController extends GetxController{
           titleText: const Text("회원가입 실패"),
           messageText: const Text("ㅇㅇ 안됨")
       );
+      return false;
     }
-
-    // if(statusCode < 200 || statusCode > 400){
-    //   //통신이 안됐을 때, 에러가 났을때
-    //
-    // }
   }
 
   Future<bool> checkEmail(String email)async{
@@ -114,51 +126,84 @@ class AuthController extends GetxController{
   }
 
   void login(String email, String password) async {
-    // final response = await http.post(
-    //   Uri.parse('${ServerUrl.baseUrl}/login'),
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(<String, String>{
-    //     'password': password,
-    //     'email': email,
-    //   }),
-    // );
-    //
-    // print(jsonDecode(response.body));
-    //
-    // if (response.statusCode == 200) {
-    //   print('Login successful');
-    //   final responseJson = jsonDecode(response.body);
-    //
-    //   // 서버에서 받아온 사용자 정보를 사용.
-    //   String token = responseJson['jwtToken'];
-    //   String id = responseJson['userId'].toString();
-    //   String name = responseJson['name'];
-    //   String nickname = responseJson['nickName'];
-    //   String image;
-    //   if(responseJson['image'] == null){
-    //     image = '';
-    //   }
-    //   else{
-    //     image = responseJson['image'];
-    //   }
-    //   String email = responseJson['email'];
-    //   await storage.write(key: 'login', value: responseJson.toString());
-    //   print(storage.read(key: 'login'));
-    //
-    //   // 로그인이 성공하면 createCurrentUser 메서드를 호출합니다.
-    //   userController.createCurrentUser(name, email, nickname, image,id);
-    //   print(UserController.currentUser);
-    //   _currentUser.value=UserController.currentUser;
-    // } else {
-    //   Get.snackbar("로그인 실패", "입력한 정보를 다시 한번 확인해주세요",snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.redAccent[100]);
-    //   throw Exception('Failed to login');
-    // }
+    final response = await http.post(
+      Uri.parse('${ServerUrl.baseUrl}/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'password': password,
+        'email': email,
+      }),
+    );
 
-    userController.createCurrentUser('김중앙', email, 'hd', 'image','');
-    print(UserController.currentUser);
-    _currentUser.value=UserController.currentUser;
+
+    if (response.statusCode == 200) {
+      print('Login successful');
+      final responseJson = jsonDecode(response.body);
+
+      // 서버에서 받아온 사용자 정보를 사용.
+      String token = responseJson['jwtToken'];
+      String id = responseJson['userId'].toString();
+      String name = responseJson['name'];
+      String nickname = responseJson['nickName'];
+      String image;
+      if(responseJson['image'] == null){
+        image = '';
+      }
+      else{
+        image = responseJson['image'];
+      }
+      String email = responseJson['email'];
+      await storage.write(key: 'login', value: responseJson.toString());
+      print(storage.read(key: 'login'));
+      await storage.write(key: 'jwtToken', value: token);
+
+      // 로그인이 성공하면 createCurrentUser 메서드를 호출합니다.
+      userController.createCurrentUser(name, email, nickname, image,id);
+      print(UserController.currentUser);
+      _currentUser.value=UserController.currentUser;
+      saveFCMToken(email, token);
+    } else {
+      Get.snackbar("로그인 실패", "입력한 정보를 다시 한번 확인해주세요",snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.redAccent[100]);
+      throw Exception('Failed to login');
+    }
+
+    // userController.createCurrentUser('김중앙', email, 'hd', 'image','');
+    // print(UserController.currentUser);
+    // _currentUser.value=UserController.currentUser;
+  }
+
+  void saveFCMToken(String email, jwtToken) async{
+    print("Starting saveFCMToken...");
+    String? fcmToken = await storage.read(key: 'fcmToken');
+
+    if (fcmToken != null){
+      print("abc = ${fcmToken}");
+      final response = await http.post(
+        Uri.parse('${ServerUrl.baseUrl}/fb/saveFCMToken'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': "Bearer " + jwtToken,
+
+        },
+        body: jsonEncode(<String, String>{
+          'email': email,
+          'fcmtoken': fcmToken,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // 서버가 200 OK 응답을 반환하면, 토큰 저장 결과를 파싱합니다.
+        print("saved FCM TOKEN : ${fcmToken}");
+        print("SaveToken OK");
+      } else {
+        // 서버가 200 OK 응답이 아닌 경우, 예외를 발생시킵니다.
+        print(response.statusCode);
+        print(response.body);
+        throw Exception('Failed to save FCM token');
+      }
+    }
   }
 
   void logout() async{
@@ -166,6 +211,7 @@ class AuthController extends GetxController{
     //자동 로그인 정보 삭제
     await storage.delete(key: "login");
     _currentUser.value=null;
+    Get.to(const LoginPage());
   }
 
 }

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_routes/google_maps_routes.dart';
+import 'package:help_closing_frontend/Controller/Help_Controller.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -17,6 +18,8 @@ class NeedHelpBody extends StatefulWidget {
 
 class _NeedHelpBodyState extends State<NeedHelpBody> {
   late GoogleMapController mapController;
+  final HelpController _helpController = Get.put(HelpController());
+  TextEditingController _currentStateController = TextEditingController();
 
   //위치 예시
   List<LatLng> points = [
@@ -53,11 +56,20 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
     LocationPermission permission;
     permission = await Geolocator.requestPermission();
 
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    double lat = position.latitude;
-    double long = position.longitude;
-    await getAddr(lat, long);
+    // Position position = await Geolocator.getCurrentPosition(
+    //     desiredAccuracy: LocationAccuracy.high);
+    // double lat = position.latitude;
+    // double long = position.longitude;
+    // await getAddr(lat, long);
+    double lat =37.504904929679796;
+    double long = 126.95403171766152;
+    _helpController.findAround(lat,long);
+    _helpController.markers.value.add(
+      Marker(
+        markerId: const MarkerId('내위치'),
+        position: LatLng(lat,long),
+      ),
+    );
 
     LatLng location = LatLng(lat, long);
 
@@ -88,28 +100,17 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
     return SafeArea(
       child: Stack(
         children: [
-          _isLoading ? const Center(child: CircularProgressIndicator()) :
-          _currentPosition != null ? GoogleMap(
+          _currentPosition != null ? Obx(() => GoogleMap(
               zoomControlsEnabled: false,
               onMapCreated: _onMapCreated,
               polylines: route.routes,
               //
-              markers: {
-                Marker(
-                markerId: const MarkerId('내위치'),
-                position: _currentPosition!,
-              ),
-                Marker(
-                  markerId: const MarkerId("중앙대학교 310관"),
-                  position: const LatLng(37.504815334545874, 126.95534935119163),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
-                ),
-              },
+              markers: _helpController.markers.value,
               initialCameraPosition: CameraPosition(
                 target: _currentPosition!,
                 zoom: 16.0,
               )
-          ) : Container(),
+          )) : const Center(child : CircularProgressIndicator()),
           Positioned(
             right: 10,
             bottom: 10,
@@ -122,83 +123,8 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
             right: 10,
               bottom: 70,
               child: FloatingActionButton(
-                // onPressed: () async {
-                //   await route.drawRoute(points, 'Test routes',
-                //       const Color.fromRGBO(130, 78, 210, 1.0),
-                //       travelMode: TravelModes.walking);
-                //   setState(() {
-                //     totalDistance =
-                //         distanceCalculator.calculateRouteDistance(points, decimals: 1);
-                //   });
-                // },
                 child: const Icon(Icons.note_alt_sharp),
                 onPressed: (){
-                  // showModalBottomSheet(context: context, builder: (context){
-                  //   return SizedBox(
-                  //     height: 400,
-                  //     width: MediaQuery.of(context).size.width,
-                  //     child: Column(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //       children: [
-                  //         ElevatedButton(
-                  //             style: ElevatedButton.styleFrom(backgroundColor: Colors.green,elevation: 50,shadowColor: myColorDark),
-                  //             onPressed: () {
-                  //             },
-                  //             child: SizedBox(
-                  //                 width: MediaQuery.of(context).size.width * 0.8,
-                  //                 height: 50,
-                  //                 child: const Center(
-                  //                   child: Text("도움 요청 됐습니다! 조금만 기다려주세요~!",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20,color: Colors.white),),
-                  //                 )
-                  //             )
-                  //         ),
-                  //         ElevatedButton(
-                  //             style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
-                  //             onPressed: (){
-                  //               showModalBottomSheet(context: context, builder: (context) {
-                  //                 return SizedBox(
-                  //                   height: 200,
-                  //                   width: MediaQuery.of(context).size.width,
-                  //                   child: const Center(
-                  //                     child: Text("상태를 입력하세요"),
-                  //                   ),
-                  //                 );
-                  //               });
-                  //             },
-                  //             child: SizedBox(
-                  //                 width: MediaQuery.of(context).size.width * 0.8,
-                  //                 height: 50,
-                  //                 child: const Center(
-                  //                   child: Text("상태 전달하기",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
-                  //                 )
-                  //             )
-                  //         ),
-                  //         ElevatedButton(
-                  //             style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
-                  //             onPressed: (){},
-                  //             child: SizedBox(
-                  //                 width: MediaQuery.of(context).size.width * 0.8,
-                  //                 height: 50,
-                  //                 child: const Center(
-                  //                   child: Text("요청 대상 선택하기",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
-                  //                 )
-                  //             )
-                  //         ),
-                  //         ElevatedButton(
-                  //             style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
-                  //             onPressed: (){},
-                  //             child: SizedBox(
-                  //                 width: MediaQuery.of(context).size.width * 0.8,
-                  //                 height: 50,
-                  //                 child: const Center(
-                  //                   child: Text("비상 연락망 연락",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
-                  //                 )
-                  //             )
-                  //         )
-                  //       ],
-                  //     ),
-                  //   );
-                  // });
                   _showMenu();
                 },
               )
@@ -225,7 +151,7 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
                     width: MediaQuery.of(context).size.width * 0.8,
                     height: 50,
                     child: const Center(
-                      child: Text("도움 요청 됐습니다! 조금만 기다려주세요~!",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20,color: Colors.white),),
+                      child: Text("도움 요청 됐습니다! 조금만 기다려주세요~!",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 15,color: Colors.white),),
                     )
                 )
             ),
@@ -253,7 +179,20 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
                             ],
                           ),
                           const Text("현재 상태를 입력해주세요",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),),
-
+                          const SizedBox(height: 30,),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10,right: 10),
+                            child: TextField(
+                              controller: _currentStateController,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  onPressed: (){},
+                                  icon: const Icon(Icons.send),
+                                ),
+                                hintText: "현재 상태를 입력해주세요",
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     );
@@ -269,7 +208,50 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
             ),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
-                onPressed: (){},
+                onPressed: (){
+                  showModalBottomSheet(context: context, builder: (context) {
+                    return SizedBox(
+                      height: 400,
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.all(10),
+                                child: IconButton(
+                                  onPressed: (){
+                                    Get.back();
+                                  },
+                                  icon: const Icon(Icons.close),
+                                ),
+                              ),
+                              const Text("요청 대상",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),),
+                            ],
+                          ),
+
+                          const SizedBox(height: 30,),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10,right: 10),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: _helpController.markers.value.length,
+                                  itemBuilder: (context, index){
+                                  return ListTile(
+                                    title: Text(_helpController.markers.value.elementAt(index).markerId.toString()),
+                                    leading: const Icon(Icons.person),
+                                  );
+                                  }
+                              )
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  });
+                },
                 child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
                     height: 50,

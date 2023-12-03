@@ -11,8 +11,11 @@ class ChatRoomListPage extends StatelessWidget {
 
   ChatRoomListPage({super.key});
 
+
+
   @override
   Widget build(BuildContext context) {
+    _chatRoomController.fetchChatRoomList();
     return Scaffold(
       body: Obx(
             () =>
@@ -25,14 +28,14 @@ class ChatRoomListPage extends StatelessWidget {
                     chatRoom.userList);
                 return Card(
                   color: Colors.white,
-                  elevation: 0,
+                  elevation: 50,
                   child: ListTile(
                     onTap: () {
-                      _chatRoomController.fetchMessageList();
                       _chatRoomController.goToChat(otherUser, chatRoom.chatRoomId);
                     },
                     leading: getPhoto(otherUser!), //
                     title: Text(nameOfOther(otherUser)!),
+                    subtitle: Text("닉네임 : ${nickNameOfOther(otherUser)}"),
                   ),
                 );
               },
@@ -69,6 +72,13 @@ class ChatRoomListPage extends StatelessWidget {
     if (user.email != UserController.to.getUserEmail() &&
         user.nickName != UserController.to.getUserNickname()) {
       return user.name;
+    }
+  }
+
+  String? nickNameOfOther(UserMailandName user) {
+    if (user.email != UserController.to.getUserEmail() &&
+        user.nickName != UserController.to.getUserNickname()) {
+      return user.nickName;
     }
   }
 

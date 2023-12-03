@@ -1,13 +1,12 @@
 import 'dart:convert';
 
-class ChatMessageRequest{
-  final String message;
-  final int chatRoomId;
-  final String email;
-  final String name;
-  final String nickName;
-  final DateTime time;
-
+class ChatMessageRequest {
+  String message;
+  int chatRoomId;
+  String email;
+  String name;
+  String nickName;
+  DateTime time;
 
   ChatMessageRequest({
     required this.message,
@@ -17,7 +16,6 @@ class ChatMessageRequest{
     required this.nickName,
     required this.time,
   });
-
 
   Map<String, dynamic> toJson() => {
     'message': message,

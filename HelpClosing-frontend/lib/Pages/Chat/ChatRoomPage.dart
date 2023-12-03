@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/ChatService/ChatService.dart';
+import 'package:help_closing_frontend/Controller/Auth_Controller.dart';
+import 'package:help_closing_frontend/Controller/Chat_Controller.dart';
 import 'package:help_closing_frontend/Controller/Chat_Room_Controller.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
 import 'package:help_closing_frontend/Domain/ChatMessageResponse.dart';
@@ -18,6 +20,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   final List<String> _messages=[];
   final ChatRoomController _chatRoomController = Get.put(ChatRoomController());
   final UserController userController = Get.find();
+  final ChatController _chatController = Get.put(ChatController());
 
 
   @override
@@ -133,6 +136,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(onPressed: () {
+              _chatRoomController.stopUpdatingMessageList();
               Get.back();
             }, icon: const Icon(Icons.arrow_back, size: 24,)),
             const SizedBox(width: 10,),
@@ -155,6 +159,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             Column(
               children: [
                 Obx((){
+                  print("Current Chat Messages length : ${_chatRoomController.messages.length}");
                   return Expanded(
                       child: ListView.builder(
                         itemCount: _chatRoomController.messages.length,
@@ -257,6 +262,13 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   void _sendMessage() {
     if (_textController.text.isNotEmpty) {
       _chatService.send(_textController.text);
+      var message = _textController.text.trim();
+      var chatRoomId = _chatRoomController.currentChatRoomId.value;
+      var email = UserController.to.getUserEmail();
+      var name = UserController.to.getUserName();
+      var nickName = UserController.to.getUserNickname();
+      var time = DateTime.now();
+      _chatController.sendMessage(message, chatRoomId, email!, name!, nickName!, time);
     }
   }
 

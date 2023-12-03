@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/GoogleApiKey.dart';
@@ -39,27 +40,29 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
     getLocation();
   }
 
-  getAddr(lat,long) async{
-    //google api 위도 경도 -> 주소
-    final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyAVkF1MVwblmaf6a8hfP3aXDgtrS6V7UMI';
-    var responseAddr=await http.get(Uri.parse(url));
-    print("json body(위경도 -> 주소) : ${jsonDecode(responseAddr.body)}");
-
-    var addr='130-1+Cheongna-dong,+Seo-gu,+Incheon,+South+Korea';
-    var responseLatLong=await  http.get(Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?address=${addr}&key=AIzaSyAVkF1MVwblmaf6a8hfP3aXDgtrS6V7UMI'));
-    print("json body(주소 -> 위도 경도) : ${jsonDecode(responseLatLong.body)}");
-  }
+  // getAddr(lat,long) async{
+  //   //google api 위도 경도 -> 주소
+  //   final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyAVkF1MVwblmaf6a8hfP3aXDgtrS6V7UMI';
+  //   var responseAddr=await http.get(Uri.parse(url));
+  //   print("json body(위경도 -> 주소) : ${jsonDecode(responseAddr.body)}");
+  //
+  //   var addr='130-1+Cheongna-dong,+Seo-gu,+Incheon,+South+Korea';
+  //   var responseLatLong=await  http.get(Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?address=${addr}&key=AIzaSyAVkF1MVwblmaf6a8hfP3aXDgtrS6V7UMI'));
+  //   print("json body(주소 -> 위도 경도) : ${jsonDecode(responseLatLong.body)}");
+  // }
 
   getLocation() async {
     LocationPermission permission;
     permission = await Geolocator.requestPermission();
 
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    double lat = position.latitude;
-    double long = position.longitude;
-    await getAddr(lat, long);
+    // Position position = await Geolocator.getCurrentPosition(
+    //     desiredAccuracy: LocationAccuracy.high);
+    // double lat = position.latitude;
+    // double long = position.longitude;
+    // await getAddr(lat, long);
 
+    double lat =37.504904929679796;
+    double long = 126.95403171766152;
     LatLng location = LatLng(lat, long);
 
     setState((){
@@ -89,7 +92,6 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
     return SafeArea(
       child: Stack(
         children: [
-          _isLoading ? const Center(child: CircularProgressIndicator()) :
           _currentPosition != null ? GoogleMap(
               zoomControlsEnabled: false,
               onMapCreated: _onMapCreated,
@@ -102,7 +104,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                 ),
                 Marker(
                     markerId: const MarkerId("중앙대학교 310관"),
-                    position: const LatLng(37.504815334545874, 126.95534935119163),
+                    position: const LatLng(37.50385146926803, 126.95590974755156),
                     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
                 ),
               },
@@ -110,7 +112,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                 target: _currentPosition!,
                 zoom: 16.0,
               )
-          ) : Container(),
+          ) : const Center(child: CircularProgressIndicator()),
           Positioned(
             right: 10,
             bottom: 10,
@@ -130,7 +132,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
               )
           ),
           Positioned(
-            right: 10,
+              right: 10,
               bottom: 130,
               child: FloatingActionButton(
                 onPressed: () {
@@ -143,6 +145,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
       ),
     );
   }
+  
   Future _showMenu(){
     return showModalBottomSheet(context: context, builder: (context){
       return SizedBox(
@@ -233,11 +236,21 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                             elevation: 50,
                             child: Column(
                               children: [
-                                IconButton(onPressed: () {},
+                                IconButton(onPressed: () {
+                                  AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+                                  _assetsAudioPlayer.open(
+                                    Audio("assets/audios/police.mp3"),
+                                    loopMode: LoopMode.single, //반복 여부 (LoopMode.none : 없음)
+                                    autoStart: true, //자동 시작 여부
+                                    showNotification: false, //스마트폰 알림 창에 띄울지 여부
+                                  );
+
+                                  _assetsAudioPlayer.play();
+                                },
                                     icon: const Icon(Icons.local_police),
                                   iconSize: 150,
                                 ),
-                                Text("경찰에 신고하기",style: TextStyle(fontSize: 20, color: Colors.blue[600]),)
+                                Text("사이렌 올리기",style: TextStyle(fontSize: 20, color: Colors.blue[600]),)
                               ],
                             )),
                         const SizedBox(width: 30,),
@@ -246,10 +259,10 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                             child: Column(
                               children: [
                                 IconButton(onPressed: () {},
-                                    icon: const Icon(Icons.notifications_active_sharp),
+                                    icon: const Icon(Icons.call),
                                   iconSize: 150,
                                 ),
-                                Text("간접 도움 주기",style: TextStyle(fontSize: 20, color: Colors.blue[600]),)
+                                Text("경찰(112) 신고하기",style: TextStyle(fontSize: 20, color: Colors.blue[600]),)
                               ],
                             )),
                         const SizedBox(width: 30,),

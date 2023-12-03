@@ -7,11 +7,15 @@ class UserMailandName {
   UserMailandName({required this.email, required this.name, required this.nickName, this.image = ''});
 
   factory UserMailandName.fromJson(Map<String, dynamic> json) {
+    var image ='';
+    if(json['image'] != null ){
+      image=json['image'];
+    }
     return UserMailandName(
       email: json['email'],
       name: json['name'],
       nickName: json['nickName'],
-      image: json['image'],
+      image: image,
     );
   }
 }
