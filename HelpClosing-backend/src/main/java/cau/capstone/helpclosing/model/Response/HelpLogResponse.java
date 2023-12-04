@@ -19,4 +19,7 @@ public class HelpLogResponse {
     private LocalDateTime time;
     private User requester;
     private User recipient;
+
+    private double latitude;
+    private double longitude;
 }

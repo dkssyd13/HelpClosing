@@ -66,6 +66,8 @@ public class HelpLogService {
             return HelpLogResponse.builder()
                     .requester(requester)
                     .recipient(recipient)
+                    .latitude(helpLogRequest.getLatitude())
+                    .longitude(helpLogRequest.getLongitude())
                     .build();
     }
 

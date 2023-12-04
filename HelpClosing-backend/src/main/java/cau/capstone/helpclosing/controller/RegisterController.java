@@ -70,7 +70,7 @@ public class RegisterController {
         }
     }
 
-    @PostMapping("/register/pledgeResponse  ")
+    @PostMapping("/register/pledgeResponse")
     public ResponseEntity<String> saveUrlPledgeResponse(@RequestParam("response") MultipartFile imageFile,
                                                         @RequestParam("email") String email){
 

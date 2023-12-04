@@ -27,8 +27,9 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-    @Column(unique = true)
     private String name;
+
+    @Column(unique = true)
     private String nickName;
 
     private String urlPledgeRequest;
