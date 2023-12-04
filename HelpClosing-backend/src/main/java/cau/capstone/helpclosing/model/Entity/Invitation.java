@@ -25,6 +25,10 @@ public class Invitation {
     private String invitePerson;
     private String invitedPerson;
     private int closenessRank;
+
+    private double latitude;
+    private double longitude;
+
 //
     private Long chatRoomId;
 

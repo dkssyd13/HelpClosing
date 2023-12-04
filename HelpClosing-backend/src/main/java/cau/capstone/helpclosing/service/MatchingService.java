@@ -54,6 +54,8 @@ public class MatchingService {
                     .invitePerson(sender.getEmail())
                     .invitedPerson(receiver.getEmail())
                     .closenessRank(inviteRequest.getClosenessRank())
+                    .latitude(inviteRequest.getLatitude())
+                    .longitude(inviteRequest.getLongitude())
                     .build();
             invitationRepository.save(invitation);
         }
@@ -175,12 +177,12 @@ public class MatchingService {
     }
 
     //초대 거절
-    public String reject(MatchingRejectRequest matchingRejectRequest, String receiver) {
+    public String reject(MatchingRejectRequest matchingRejectRequest) {
         Invitation invitation;
 
         //첫 매칭
         if (matchingRejectRequest.getChatRoomId() == 0L) {
-            invitation = invitationRepository.findByInvitedPersonAndInvitePerson(receiver, matchingRejectRequest.getSenderEmail());
+            invitation = invitationRepository.findByInvitedPersonAndInvitePerson(matchingRejectRequest.getRecipientEmail(), matchingRejectRequest.getSenderEmail());
         } else {
             invitation = invitationRepository.findByInvitePersonAndChatRoomId(matchingRejectRequest.getSenderEmail(), matchingRejectRequest.getChatRoomId());
         }

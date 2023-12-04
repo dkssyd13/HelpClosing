@@ -32,7 +32,6 @@ public class LocationController {
         catch(Exception e){
             return Header.ERROR("Need to login for finding around");
         }
-
     }
 
     @GetMapping("/location/distance")

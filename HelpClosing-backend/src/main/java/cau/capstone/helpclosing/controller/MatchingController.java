@@ -77,10 +77,7 @@ public class MatchingController {
     // @ApiOperation(value = "초대 거절", notes = "sender email, roomid: null일 경우 0으로 줘야함. ")
     public Header reject(@RequestBody MatchingRejectRequest matchingRejectRequest){
         try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String receiver = ((User) auth.getPrincipal()).getNickName();
-
-            return Header.OK(matchingService.reject(matchingRejectRequest, receiver), "");
+            return Header.OK(matchingService.reject(matchingRejectRequest), "");
         }
         catch (Exception e){
             return Header.ERROR("Need to login for rejecting matching");

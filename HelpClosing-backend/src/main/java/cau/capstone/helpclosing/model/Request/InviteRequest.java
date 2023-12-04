@@ -17,7 +17,9 @@ public class InviteRequest {
     private String invitedEmail;
     private int closenessRank;
 
+    private double latitude;
+    private double longitude;
 
-//    private Long chatRoomId;
+    //    private Long chatRoomId;
 
 }
