@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.mail.MessagingException;
@@ -54,6 +55,37 @@ public class RegisterController {
     public ResponseEntity<Boolean> register(@RequestBody RegisterRequest request) throws Exception{
         return new ResponseEntity<>(userService.register(request), HttpStatus.OK);
     }
+
+    @PostMapping("/register/pledgeRequest")
+    public ResponseEntity<String> saveUrlPledgeRequest(@RequestParam("request") MultipartFile imageFile,
+                                                        @RequestParam("email") String email){
+        try {
+            String urlPledgeRequest = userService.uploadImageToS3(imageFile);
+
+            userService.saveUrlPledgeRequestToUser(email, urlPledgeRequest);
+
+            return ResponseEntity.ok("Image URLs saved successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save image URLs");
+        }
+    }
+
+    @PostMapping("/register/pledgeResponse  ")
+    public ResponseEntity<String> saveUrlPledgeResponse(@RequestParam("response") MultipartFile imageFile,
+                                                        @RequestParam("email") String email){
+
+        try {
+            String urlPledgeResponse = userService.uploadImageToS3(imageFile);
+
+            userService.saveUrlPledgeResponseToUser(email, urlPledgeResponse);
+
+            return ResponseEntity.ok("Image URLs saved successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save image URLs");
+        }
+    }
+
+
 
 //
 //    @ApiOperation(value = "이메일 코드 전송", notes = "이메일 코드 전송")

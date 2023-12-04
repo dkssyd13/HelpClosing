@@ -1,11 +1,12 @@
 package cau.capstone.helpclosing.service;
 
 import cau.capstone.helpclosing.model.Entity.HelpLog;
+import cau.capstone.helpclosing.model.Entity.User;
 import cau.capstone.helpclosing.model.Request.HelpLogRequest;
 import cau.capstone.helpclosing.model.Response.HelpLogResponse;
 import cau.capstone.helpclosing.model.repository.HelpLogRepository;
 import cau.capstone.helpclosing.model.repository.LocationRepository;
-import cau.capstone.helpclosing.model.repository.PledgeRepository;
+//import cau.capstone.helpclosing.model.repository.PledgeRepository;
 import cau.capstone.helpclosing.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,8 @@ public class HelpLogService {
     @Autowired
     HelpLogRepository helpLogRepository;
 
-    @Autowired
-    PledgeRepository pledgeRepository;
+//    @Autowired
+//    PledgeRepository pledgeRepository;
 
     @Autowired
     LocationRepository locationRepository;
@@ -47,12 +48,15 @@ public class HelpLogService {
     //위치를 어떻게 받을건지?
     public HelpLogResponse createHelpLog(HelpLogRequest helpLogRequest){
 
+            User requester = userRepository.findByEmail(helpLogRequest.getRequesterEmail());
+            User recipient = userRepository.findByEmail(helpLogRequest.getRecipientEmail());
+
             HelpLog helpLog = HelpLog.builder()
-                    .requester(userRepository.findByUserId(helpLogRequest.getRequesterId()))
-                    .recipient(userRepository.findByUserId(helpLogRequest.getRecipientId()))
-                    .pledgeRequest(pledgeRepository.findByUser(userRepository.findByUserId(helpLogRequest.getRequesterId())))
-                    .pledgeRecipient(pledgeRepository.findByUser(userRepository.findByUserId(helpLogRequest.getRecipientId())))
-                   // .location(locationRepository.findByUserId(helpLogRequest.getRecipientId()))
+                    .requester(requester)
+                    .recipient(recipient)
+//                    .pledgeRequest(pledgeRepository.findByUser(userRepository.findByEmail(helpLogRequest.getRequesterEmail())))
+//                    .pledgeRecipient(pledgeRepository.findByUser(userRepository.findByEmail(helpLogRequest.getRecipientEmail())))
+//                  .location(Location(helpLogRequest.getLatitude(), helpLogRequest.getLongitude()))
                     .build();
 
             helpLog.setTime(LocalDateTime.now());
@@ -60,8 +64,8 @@ public class HelpLogService {
             helpLogRepository.save(helpLog);
 
             return HelpLogResponse.builder()
-                    .requesterId(helpLogRequest.getRequesterId())
-                    .recipientId(helpLogRequest.getRecipientId())
+                    .requester(requester)
+                    .recipient(recipient)
                     .build();
     }
 

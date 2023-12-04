@@ -1,5 +1,6 @@
 package cau.capstone.helpclosing.service;
 
+import cau.capstone.helpclosing.aws.S3Service;
 import cau.capstone.helpclosing.model.Entity.Authority;
 import cau.capstone.helpclosing.model.Entity.User;
 import cau.capstone.helpclosing.model.Request.LoginRequest;
@@ -14,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -29,6 +33,10 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private JwtProvider jwtProvider;
+
+    // Assuming you have an S3Service to handle S3 interactions
+    @Autowired
+    private S3Service s3Service;
 
     public LoginResponse login(LoginRequest request) throws Exception {
         User user = userRepository.findByEmail(request.getEmail());
@@ -77,6 +85,39 @@ public class UserService {
             throw new Exception("회원가입 실패");
         }
         return true;
+    }
+
+
+    public String uploadImageToS3(MultipartFile imageFile) throws IOException {
+        // Logic to upload image to S3 and get URL
+        String imageUrl = s3Service.saveFile(imageFile); // Implement this method in S3Service
+
+        return imageUrl;
+    }
+
+    public void saveUrlPledgeRequestToUser(String userEmail, String imageUrl) throws Exception {
+        User user = userRepository.findByEmail(userEmail);
+
+        if(user == null){
+            throw new Exception("존재하지 않는 이메일입니다.");
+        }
+        else{
+            user.setUrlPledgeRequest(imageUrl);
+            userRepository.save(user);
+        }
+    }
+
+
+    public void saveUrlPledgeResponseToUser(String userEmail, String imageUrl) throws Exception {
+        User user = userRepository.findByEmail(userEmail);
+
+        if(user == null){
+            throw new Exception("존재하지 않는 이메일입니다.");
+        }
+        else{
+            user.setUrlPledgeResponse(imageUrl);
+            userRepository.save(user);
+        }
     }
 
     public LoginResponse getUser(String email) throws Exception{
@@ -134,7 +175,7 @@ public class UserService {
         return UserProfileResponse.builder()
                 .email(user.getEmail())
                 .nickName(user.getNickName())
-                .image(user.getImage())
+//                .image(user.getImage())
                 .build();
     }
 
@@ -143,16 +184,15 @@ public class UserService {
         User user = userRepository.findByEmail(email);
 
         user.setNickName(userProfileRequest.getNickName())
-                .setName(userProfileRequest.getName())
-                .setImage(userProfileRequest.getImage());
+                .setName(userProfileRequest.getName());
+//                .setImage(userProfileRequest.getImage());
 
         userRepository.save(user);
 
         return UserProfileResponse.builder()
                 .email(email)
                 .nickName(user.getNickName())
-                .image(user.getImage())
-
+//                .image(user.getImage())
                 .build();
 
     }

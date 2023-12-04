@@ -33,14 +33,6 @@ public class HelpLog {
     @JoinColumn(name = "recipient")
     private User recipient;
 
-    @ManyToOne
-    @JoinColumn(name = "request_pledge")
-    private Pledge pledgeRequest;
-
-    @ManyToOne
-    @JoinColumn(name = "response_pledge")
-    private Pledge pledgeRecipient;
-
 
     @ManyToOne
     @JoinColumn(name = "location")

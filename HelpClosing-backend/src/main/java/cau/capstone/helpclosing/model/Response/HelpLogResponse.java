@@ -1,6 +1,8 @@
 package cau.capstone.helpclosing.model.Response;
 
 
+
+import cau.capstone.helpclosing.model.Entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,10 +17,6 @@ import java.time.LocalDateTime;
 public class HelpLogResponse {
 
     private LocalDateTime time;
-    private Long requesterId;
-    private Long recipientId;
-    private Long pledgeRequestId;
-    private Long pledgeRecipientId;
-    private Long locationId;
-
+    private User requester;
+    private User recipient;
 }

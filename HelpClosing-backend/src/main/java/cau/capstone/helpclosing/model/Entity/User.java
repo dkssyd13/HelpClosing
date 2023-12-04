@@ -26,22 +26,13 @@ public class User {
 
     @Column(unique = true)
     private String email;
-
     private String password;
-
     @Column(unique = true)
     private String name;
-
     private String nickName;
 
-    private String image;
-
-//    private int reporter_count;
-//
-//    private int reported_count;
-//
-//    private int matchingCount;
-
+    private String urlPledgeRequest;
+    private String urlPledgeResponse;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
@@ -55,6 +46,16 @@ public class User {
         this.roles = roles;
         roles.forEach(o -> o.setUser(this));
     }
+
+    //
+//    private String image;
+
+//    private int reporter_count;
+//
+//    private int reported_count;
+//
+//    private int matchingCount;
+
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userEmail")
 //    List<ChatMessage> chatList = new ArrayList<>();
 

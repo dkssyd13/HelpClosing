@@ -23,7 +23,6 @@ public class Location {
     private Long locationId;
 
     private String description;
-
     private double latitude;
     private double longitude;
 
