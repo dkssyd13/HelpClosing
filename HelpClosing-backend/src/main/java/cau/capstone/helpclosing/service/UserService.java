@@ -1,6 +1,7 @@
 package cau.capstone.helpclosing.service;
 
 import cau.capstone.helpclosing.aws.S3Service;
+import cau.capstone.helpclosing.model.CustomException;
 import cau.capstone.helpclosing.model.Entity.Authority;
 import cau.capstone.helpclosing.model.Entity.User;
 import cau.capstone.helpclosing.model.Request.LoginRequest;
@@ -22,7 +23,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
@@ -38,15 +38,15 @@ public class UserService {
     @Autowired
     private S3Service s3Service;
 
-    public LoginResponse login(LoginRequest request) throws Exception {
+    public LoginResponse login(LoginRequest request) throws CustomException {
         User user = userRepository.findByEmail(request.getEmail());
 
         if (user == null) {
-            throw new Exception("존재하지 않는 이메일입니다.");
+            throw new CustomException("존재하지 않는 이메일입니다.");
         }
 
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
-            throw new Exception("비밀번호가 일치하지 않습니다.");
+            throw new CustomException("비밀번호가 일치하지 않습니다.");
         }
 
         return LoginResponse.builder()
@@ -59,15 +59,15 @@ public class UserService {
     }
 
 
-    public boolean register(RegisterRequest request) throws Exception{
+    public boolean register(RegisterRequest request) throws CustomException{
         if(!emailCheck(request.getEmail())){
-            throw new Exception("이미 존재하는 이메일입니다.");
+            throw new CustomException("이미 존재하는 이메일입니다.");
         }
         if(!nicknameCheck(request.getNickName())){
-            throw new Exception("이미 존재하는 닉네임입니다.");
+            throw new CustomException("이미 존재하는 닉네임입니다.");
         }
         if(!request.getPassword().equals(request.getConfirmPw())){
-            throw new Exception("비밀번호가 일치하지 않습니다.");
+            throw new CustomException("비밀번호가 일치하지 않습니다.");
         }
 
         try{
@@ -80,9 +80,10 @@ public class UserService {
 
             user.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
             userRepository.save(user);
+
         } catch (Exception e){
             System.out.println(e.getMessage());
-            throw new Exception("회원가입 실패");
+            throw new CustomException("회원가입 실패");
         }
         return true;
     }
@@ -95,11 +96,11 @@ public class UserService {
         return imageUrl;
     }
 
-    public void saveUrlPledgeRequestToUser(String userEmail, String imageUrl) throws Exception {
+    public void saveUrlPledgeRequestToUser(String userEmail, String imageUrl) throws CustomException {
         User user = userRepository.findByEmail(userEmail);
 
         if(user == null){
-            throw new Exception("존재하지 않는 이메일입니다.");
+            throw new CustomException("존재하지 않는 이메일입니다.");
         }
         else{
             user.setUrlPledgeRequest(imageUrl);
@@ -108,11 +109,11 @@ public class UserService {
     }
 
 
-    public void saveUrlPledgeResponseToUser(String userEmail, String imageUrl) throws Exception {
+    public void saveUrlPledgeResponseToUser(String userEmail, String imageUrl) throws CustomException {
         User user = userRepository.findByEmail(userEmail);
 
         if(user == null){
-            throw new Exception("존재하지 않는 이메일입니다.");
+            throw new CustomException("존재하지 않는 이메일입니다.");
         }
         else{
             user.setUrlPledgeResponse(imageUrl);
@@ -120,11 +121,11 @@ public class UserService {
         }
     }
 
-    public LoginResponse getUser(String email) throws Exception{
+    public LoginResponse getUser(String email) throws CustomException{
         User user = userRepository.findByEmail(email);
 
         if(user == null){
-            throw new Exception("존재하지 않는 이메일입니다.");
+            throw new CustomException("존재하지 않는 이메일입니다.");
         }
 
         return LoginResponse.builder()
