@@ -8,10 +8,7 @@ import cau.capstone.helpclosing.model.Response.HelpLogResponse;
 import cau.capstone.helpclosing.service.HelpLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,7 +40,7 @@ public class HelpLogController {
     }
 
     @PostMapping("/helpLog/create")
-    public Header<HelpLogResponse> createHelpLog(HelpLogRequest helpLogRequest){
+    public Header<HelpLogResponse> createHelpLog(@RequestBody HelpLogRequest helpLogRequest){
         try{
             return Header.OK(helpLogService.createHelpLog(helpLogRequest),"create help log");
         }
