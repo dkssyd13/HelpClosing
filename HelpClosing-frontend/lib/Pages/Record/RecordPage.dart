@@ -123,6 +123,14 @@ class _RecordPageState extends State<RecordPage> {
   Choice choiceView = Choice.receive;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _helpLogController.getHelpLogsForRequester();
+    _helpLogController.getHelpLogsForRecipient();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -138,12 +146,13 @@ class _RecordPageState extends State<RecordPage> {
                   })),
           Expanded(
             child: Obx(() => ListView.builder(
-                itemCount: _helpLogController.recipientHelpLogs.length,
+                itemCount: choiceView == Choice.give ? _helpLogController.recipientHelpLogs.length : _helpLogController.requesterHelpLogs.length,
                 itemBuilder: (context, index) {
-                  final log = _helpLogController.recipientHelpLogs[index];
+                  final log = choiceView == Choice.give ? _helpLogController.recipientHelpLogs[index] : _helpLogController.requesterHelpLogs[index];
                   if (choiceView == Choice.receive) {
                     return _buildCardSos(log);
                   } else {
+                    print(_helpLogController.recipientHelpLogs.length);
                     return _buildCardPeople(log);
                   }
                 })),

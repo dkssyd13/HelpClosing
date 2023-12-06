@@ -63,6 +63,8 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
     // await getAddr(lat, long);
     double lat =37.504904929679796;
     double long = 126.95403171766152;
+    _helpController.latitude=lat;
+    _helpController.longitude=long;
     _helpController.findAround(lat,long);
     _helpController.markers.value.add(
       Marker(

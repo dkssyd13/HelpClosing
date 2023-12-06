@@ -19,6 +19,8 @@ class HelpController extends GetxController {
   RxList<LatLng> _locations = List<LatLng>.empty(growable: true).obs;
   get helpFlag => _requestHelpFlag.value;
   RxSet<Marker> _markers = Set<Marker>().obs;
+  late double latitude;
+  late double longitude;
 
   RxSet<Marker> get markers => _markers;
 
@@ -80,7 +82,7 @@ class HelpController extends GetxController {
     print("Done making Markers");
   }
 
-  void matchingInvite(String invitedEmail, closenessRank) async{
+  void matchingInvite(String invitedEmail, closenessRank,) async{
     print("Start Matching Invite");
     var jwtToken = await AuthController.to.storage.read(key: 'jwtToken');
     var url = Uri.parse('${ServerUrl.baseUrl}/matching/invite');
@@ -93,6 +95,8 @@ class HelpController extends GetxController {
       'inviteEmail': UserController.to.getUserEmail(),
       'invitedEmail': invitedEmail,
       'closenessRank' : closenessRank,
+      'latitude' : latitude,
+      'longitude' : longitude
     });
     var response = await http.post(url, headers: headers, body: body);
     print(response.statusCode);

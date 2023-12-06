@@ -22,9 +22,9 @@ class User {
     required String name,
     required String email,
     required String nickname,
-    required String? image,
-    required Location? location,
-    required String? address,
+    String? image,
+    Location? location,
+    String? address,
   })  : _id = id,
         _name = name,
         _email = email,
@@ -35,13 +35,13 @@ class User {
 
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json["id"],
+    id: json["id"].toString(),
     name: json["name"],
     email: json["email"],
-    nickname: json["nickname"],
-    image: json["profile"],
-    location: Location.fromJson(json["location"]),
-    address: json["address"],
+    nickname: json["nickName"],
+    // image: json["profile"],
+    // location: Location.fromJson(json["location"]),
+    // address: json["address"],
   );
 
   Map<String, dynamic> toJson() => {

@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Controller/Auth_Controller.dart';
 import 'package:help_closing_frontend/Controller/Chat_Controller.dart';
+import 'package:help_closing_frontend/Controller/Help_Log_Controller.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
 import 'package:help_closing_frontend/ServerUrl.dart';
 import 'package:http/http.dart' as http;
@@ -9,7 +11,7 @@ import 'package:help_closing_frontend/Domain/InvitationList.dart';
 
 class NotificationController extends GetxController{
   RxList<Invitation> _notifications = RxList<Invitation>.empty(growable: true);
-
+  final HelpLogController _helpLogController = Get.put(HelpLogController());
   RxList<Invitation> get notifications => _notifications;
 
   @override
@@ -68,11 +70,19 @@ class NotificationController extends GetxController{
     print("senderEmail = ${senderEmail}");
     print("recipientEmail = ${recipientEmail}");
     print("chatRoomID = ${chatRoomId}");
+    print("Accept response : ${response.toString()}");
+    print("response body : ${response.body}");
     if (response.statusCode == 200) {
+      print("Invitation accepted successfully");
+      Position _currentPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      _helpLogController.createHelpLog(senderEmail, recipientEmail,_currentPosition.latitude.toString(), _currentPosition.longitude.toString());
       ChatController chatController = Get.put(ChatController());
       chatController.enterChatRoom(0.toString(), UserController.to.getUserEmail()!,UserController.to.getUserNickname()!);
       chatController.onClose();
-      print("Invitation accepted successfully");
+
+
+
+
     } else {
       throw Exception('Failed to accept invitation');
     }

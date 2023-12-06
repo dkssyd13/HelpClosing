@@ -55,6 +55,8 @@ dependencies:
   http: ^0.13.6
   contacts_service: ^0.6.3
   assets_audio_player: ^3.1.1
+  flutter_phone_direct_caller: ^2.1.1
+  url_launcher: ^6.2.1
 
 dev_dependencies:
   flutter_test:

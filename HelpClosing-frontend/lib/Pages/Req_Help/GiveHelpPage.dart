@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/GoogleApiKey.dart';
@@ -9,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_routes/google_maps_routes.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'temp/temp.dart';
 
 class GiveHelpBody extends StatefulWidget {
   const GiveHelpBody({super.key});
@@ -18,7 +22,27 @@ class GiveHelpBody extends StatefulWidget {
 }
 
 class _GiveHelpBodyState extends State<GiveHelpBody> {
+  bool flagPoliceSound=false;
   late GoogleMapController mapController;
+  AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+
+
+  _launchNaverMap(String lat, String long) async{
+    var encodedData = utf8.encode("목적지");
+    var decodedData = "";
+    for (int i = 0; i < encodedData.length; i++) {
+      decodedData += '%' + encodedData[i].toRadixString(16);
+    }
+    // var url = "nmap://route/walk?dlat=${lat}&dlng=${long}&dname=$decodedData&appname=com.example.help_closing_frontend";
+    var url = "nmap://route/walk?dlat=${lat}&dlng=${long}&appname=com.example.help_closing_frontend";
+
+    await canLaunchUrl(Uri.parse(url)) ? await launchUrl(Uri.parse(url)) : Get.snackbar("지도 앱 오류", "네이버 지도 앱을 여는데 실패했습니다",backgroundColor: Colors.red);
+  }
+
+
+  void togglePoliceSoundFlag(){
+    flagPoliceSound=!flagPoliceSound;
+}
 
   //위치 예시
   List<LatLng> points = [
@@ -26,6 +50,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
   ];
 
   MapsRoutes route = MapsRoutes();
+
 
   //거리 계산기??암튼
   DistanceCalculator distanceCalculator = DistanceCalculator();
@@ -38,6 +63,14 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
   void initState() {
     super.initState();
     getLocation();
+
+
+    _assetsAudioPlayer.open(
+      Audio("assets/audios/police.mp3"),
+      loopMode: LoopMode.single, //반복 여부 (LoopMode.none : 없음)
+      autoStart: false, //자동 시작 여부
+      showNotification: false, //스마트폰 알림 창에 띄울지 여부
+    );
   }
 
   // getAddr(lat,long) async{
@@ -64,6 +97,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
     double lat =37.504904929679796;
     double long = 126.95403171766152;
     LatLng location = LatLng(lat, long);
+
 
     setState((){
       _currentPosition = location;
@@ -95,7 +129,6 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
           _currentPosition != null ? GoogleMap(
               zoomControlsEnabled: false,
               onMapCreated: _onMapCreated,
-              polylines: route.routes,
               //
               markers: {
                 Marker(
@@ -140,6 +173,16 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                 },
                 child: const Icon(Icons.add_alert_sharp),
               )
+          ),
+          Positioned(
+            left: 10,
+            bottom: 10,
+            child: FloatingActionButton(
+              onPressed: (){
+                _launchNaverMap(_currentPosition!.latitude.toString(),_currentPosition!.longitude.toString());
+              },
+              child: const Icon(Icons.map_outlined),
+            ),
           )
         ],
       ),
@@ -237,15 +280,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                             child: Column(
                               children: [
                                 IconButton(onPressed: () {
-                                  AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
-                                  _assetsAudioPlayer.open(
-                                    Audio("assets/audios/police.mp3"),
-                                    loopMode: LoopMode.single, //반복 여부 (LoopMode.none : 없음)
-                                    autoStart: true, //자동 시작 여부
-                                    showNotification: false, //스마트폰 알림 창에 띄울지 여부
-                                  );
-
-                                  _assetsAudioPlayer.play();
+                                  _assetsAudioPlayer.playOrPause();
                                 },
                                     icon: const Icon(Icons.local_police),
                                   iconSize: 150,
@@ -258,7 +293,10 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                             elevation: 50,
                             child: Column(
                               children: [
-                                IconButton(onPressed: () {},
+                                IconButton(onPressed: () async{
+                                  final policeNumber = "112";
+                                  await FlutterPhoneDirectCaller.callNumber(policeNumber);
+                                },
                                     icon: const Icon(Icons.call),
                                   iconSize: 150,
                                 ),

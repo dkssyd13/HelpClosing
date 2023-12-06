@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
@@ -26,16 +27,60 @@ class ChatRoomListPage extends StatelessWidget {
                     .chatRoomList[index]; // -> chatRoom id, userList
                 final UserMailandName? otherUser = getOtherUser(
                     chatRoom.userList);
-                return Card(
-                  color: Colors.white,
-                  elevation: 50,
-                  child: ListTile(
-                    onTap: () {
-                      _chatRoomController.goToChat(otherUser, chatRoom.chatRoomId);
-                    },
-                    leading: getPhoto(otherUser!), //
-                    title: Text(nameOfOther(otherUser)!),
-                    subtitle: Text("닉네임 : ${nickNameOfOther(otherUser)}"),
+                return Slidable(
+                  key: Key(chatRoom.chatRoomId),
+                  startActionPane: ActionPane(
+                    motion: const StretchMotion(),
+                    children: [
+                      SlidableAction(
+                        backgroundColor: Colors.green,
+                        icon: Icons.check,
+                        label: "Done",
+                        onPressed: (BuildContext context){
+                          _chatRoomController.setDone(chatRoom.chatRoomId);
+                        },
+                      )
+                    ],
+                  ),
+                  endActionPane: ActionPane(
+                    motion: const StretchMotion(),
+                    children: [
+                      SlidableAction(
+                        backgroundColor: Colors.red,
+                        icon: Icons.delete_forever,
+                        label: "Delete",
+                        onPressed: (BuildContext context){
+                          _chatRoomController.deleteChatRoom(chatRoom.chatRoomId);
+                        },
+                      )
+                    ],
+                  ),
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 50,
+                    child: ListTile(
+                      onTap: () {
+                        _chatRoomController.goToChat(otherUser, chatRoom.chatRoomId);
+                      },
+                      leading: getPhoto(otherUser!), //
+                      title: Text(nameOfOther(otherUser)!),
+                      subtitle: Text("닉네임 : ${nickNameOfOther(otherUser)}"),
+                      iconColor: Colors.green,
+                      trailing: FutureBuilder<bool>(
+                        future: _chatRoomController.getChatRoomStatus(chatRoom.chatRoomId),
+                        builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else {
+                            if (snapshot.hasError)
+                              return Icon(Icons.error);
+                            else {
+                              return (snapshot.data??false) ? const Icon(Icons.check) : const Icon(Icons.directions_run);
+                            }
+                          }
+                        },
+                      ),
+                    ),
                   ),
                 );
               },

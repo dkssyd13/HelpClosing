@@ -140,10 +140,13 @@ class AuthController extends GetxController{
 
     if (response.statusCode == 200) {
       print('Login successful');
+      print(response.body);
       final responseJson = jsonDecode(response.body);
 
       // 서버에서 받아온 사용자 정보를 사용.
+      print("aaa");
       String token = responseJson['jwtToken'];
+      print(token);
       String id = responseJson['userId'].toString();
       String name = responseJson['name'];
       String nickname = responseJson['nickName'];
@@ -158,6 +161,7 @@ class AuthController extends GetxController{
       await storage.write(key: 'login', value: responseJson.toString());
       print(storage.read(key: 'login'));
       await storage.write(key: 'jwtToken', value: token);
+      print("token end");
 
       // 로그인이 성공하면 createCurrentUser 메서드를 호출합니다.
       userController.createCurrentUser(name, email, nickname, image,id);

@@ -90,6 +90,64 @@ class ChatRoomController extends GetxController {
     }
   }
 
+  void setDone(String chatRoomId)async{
+    var jwtToken=await AuthController.to.storage.read(key: 'jwtToken');
+    print("Starting setDone chatRoomId = $chatRoomId");
+    final response = await http.put(
+      Uri.parse('${ServerUrl.baseUrl}/chatRoom/$chatRoomId/done'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': "Bearer " + jwtToken!,
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      Get.snackbar("도움 완료 성공", "$chatRoomId번 채팅이 완료",backgroundColor: Colors.green);
+      fetchChatRoomList();
+    } else {
+      Get.snackbar("도움 완료 실패", "$chatRoomId번 채팅이 완료 실패",backgroundColor: Colors.red);
+    }
+  }
+
+  void deleteChatRoom(String chatRoomId) async {
+    String? userEmail = AuthController.to.userController.getUserEmail();
+    var jwtToken=await AuthController.to.storage.read(key: 'jwtToken');
+    final response = await http.delete(
+      Uri.parse('${ServerUrl.baseUrl}/chatRoom/exit?userEmail=$userEmail&chatRoomId=$chatRoomId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': "Bearer " + jwtToken!,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Get.snackbar("채팅방 나가기 완료", "채팅방에서 나가셨습니다",backgroundColor: Colors.green);
+      fetchChatRoomList();
+    } else {
+      Get.snackbar("채팅방 나가기 실패", "오류가 발생했습니다");
+    }
+  }
+
+  Future<bool> getChatRoomStatus(String chatRoomId) async {
+    var jwtToken=await AuthController.to.storage.read(key: 'jwtToken');
+    print("start getting chat room status");
+    final response = await http.get(
+      Uri.parse('${ServerUrl.baseUrl}/chatRoom/$chatRoomId/status'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': "Bearer " + jwtToken!,
+      },
+    );
+    print("status code : ${response.statusCode}");
+    print("body : ${response.body}");
+    print("type : ${response.body.runtimeType}");
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to get chat room status.');
+    }
+  }
 
   void fetchChatRoomList() async {
     var jwtToken=await AuthController.to.storage.read(key: 'jwtToken');

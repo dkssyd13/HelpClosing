@@ -21,113 +21,24 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   final ChatRoomController _chatRoomController = Get.put(ChatRoomController());
   final UserController userController = Get.find();
   final ChatController _chatController = Get.put(ChatController());
+  bool _status = false;
+  
+  @override
+  void initState() {
+    getStatus();
+    // TODO: implement initState
+    super.initState();
+
+
+  }
+  void getStatus()async {
+    _status=await _chatRoomController.getChatRoomStatus(_chatRoomController.currentChatRoomId.value);
+    setState(() {
+    });
+}
 
 
   @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       leadingWidth: 100,
-  //       leading: Row(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //           IconButton(onPressed: () {
-  //             Get.back();
-  //           }, icon: const Icon(Icons.arrow_back, size: 24,)),
-  //           const SizedBox(width: 10,),
-  //           _chatRoomController.getPartnerImage(),
-  //         ],
-  //       ),
-  //       title: Text(_chatRoomController.currentPartner.value!.name,),
-  //     ),
-  //     body: Container(
-  //       height: MediaQuery
-  //           .of(context)
-  //           .size
-  //           .height,
-  //       width: MediaQuery
-  //           .of(context)
-  //           .size
-  //           .width,
-  //       child: Stack(
-  //         children: [
-  //           Column(
-  //             children: <Widget>[
-  //               Expanded(
-  //                 child: StreamBuilder(
-  //                   stream: _chatService.messages,
-  //                   builder: (context, snapshot) {
-  //                     if (snapshot.hasData) {
-  //                       // 서버로부터 받은 메시지를 _messages에 추가합니다.
-  //                       _messages.add(snapshot.data);
-  //                       // ListView를 사용해 _messages에 저장된 메시지를 화면에 표시합니다.
-  //                       return ListView.builder(
-  //                         itemCount: _messages.length,
-  //                         itemBuilder: (context, index) {
-  //                           return ListTile(
-  //                             title: Text(_messages[index]),
-  //                           );
-  //                         },
-  //                       );
-  //                     } else if (snapshot.hasError) {
-  //                       return Text('Error: ${snapshot.error}');
-  //                     }
-  //                     // 기본적으로 로딩 인디케이터를 표시합니다.
-  //                     return const CircularProgressIndicator();
-  //                   },
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //           Align(
-  //             alignment: Alignment.bottomCenter,
-  //             child: Row(
-  //               children: [
-  //                 Expanded(
-  //                   child: Card(
-  //                     margin: const EdgeInsets.all(8),
-  //                     shape: RoundedRectangleBorder(
-  //                       borderRadius: BorderRadius.circular(25),
-  //                     ),
-  //                     child: TextField(
-  //                       controller: _textController,
-  //                       decoration: const InputDecoration(
-  //                         labelText: 'Send a message',
-  //                         contentPadding: EdgeInsets.all(5),
-  //                       ),
-  //                       onSubmitted: (message) {
-  //                         // _chatService.send(
-  //                         //   message,
-  //                         //   1, // 이는 실제 채팅방 ID로 대체해야 합니다.
-  //                         //   'user@example.com', // 이는 실제 사용자 이메일로 대체해야 합니다.
-  //                         //   'User', // 이는 실제 사용자 이름으로 대체해야 합니다.
-  //                         //   'User', // 이는 실제 사용자 별명으로 대체해야 합니다.
-  //                         //   DateTime.now(),
-  //                         // );
-  //                         _sendMessage();
-  //                         _textController.clear();
-  //                       },
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 CircleAvatar(
-  //                   radius: 25,
-  //                   backgroundColor: Colors.blue[100],
-  //                   child: IconButton(
-  //                       onPressed: () {
-  //                         _sendMessage();
-  //                         _textController.clear();
-  //                       },
-  //                       icon: const Icon(Icons.send)),
-  //                 )
-  //               ],
-  //             ),
-  //           )
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -167,6 +78,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                             final message = _chatRoomController.messages[index];
                             return _buildMessage(message);
                           }
+
                       )
                   );
                 })
@@ -174,7 +86,20 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Row(
+              child : _status ? Container(
+                width: MediaQuery.of(context).size.width,
+                color: Colors.green,
+                child: const Text(
+                  "이미 완료된 채팅방입니다",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white
+                  ),
+                ),
+              )
+                  :Row(
                 children: [
                   Expanded(
                     child: Card(
@@ -189,14 +114,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                           contentPadding: EdgeInsets.all(5),
                         ),
                         onSubmitted: (message) {
-                          // _chatService.send(
-                          //   message,
-                          //   1, // 이는 실제 채팅방 ID로 대체해야 합니다.
-                          //   'user@example.com', // 이는 실제 사용자 이메일로 대체해야 합니다.
-                          //   'User', // 이는 실제 사용자 이름으로 대체해야 합니다.
-                          //   'User', // 이는 실제 사용자 별명으로 대체해야 합니다.
-                          //   DateTime.now(),
-                          // );
                           _sendMessage();
                           _textController.clear();
                         },
@@ -214,7 +131,42 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                         icon: const Icon(Icons.send)),
                   )
                 ],
-              ),
+              )
+              
+              
+              // child: Row(
+              //   children: [
+              //     Expanded(
+              //       child: Card(
+              //         margin: const EdgeInsets.all(8),
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(25),
+              //         ),
+              //         child: TextField(
+              //           controller: _textController,
+              //           decoration: const InputDecoration(
+              //             labelText: 'Send a message',
+              //             contentPadding: EdgeInsets.all(5),
+              //           ),
+              //           onSubmitted: (message) {
+              //             _sendMessage();
+              //             _textController.clear();
+              //           },
+              //         ),
+              //       ),
+              //     ),
+              //     CircleAvatar(
+              //       radius: 25,
+              //       backgroundColor: Colors.blue[100],
+              //       child: IconButton(
+              //           onPressed: () {
+              //             _sendMessage();
+              //             _textController.clear();
+              //           },
+              //           icon: const Icon(Icons.send)),
+              //     )
+              //   ],
+              // ),
             )
           ],
         ),
