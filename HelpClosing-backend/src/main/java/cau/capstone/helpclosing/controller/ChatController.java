@@ -85,8 +85,8 @@ public class ChatController {
     }
 
     @GetMapping("/chat/chatList")
-    @ApiOperation(value = "채팅 목록", notes = "채팅방 목록을 조회한다.") //SWagger
-    public Header<List<ChatMessageResponse>> chatList(Long chatRoomId){
+    @ApiOperation(value = "채팅 목록", notes = "채팅 목록을 조회한다.") //SWagger
+    public Header<List<ChatMessageResponse>> chatList(@RequestParam Long chatRoomId){
         try{
             return Header.OK(chatService.chatList(chatRoomId), "chatlist for chatRoomId " + chatRoomId);
         }

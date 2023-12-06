@@ -1,5 +1,6 @@
 package cau.capstone.helpclosing.controller;
 
+import cau.capstone.helpclosing.model.Entity.Invitation;
 import cau.capstone.helpclosing.model.Entity.User;
 import cau.capstone.helpclosing.model.Header;
 import cau.capstone.helpclosing.model.Request.InviteRequest;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
+
+import java.util.List;
 
 @RestController
 public class MatchingController {
@@ -55,7 +58,7 @@ public class MatchingController {
 
     @GetMapping("/matching/invitedList")
     //@ApiOperation(value="초대 받은 목록(invitation) 보기", notes = "")
-    public Header<InvitationListResponse> inviteList(@RequestParam String email){
+    public Header<List<Invitation>> inviteList(@RequestParam String email){
         try {
             return Header.OK(matchingService.inviteList(email), "");
         }

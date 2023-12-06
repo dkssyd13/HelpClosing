@@ -33,9 +33,9 @@ public class ChatRoomController {
 
     //@ApiOperation(value="매칭룸 정보 수정")
     @PostMapping("/chatRoom/updateRoom")
-    public Header updateChatRoom(@RequestBody ChatRoomRequest chatRoomRequest){
+    public Header updateChatRoom(@RequestParam Long chatRoomId){
         try{
-            return Header.OK(chatRoomService.update(chatRoomRequest),"");
+            return Header.OK(chatRoomService.update(chatRoomId),"");
         }
         catch(Exception e){
             return Header.ERROR("update chat room error: "+e);

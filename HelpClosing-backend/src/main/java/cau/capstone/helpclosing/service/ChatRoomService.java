@@ -67,8 +67,8 @@ public class ChatRoomService {
         return roomList;
     }
 
-    public String update(ChatRoomRequest chatRoomRequest){
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRoomRequest.getChatRoomId());
+    public String update(Long chatRoomId){
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRoomId);
 
         chatRoomRepository.save(chatRoom);
 

@@ -20,6 +20,8 @@ public class InviteRequest {
     private double latitude;
     private double longitude;
 
+    private String briefDescription;
+
     //    private Long chatRoomId;
 
 }
