@@ -41,12 +41,50 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: Drawer(
+        width: MediaQuery.of(context).size.width * 0.5,
+        child: ListView(
+          children: [
+            //DrawerHeader(child: Text("메뉴",))//style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.blue),))
+            UserAccountsDrawerHeader(
+                accountName: Text(_chatRoomController.currentPartner.value!.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold,),),
+                accountEmail: Text(_chatRoomController.currentPartner.value!.email,
+                  style: const TextStyle(fontWeight: FontWeight.bold,),),
+              currentAccountPicture: _chatRoomController.getPartnerImage(),
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.check,
+              ),
+              title: const Text('도움 요청 완료'),
+              onTap: () {
+                _chatRoomController.setDone(_chatRoomController.currentChatRoomId.value);
+                setState(() async {
+                  _status=await _chatRoomController.getChatRoomStatus(_chatRoomController.currentChatRoomId.value);
+                });
+
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.delete_forever,
+              ),
+              title: const Text('채팅방에서 나가기'),
+              onTap: () {
+                _chatRoomController.deleteChatRoom(_chatRoomController.currentChatRoomId.value);
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         leadingWidth: 100,
         leading: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(onPressed: () {
+              _chatRoomController.stopUpdatingMessageList();
               _chatRoomController.stopUpdatingMessageList();
               Get.back();
             }, icon: const Icon(Icons.arrow_back, size: 24,)),

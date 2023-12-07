@@ -22,7 +22,7 @@ class AddContactPage extends StatelessWidget {
         itemCount: contactsController.contacts.length,
         itemBuilder: (context, index){
           return Slidable(
-              key: Key(contactsController.getContactByIndex(index).givenName),
+              key: Key(contactsController.getContactByIndex(index).displayName),
               endActionPane: ActionPane(
                 motion: const StretchMotion(),
                 dismissible: DismissiblePane(
@@ -46,7 +46,7 @@ class AddContactPage extends StatelessWidget {
     );
   }
   addContact(ContactsController contactsController,index){
-    var name = "${contactsController.getContactByIndex(index).familyName}${contactsController.getContactByIndex(index).givenName!}";
+    var name = "${contactsController.getContactByIndex(index).displayName}";
     var id = contactsController.getContactByIndex(index).phones[0].value.toString();
     print("number : ${id}");
     Get.find<EmergencyContactsController>().contactsList.value.add(
@@ -64,10 +64,11 @@ class AddContactPage extends StatelessWidget {
   }
 
   Widget buildUserListTile(Contact contactByIndex) {
+    print("start build");
     return Builder(builder: (context) =>
         ListTile(
           contentPadding: const EdgeInsets.all(15),
-          title: Text("${contactByIndex.familyName}${contactByIndex.givenName!}"),
+          title: Text("${contactByIndex.displayName}"),
           leading: const CircleAvatar(
             radius: 30,
             child: Icon(Icons.account_box,size: 50,),

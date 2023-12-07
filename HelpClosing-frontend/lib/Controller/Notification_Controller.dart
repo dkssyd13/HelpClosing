@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Controller/Auth_Controller.dart';
 import 'package:help_closing_frontend/Controller/Chat_Controller.dart';
+import 'package:help_closing_frontend/Controller/Help_Controller.dart';
 import 'package:help_closing_frontend/Controller/Help_Log_Controller.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
 import 'package:help_closing_frontend/ServerUrl.dart';
@@ -38,19 +40,46 @@ class NotificationController extends GetxController{
       print("Fetch Notifications OK");
       Map<String, dynamic> jsonResponse = json.decode(response.body);
       print(response.body);
-      List<dynamic> invitations = jsonResponse['value']['invitationList'];
-      _notifications.value = invitations.map((item) => new Invitation.fromJson(Map<String, dynamic>.from(item))).toList();
+      List<dynamic> invitations = jsonResponse['value'];
+      _notifications.value = invitations.map((item) => Invitation.fromJson(Map<String, dynamic>.from(item))).toList();
     } else {
       throw Exception('Failed to load invitation list');
     }
 
-    for (var o in _notifications.value) {
-      print(o.toString());
+    for (var o in _notifications) {
+      o.inviteName= await getUserProfile(o.inviteEmail);
+      print(o.inviteName);
     }
   }
 
+  Future<String> getUserProfile(String email) async{
+    print("Invitation start getting user profile");
+    var jwtToken = await AuthController.to.storage.read(key: 'jwtToken');
+    final response = await http.get(Uri.parse("${ServerUrl.baseUrl}/profile/$email"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': "Bearer " + jwtToken!,
+      },
+    );
 
-  void acceptInvitation(String senderEmail, String recipientEmail, int chatRoomId) async {
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response, then parse the JSON.
+      print(response.body);
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      print(jsonResponse['value']['name'].runtimeType);
+      if(jsonResponse['value']['name']== Null || jsonResponse['value']['name']==null){
+        print("true");
+        return jsonResponse['value']['nickName'];
+      }
+      return jsonResponse['value']['name'];
+    } else {
+      // If the server did not return a 200 OK response, then throw an exception.
+      throw Exception('Failed to load user profile');
+    }
+  }
+
+  void acceptInvitation(String senderEmail, String recipientEmail, int chatRoomId,Invitation invitation) async {
     print("Start accpeInvitation");
     var jwtToken = await AuthController.to.storage.read(key: 'jwtToken');
     final response = await http.post(
@@ -74,17 +103,38 @@ class NotificationController extends GetxController{
     print("response body : ${response.body}");
     if (response.statusCode == 200) {
       print("Invitation accepted successfully");
-      Position _currentPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      _helpLogController.createHelpLog(senderEmail, recipientEmail,_currentPosition.latitude.toString(), _currentPosition.longitude.toString());
+      _helpLogController.createHelpLog(senderEmail, recipientEmail,invitation.latitude.toString(), invitation.longitude.toString());
       ChatController chatController = Get.put(ChatController());
       chatController.enterChatRoom(0.toString(), UserController.to.getUserEmail()!,UserController.to.getUserNickname()!);
       chatController.onClose();
-
-
-
-
     } else {
       throw Exception('Failed to accept invitation');
+    }
+  }
+
+  void rejectMatching(String senderEmail, String recipientEmail) async {
+    var jwtToken = await AuthController.to.storage.read(key: 'jwtToken');
+
+    final response = await http.delete(
+      Uri.parse('${ServerUrl.baseUrl}/matching/reject'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': "Bearer " + jwtToken!,
+      },
+      body: jsonEncode(<String, dynamic>{
+        'senderEmail': senderEmail,
+        'recipientEmail': recipientEmail,
+        'chatRoomId': 0,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Get.snackbar("도움 요청 거절 완료", "${senderEmail}님의 도움 요청을 거절 완료",backgroundColor: Colors.green);
+      fetchInvitationList();
+    } else {
+      Get.snackbar("도움 요청 거절 실패", "${senderEmail}님의 도움 요청을 거절 실패",backgroundColor: Colors.red);
+      throw Exception('Failed to reject matching');
     }
   }
 

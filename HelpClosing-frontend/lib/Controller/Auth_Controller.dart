@@ -1,3 +1,4 @@
+// import 'dart:html';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/Domain/User.dart';
@@ -9,6 +10,8 @@ import '../Pages/Login_SignUp/Login.dart';
 import '../Pages/MainPage.dart';
 import 'User_Controller.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:http_parser/http_parser.dart';
 
 class AuthController extends GetxController{
   //어디서든 접근 가능해야됨
@@ -17,6 +20,7 @@ class AuthController extends GetxController{
   late Rx<User?> _currentUser;
   final RxBool _rememberUser=false.obs;
   final storage = const FlutterSecureStorage();
+  String registerEmail = "";
 
   bool get rememberUser => _rememberUser.value;
 
@@ -208,6 +212,49 @@ class AuthController extends GetxController{
         throw Exception('Failed to save FCM token');
       }
     }
+  }
+
+  void uploadS3(String dir, reqOrResp, reqOrResp2) async {
+    print("start uploading s3");
+    File imgFile = File(dir);
+
+    var uri = Uri.parse("${ServerUrl.baseUrl}/register/${reqOrResp}");
+
+    // MultipartRequest를 생성합니다.
+    var request = http.MultipartRequest('POST', uri);
+
+    request.fields['email'] = registerEmail;
+    print("registerEmail : ${registerEmail}");
+
+    // 파일을 바이트로 읽습니다.
+    // List<int> bytes = await imgFile.readAsBytesSync();
+    List<int> bytes = await imgFile.readAsBytes();
+
+    // 바이트를 MultipartFile로 변환합니다.
+    var multipartFile = http.MultipartFile.fromBytes(
+      reqOrResp2, // 서버에서 이 파일을 참조할 키
+      bytes,
+      contentType: MediaType('image', 'png'), // 이미지의 타입을 지정합니다.
+      filename: "${reqOrResp}_${registerEmail}", // 파일명을 지정합니다.
+    );
+
+    request.files.add(multipartFile);
+
+
+
+    var response = await request.send();
+
+    print("response code : ${response.statusCode}");
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
+
+    if (response.statusCode == 200) {
+      Get.snackbar("저장 완료", "성공적으로 저장.", backgroundColor: Colors.green);
+    } else {
+      Get.snackbar("저장 실패", "저장하는데 문제가 발생했습니다.", backgroundColor: Colors.red);
+    }
+
   }
 
   void logout() async{

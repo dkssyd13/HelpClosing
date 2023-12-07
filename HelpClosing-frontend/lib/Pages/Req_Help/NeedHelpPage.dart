@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_routes/google_maps_routes.dart';
 import 'package:help_closing_frontend/Controller/Help_Controller.dart';
+import 'package:help_closing_frontend/Pages/Notification/NotificationPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -19,7 +20,7 @@ class NeedHelpBody extends StatefulWidget {
 class _NeedHelpBodyState extends State<NeedHelpBody> {
   late GoogleMapController mapController;
   final HelpController _helpController = Get.put(HelpController());
-  TextEditingController _currentStateController = TextEditingController();
+  final TextEditingController _currentStateController = TextEditingController();
 
   //위치 예시
   List<LatLng> points = [
@@ -160,42 +161,54 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
             ElevatedButton(
                 style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
                 onPressed: (){
-                  showModalBottomSheet(context: context, builder: (context) {
-                    return SizedBox(
-                      height: 400,
-                      width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.all(10),
-                                child: IconButton(
-                                  onPressed: (){
-                                    Get.back();
-                                  },
-                                  icon: const Icon(Icons.close),
+                  showModalBottomSheet(context: context,isScrollControlled: true ,builder: (context) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: SizedBox(
+                        height: 400,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.all(10),
+                                  child: IconButton(
+                                    onPressed: (){
+                                      Get.back();
+                                    },
+                                    icon: const Icon(Icons.close),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const Text("현재 상태를 입력해주세요",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),),
-                          const SizedBox(height: 30,),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10,right: 10),
-                            child: TextField(
-                              controller: _currentStateController,
-                              decoration: InputDecoration(
-                                suffixIcon: IconButton(
-                                  onPressed: (){},
-                                  icon: const Icon(Icons.send),
-                                ),
-                                hintText: "현재 상태를 입력해주세요",
-                              ),
+                              ],
                             ),
-                          )
-                        ],
+                            const Text("현재 상태를 입력해주세요",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),),
+                            const SizedBox(height: 30,),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10,right: 10),
+                              child: TextField(
+                                controller: _currentStateController,
+                                decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    onPressed: (){
+                                      _helpController.requestHelpStateReq=_currentStateController.text.trim();
+                                      _currentStateController.clear();
+                                      Get.snackbar("현재 상태 저장 완료", "현재 상태를 저장했습니다!",backgroundColor: Colors.green);
+                                    },
+                                    icon: const Icon(Icons.send),
+                                  ),
+                                  hintText: "현재 상태를 입력해주세요",
+                                ),
+                                onSubmitted: (m){
+                                  _helpController.requestHelpStateReq=_currentStateController.text.trim();
+                                  _currentStateController.clear();
+                                  Get.snackbar("현재 상태 저장 완료", "현재 상태를 저장했습니다!",backgroundColor: Colors.green);
+                                },
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     );
                   });
@@ -272,11 +285,22 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
                       child: Text("비상 연락망 연락",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
                     )
                 )
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark, backgroundColor: Colors.red),
+                onPressed: (){
+                  _helpController.cancelHelp();
+                  Get.back();
+                },
+                child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: 50,
+                    child: const Center(child: Text("나가기",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20, color: Colors.white),)))
             )
           ],
         ),
       );
-    });
+    },);
   }
 
 }

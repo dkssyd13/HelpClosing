@@ -4,6 +4,7 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:help_closing_frontend/Controller/Help_Controller.dart';
 import 'package:help_closing_frontend/GoogleApiKey.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -24,7 +25,9 @@ class GiveHelpBody extends StatefulWidget {
 class _GiveHelpBodyState extends State<GiveHelpBody> {
   bool flagPoliceSound=false;
   late GoogleMapController mapController;
-  AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+  final AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+  HelpController helpController = Get.put(HelpController());
+  late final destAddress;
 
 
   _launchNaverMap(String lat, String long) async{
@@ -33,8 +36,8 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
     for (int i = 0; i < encodedData.length; i++) {
       decodedData += '%' + encodedData[i].toRadixString(16);
     }
-    // var url = "nmap://route/walk?dlat=${lat}&dlng=${long}&dname=$decodedData&appname=com.example.help_closing_frontend";
-    var url = "nmap://route/walk?dlat=${lat}&dlng=${long}&appname=com.example.help_closing_frontend";
+    var url = "nmap://route/walk?dlat=${lat}&dlng=${long}&dname=$decodedData&appname=com.example.help_closing_frontend";
+    // var url = "nmap://route/walk?dlat=${helpController.requesterPosition.latitude}&dlng=${helpController.requesterPosition.longitude}&appname=com.example.help_closing_frontend";
 
     await canLaunchUrl(Uri.parse(url)) ? await launchUrl(Uri.parse(url)) : Get.snackbar("지도 앱 오류", "네이버 지도 앱을 여는데 실패했습니다",backgroundColor: Colors.red);
   }
@@ -45,9 +48,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
 }
 
   //위치 예시
-  List<LatLng> points = [
-    const LatLng(37.499449, 126.971902),
-  ];
+  List<LatLng> points = [];
 
   MapsRoutes route = MapsRoutes();
 
@@ -73,31 +74,35 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
     );
   }
 
-  // getAddr(lat,long) async{
-  //   //google api 위도 경도 -> 주소
-  //   final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyAVkF1MVwblmaf6a8hfP3aXDgtrS6V7UMI';
-  //   var responseAddr=await http.get(Uri.parse(url));
-  //   print("json body(위경도 -> 주소) : ${jsonDecode(responseAddr.body)}");
-  //
-  //   var addr='130-1+Cheongna-dong,+Seo-gu,+Incheon,+South+Korea';
-  //   var responseLatLong=await  http.get(Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?address=${addr}&key=AIzaSyAVkF1MVwblmaf6a8hfP3aXDgtrS6V7UMI'));
-  //   print("json body(주소 -> 위도 경도) : ${jsonDecode(responseLatLong.body)}");
-  // }
+  getAddr(lat,long) async{
+    //google api 위도 경도 -> 주소
+    final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${googleApiKey}&language=ko';
+    var responseAddr=await http.get(Uri.parse(url));
+    print("json body(위경도 -> 주소) : ${jsonDecode(responseAddr.body)}");
+    destAddress = jsonDecode(responseAddr.body)['results'][0]['formatted_address'];
+
+
+
+
+    // var addr='130-1+Cheongna-dong,+Seo-gu,+Incheon,+South+Korea';
+    // var responseLatLong=await  http.get(Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?address=${addr}&key=$googleApiKey&language=ko'));
+    // print("json body(주소 -> 위도 경도) : ${jsonDecode(responseLatLong.body)}");
+  }
 
   getLocation() async {
     LocationPermission permission;
     permission = await Geolocator.requestPermission();
 
-    // Position position = await Geolocator.getCurrentPosition(
-    //     desiredAccuracy: LocationAccuracy.high);
-    // double lat = position.latitude;
-    // double long = position.longitude;
-    // await getAddr(lat, long);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    double lat = position.latitude;
+    double long = position.longitude;
+    await getAddr(helpController.requesterPosition.latitude.toString(), helpController.requesterPosition.longitude.toString());
 
-    double lat =37.504904929679796;
-    double long = 126.95403171766152;
     LatLng location = LatLng(lat, long);
 
+    points.add(location);
+    points.add(LatLng(helpController.requesterPosition.latitude, helpController.requesterPosition.longitude));
 
     setState((){
       _currentPosition = location;
@@ -136,8 +141,8 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                   position: _currentPosition!,
                 ),
                 Marker(
-                    markerId: const MarkerId("중앙대학교 310관"),
-                    position: const LatLng(37.50385146926803, 126.95590974755156),
+                    markerId: const MarkerId("도움 요청한 사람"),
+                    position: helpController.requesterPosition,
                     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
                 ),
               },
@@ -179,7 +184,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
             bottom: 10,
             child: FloatingActionButton(
               onPressed: (){
-                _launchNaverMap(_currentPosition!.latitude.toString(),_currentPosition!.longitude.toString());
+                _launchNaverMap(helpController.requesterPosition.latitude.toString(),helpController.requesterPosition.longitude.toString());
               },
               child: const Icon(Icons.map_outlined),
             ),
@@ -200,10 +205,10 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
           children: [
             const Divider(indent: 200, endIndent: 200, thickness: 5,),
             const SizedBox(height: 20,),
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text("사고 발생 위치 : ",
                     style: TextStyle(
@@ -214,18 +219,18 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                   ),
                 ),
                 Expanded(
-                    child: Text("서울 동작구 흑석로 84 중앙대학교",
-                    style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                    child: Text("$destAddress",
+                    style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
                     )
 
                 ),
               ],
             ),
             const SizedBox(height: 20,),
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text("거리 : ",
                     style: TextStyle(
@@ -236,8 +241,8 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                   ),
                 ),
                 Expanded(
-                    child: Text("400m",
-                      style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                    child: Text(distanceCalculator.calculateRouteDistance(points),
+                      style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
                     )
 
                 ),
@@ -246,7 +251,20 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: (){},
+                TextButton(onPressed: (){
+                  showModalBottomSheet(context: context,isScrollControlled: true ,builder: (context) {
+                    return SizedBox(
+                      height: 400,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView(
+                        children: [
+                          Image.network('https://helpclosing-bucket.s3.ap-northeast-2.amazonaws.com/secondPledge.png'),
+                          Image.network('https://helpclosing-bucket.s3.ap-northeast-2.amazonaws.com/secondPledge.png'),
+                        ],
+                      )
+                    );
+                  });
+                },
                     child: const Text("계약서 확인하기",style: TextStyle(color: Colors.blue, fontSize: 16),))
               ],
             )
@@ -269,7 +287,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text("신고 접수 위치", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.blue[300]),),
-              Text("서울특별시 동작구 흑석로 84", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.blue[400]),),
+              Text("$destAddress", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.blue[400]),),
               const SizedBox(height: 40,),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,

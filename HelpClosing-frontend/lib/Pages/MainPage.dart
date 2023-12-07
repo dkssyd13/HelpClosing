@@ -138,6 +138,8 @@ class _TimerWidgetState extends State<TimerWidget> {
   int _currentSec=5; //"잘못 눌렀어요..." 옆에 타이머가 줄어드는거 추가하기 위해 필요한 state
   String _currentSituation="잘못 눌렀어요...";
   bool _cancelHelpFlag = false;
+  final HelpController _helpController = Get.put(HelpController());
+  TextEditingController _currentStateController = TextEditingController();
 
 
 
@@ -172,7 +174,7 @@ class _TimerWidgetState extends State<TimerWidget> {
         setState(() {
           _currentSituation="도움 요청 됐습니다! 조금만 기다려주세요~!";
         });
-        Get.back();
+        // Get.back();
       }
     });
   }
@@ -190,60 +192,206 @@ class _TimerWidgetState extends State<TimerWidget> {
   @override
   void dispose() {
     _timer?.cancel();
-    super.dispose();
+    // super.dispose();
   }
   @override
   Widget build(BuildContext context) {
     Color myColorDark=Theme.of(context).primaryColorDark;
     return Center(
+      // child: Column(
+      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //   children: [
+      //     ElevatedButton(
+      //       style: ElevatedButton.styleFrom(backgroundColor: _currentColor,elevation: 50,shadowColor: myColorDark),
+      //         onPressed: () {
+      //           if (!helpController.helpFlag) {
+      //             _cancelHelp();
+      //           }
+      //         },
+      //         child: SizedBox(
+      //             width: MediaQuery.of(context).size.width * 0.8,
+      //             height: 50,
+      //             child: Center(
+      //                 child: Text(_currentSituation,style: const TextStyle(fontWeight: FontWeight.w800,fontSize: 20,color: Colors.white),),
+      //             )
+      //         )
+      //     ),
+      //     ElevatedButton(
+      //       style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
+      //         onPressed: (){},
+      //         child: SizedBox(
+      //             width: MediaQuery.of(context).size.width * 0.8,
+      //             height: 50,
+      //             child: const Center(
+      //                 child: Text("상태 전달하기",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
+      //             )
+      //         )
+      //     ),
+      //     ElevatedButton(
+      //       style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
+      //         onPressed: (){},
+      //         child: SizedBox(
+      //             width: MediaQuery.of(context).size.width * 0.8,
+      //             height: 50,
+      //             child: const Center(
+      //                 child: Text("요청 대상 선택하기",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
+      //             )
+      //         )
+      //     ),
+      //     ElevatedButton(
+      //       style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
+      //         onPressed: (){},
+      //         child: SizedBox(
+      //             width: MediaQuery.of(context).size.width * 0.8,
+      //             height: 50,
+      //             child: const Center(
+      //                 child: Text("비상 연락망 연락",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
+      //             )
+      //         )
+      //     )
+      //   ],
+      // ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: _currentColor,elevation: 50,shadowColor: myColorDark),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green,elevation: 50,shadowColor: myColorDark),
               onPressed: () {
-                if (!helpController.helpFlag) {
-                  _cancelHelp();
-                }
               },
               child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   height: 50,
-                  child: Center(
-                      child: Text(_currentSituation,style: const TextStyle(fontWeight: FontWeight.w800,fontSize: 20,color: Colors.white),),
+                  child: const Center(
+                    child: Text("도움 요청 됐습니다! 조금만 기다려주세요~!",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 15,color: Colors.white),),
                   )
               )
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
+              style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
+              onPressed: (){
+                showModalBottomSheet(context: context,isScrollControlled: true ,builder: (context) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                    child: SizedBox(
+                      height: 400,
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.all(10),
+                                child: IconButton(
+                                  onPressed: (){
+                                    Get.back();
+                                  },
+                                  icon: const Icon(Icons.close),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Text("현재 상태를 입력해주세요",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),),
+                          const SizedBox(height: 30,),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10,right: 10),
+                            child: TextField(
+                              controller: _currentStateController,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  onPressed: (){
+                                    _helpController.requestHelpStateReq=_currentStateController.text.trim();
+                                    _currentStateController.clear();
+                                    Get.snackbar("현재 상태 저장 완료", "현재 상태를 저장했습니다!",backgroundColor: Colors.green);
+                                    Get.back();
+                                  },
+                                  icon: const Icon(Icons.send),
+                                ),
+                                hintText: "현재 상태를 입력해주세요",
+                              ),
+                              onSubmitted: (m){
+                                _helpController.requestHelpStateReq=_currentStateController.text.trim();
+                                _currentStateController.clear();
+                                Get.snackbar("현재 상태 저장 완료", "현재 상태를 저장했습니다!",backgroundColor: Colors.green);
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                });
+              },
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: 50,
+                  child: const Center(
+                    child: Text("상태 전달하기",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
+                  )
+              )
+          ),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
+              onPressed: (){
+                showModalBottomSheet(context: context, builder: (context) {
+                  return SizedBox(
+                    height: 400,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.all(10),
+                              child: IconButton(
+                                onPressed: (){
+                                  Get.back();
+                                },
+                                icon: const Icon(Icons.close),
+                              ),
+                            ),
+                            const Text("요청 대상",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),),
+                          ],
+                        ),
+
+                        const SizedBox(height: 30,),
+                        Expanded(
+                          child: Padding(
+                              padding: EdgeInsets.only(left: 10,right: 10),
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: _helpController.markers.value.length,
+                                  itemBuilder: (context, index){
+                                    return ListTile(
+                                      title: Text(_helpController.markers.value.elementAt(index).markerId.toString()),
+                                      leading: const Icon(Icons.person),
+                                    );
+                                  }
+                              )
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                });
+              },
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: 50,
+                  child: const Center(
+                    child: Text("요청 대상 선택하기",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
+                  )
+              )
+          ),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
               onPressed: (){},
               child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   height: 50,
                   child: const Center(
-                      child: Text("상태 전달하기",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
-                  )
-              )
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
-              onPressed: (){},
-              child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: 50,
-                  child: const Center(
-                      child: Text("요청 대상 선택하기",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
-                  )
-              )
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(elevation: 20,shadowColor: myColorDark),
-              onPressed: (){},
-              child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: 50,
-                  child: const Center(
-                      child: Text("비상 연락망 연락",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
+                    child: Text("비상 연락망 연락",style: TextStyle(fontWeight: FontWeight.w800,fontSize: 20),),
                   )
               )
           )

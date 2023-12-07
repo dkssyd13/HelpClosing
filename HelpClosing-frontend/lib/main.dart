@@ -15,13 +15,13 @@ import 'Pages/Req_Help/GiveHelpPage.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   // notification 설정
-  // String? firebaseToken = await fcmSetting();
+  String? firebaseToken = await fcmSetting();
 
   Get.put(AuthController());
   Get.put(UserController());
 
   // notification 설정
-  // await AuthController.to.storage.write(key: 'fcmToken', value: firebaseToken);
+  await AuthController.to.storage.write(key: 'fcmToken', value: firebaseToken);
 
   runApp(const MyApp());
 }

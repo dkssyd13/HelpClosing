@@ -21,6 +21,8 @@ class HelpController extends GetxController {
   RxSet<Marker> _markers = Set<Marker>().obs;
   late double latitude;
   late double longitude;
+  String requestHelpStateReq = "";
+  late LatLng requesterPosition;
 
   RxSet<Marker> get markers => _markers;
 
@@ -96,7 +98,8 @@ class HelpController extends GetxController {
       'invitedEmail': invitedEmail,
       'closenessRank' : closenessRank,
       'latitude' : latitude,
-      'longitude' : longitude
+      'longitude' : longitude,
+      'briefDescription' : requestHelpStateReq,
     });
     var response = await http.post(url, headers: headers, body: body);
     print(response.statusCode);
@@ -123,8 +126,8 @@ class HelpController extends GetxController {
       // 만약 서버가 OK 응답을 반환하면, JSON을 파싱합니다.
       print(jsonDecode(response.body));
       Map<String, dynamic> jsonData = jsonDecode(response.body);
-      print(jsonData['data']['fcmToken']);
-      sendMessageFCM(jsonData['data']['fcmToken'],closenessRank);
+      print(jsonData['value']['fcmtoken']);
+      sendMessageFCM(jsonData['value']['fcmtoken'],closenessRank);
     } else {
       // 만약 응답이 OK가 아니면, 에러를 던집니다.
       throw Exception('Failed to load FCM token');
@@ -133,10 +136,12 @@ class HelpController extends GetxController {
 
   void sendMessageFCM(String targetToken,closenessRank) async{
     print("sendMessageFCM Starting...");
+    var jwtToken = await AuthController.to.storage.read(key: 'jwtToken');
     final response = await http.post(
       Uri.parse('${ServerUrl.baseUrl}/fb/fcm'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': "Bearer " + jwtToken!,
       },
       body: jsonEncode(<String, String>{
         'targetToken': targetToken,
@@ -179,4 +184,5 @@ class HelpController extends GetxController {
   void cancelHelp() {
     _requestHelpFlag.value=false;
   }
+
 }

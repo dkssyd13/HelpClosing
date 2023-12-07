@@ -70,11 +70,11 @@ class ChatRoomListPage extends StatelessWidget {
                         future: _chatRoomController.getChatRoomStatus(chatRoom.chatRoomId),
                         builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator();
+                            return const CircularProgressIndicator();
                           } else {
-                            if (snapshot.hasError)
-                              return Icon(Icons.error);
-                            else {
+                            if (snapshot.hasError) {
+                              return const Icon(Icons.error,color: Colors.red,);
+                            } else {
                               return (snapshot.data??false) ? const Icon(Icons.check) : const Icon(Icons.directions_run);
                             }
                           }
