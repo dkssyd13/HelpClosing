@@ -33,9 +33,7 @@ public class HelpLog {
     @JoinColumn(name = "recipient")
     private User recipient;
 
-
-    @ManyToOne
-    @JoinColumn(name = "location")
-    private Location location;
+    private double latitude;
+    private double longitude;
 
 }

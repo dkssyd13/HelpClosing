@@ -54,6 +54,8 @@ public class HelpLogService {
             HelpLog helpLog = HelpLog.builder()
                     .requester(requester)
                     .recipient(recipient)
+                    .latitude(helpLogRequest.getLatitude())
+                    .longitude(helpLogRequest.getLongitude())
 //                    .pledgeRequest(pledgeRepository.findByUser(userRepository.findByEmail(helpLogRequest.getRequesterEmail())))
 //                    .pledgeRecipient(pledgeRepository.findByUser(userRepository.findByEmail(helpLogRequest.getRecipientEmail())))
 //                  .location(Location(helpLogRequest.getLatitude(), helpLogRequest.getLongitude()))

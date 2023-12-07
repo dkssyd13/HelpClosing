@@ -12,13 +12,11 @@ import lombok.NoArgsConstructor;
 public class LoginResponse {
     private Long userId;
     private String jwtToken;
-
     private String email;
-
     private String name;
-
     private String nickName;
 
-    private String image;
+    private String urlPledgeRequest;
+    private String urlPledgeResponse;
 
 }
