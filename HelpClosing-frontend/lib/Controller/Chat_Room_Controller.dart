@@ -81,7 +81,7 @@ class ChatRoomController extends GetxController {
         for (var item in jsonData['value']) {
           chatList.add(ChatMessageResponse.fromJson(item));
         }
-        messages.value = chatList;
+        messages.value = List.from(chatList.reversed);
       } else {
         throw Exception('Failed to fetch chat list');
       }

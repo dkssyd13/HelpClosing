@@ -22,14 +22,13 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   final UserController userController = Get.find();
   final ChatController _chatController = Get.put(ChatController());
   bool _status = false;
+  final scrollController = ScrollController();
   
   @override
   void initState() {
     getStatus();
     // TODO: implement initState
     super.initState();
-
-
   }
   void getStatus()async {
     _status=await _chatRoomController.getChatRoomStatus(_chatRoomController.currentChatRoomId.value);
@@ -41,6 +40,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       endDrawer: Drawer(
         width: MediaQuery.of(context).size.width * 0.5,
         child: ListView(
@@ -111,6 +111,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                   print("Current Chat Messages length : ${_chatRoomController.messages.length}");
                   return Expanded(
                       child: ListView.builder(
+                          shrinkWrap: true,
+                          controller: scrollController,
+                          reverse: true,
                         itemCount: _chatRoomController.messages.length,
                           itemBuilder: (context, index){
                             final message = _chatRoomController.messages[index];
@@ -119,93 +122,95 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
                       )
                   );
-                })
-              ],
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child : _status ? Container(
-                width: MediaQuery.of(context).size.width,
-                color: Colors.green,
-                child: const Text(
-                  "이미 완료된 채팅방입니다",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
-                  ),
-                ),
-              )
-                  :Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      margin: const EdgeInsets.all(8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: TextField(
-                        controller: _textController,
-                        decoration: const InputDecoration(
-                          labelText: 'Send a message',
-                          contentPadding: EdgeInsets.all(5),
+                }),
+                Align(
+                    alignment: Alignment.bottomCenter,
+                    child : _status ? Container(
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.green,
+                      child: const Text(
+                        "이미 완료된 채팅방입니다",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
                         ),
-                        onSubmitted: (message) {
-                          _sendMessage();
-                          _textController.clear();
-                        },
                       ),
-                    ),
-                  ),
-                  CircleAvatar(
-                    radius: 25,
-                    backgroundColor: Colors.blue[100],
-                    child: IconButton(
-                        onPressed: () {
-                          _sendMessage();
-                          _textController.clear();
-                        },
-                        icon: const Icon(Icons.send)),
-                  )
-                ],
-              )
-              
-              
-              // child: Row(
-              //   children: [
-              //     Expanded(
-              //       child: Card(
-              //         margin: const EdgeInsets.all(8),
-              //         shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(25),
-              //         ),
-              //         child: TextField(
-              //           controller: _textController,
-              //           decoration: const InputDecoration(
-              //             labelText: 'Send a message',
-              //             contentPadding: EdgeInsets.all(5),
-              //           ),
-              //           onSubmitted: (message) {
-              //             _sendMessage();
-              //             _textController.clear();
-              //           },
-              //         ),
-              //       ),
-              //     ),
-              //     CircleAvatar(
-              //       radius: 25,
-              //       backgroundColor: Colors.blue[100],
-              //       child: IconButton(
-              //           onPressed: () {
-              //             _sendMessage();
-              //             _textController.clear();
-              //           },
-              //           icon: const Icon(Icons.send)),
-              //     )
-              //   ],
-              // ),
-            )
+                    )
+                        :Row(
+                      children: [
+                        Expanded(
+                          child: Card(
+                            margin: const EdgeInsets.all(8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: TextField(
+                              controller: _textController,
+                              decoration: const InputDecoration(
+                                labelText: 'Send a message',
+                                contentPadding: EdgeInsets.all(5),
+                              ),
+                              onSubmitted: (message) {
+                                _sendMessage();
+                                _textController.clear();
+                              },
+                            ),
+                          ),
+                        ),
+                        CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.blue[100],
+                          child: IconButton(
+                              onPressed: () {
+                                _sendMessage();
+                                _textController.clear();
+                              },
+                              icon: const Icon(Icons.send)),
+                        )
+                      ],
+                    )
+
+
+                  // child: Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: Card(
+                  //         margin: const EdgeInsets.all(8),
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius: BorderRadius.circular(25),
+                  //         ),
+                  //         child: TextField(
+                  //           controller: _textController,
+                  //           decoration: const InputDecoration(
+                  //             labelText: 'Send a message',
+                  //             contentPadding: EdgeInsets.all(5),
+                  //           ),
+                  //           onSubmitted: (message) {
+                  //             _sendMessage();
+                  //             _textController.clear();
+                  //           },
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     CircleAvatar(
+                  //       radius: 25,
+                  //       backgroundColor: Colors.blue[100],
+                  //       child: IconButton(
+                  //           onPressed: () {
+                  //             _sendMessage();
+                  //             _textController.clear();
+                  //           },
+                  //           icon: const Icon(Icons.send)),
+                  //     )
+                  //   ],
+                  // ),
+                )
+              ],
+
+            ),
+
           ],
         ),
       ),
@@ -254,6 +259,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   void _sendMessage() {
     if (_textController.text.isNotEmpty) {
+      scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
       _chatService.send(_textController.text);
       var message = _textController.text.trim();
       var chatRoomId = _chatRoomController.currentChatRoomId.value;

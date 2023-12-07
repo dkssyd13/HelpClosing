@@ -9,14 +9,16 @@ class HelpLog {
   final String time;
   final User requester;
   final User recipient;
-  Location? location;
+  final double latitude;
+  final double longitude;
 
   HelpLog({
     required this.id,
     required this.time,
     required this.requester,
     required this.recipient,
-    this.location,
+    required this.latitude,
+    required this.longitude
   });
 
   factory HelpLog.fromJson(Map<String, dynamic> json) {
@@ -27,7 +29,8 @@ class HelpLog {
       time: dateStr,
       requester: User.fromJson(json['requester']),
       recipient: User.fromJson(json['recipient']),
-      location: json['location'] != null ? Location.fromJson(json['location']) : null,
+      latitude: json['latitude'],
+      longitude: json['longitude']
     );
   }
 }

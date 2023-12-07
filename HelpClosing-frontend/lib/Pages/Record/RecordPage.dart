@@ -210,7 +210,7 @@ class _RecordPageState extends State<RecordPage> {
 class RecordDetailRequesterPage extends StatefulWidget {
   final HelpLog log;
 
-  RecordDetailRequesterPage({required this.log});
+  const RecordDetailRequesterPage({super.key, required this.log});
 
   @override
   State<RecordDetailRequesterPage> createState() => _RecordDetailRequesterPageState();
@@ -218,6 +218,8 @@ class RecordDetailRequesterPage extends StatefulWidget {
 
 class _RecordDetailRequesterPageState extends State<RecordDetailRequesterPage> {
   late String destAddress="";
+  HelpLogController helpLogController = Get.put(HelpLogController());
+
 
   @override
   void initState() {
@@ -226,7 +228,7 @@ class _RecordDetailRequesterPageState extends State<RecordDetailRequesterPage> {
   }
 
   void getLocation()async{
-    final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${widget.log.location!.latitude.toString()},${widget.log.location!.longitude}&key=${googleApiKey}&language=ko';
+    final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${widget.log.latitude},${widget.log.latitude}&key=${googleApiKey}&language=ko';
     var responseAddr=await http.get(Uri.parse(url));
     print("json body(위경도 -> 주소) : ${jsonDecode(responseAddr.body)}");
 
@@ -263,7 +265,7 @@ class _RecordDetailRequesterPageState extends State<RecordDetailRequesterPage> {
               const Divider(),
               Image.network(widget.log.requester.urlPledgeRequest),
               const Divider(),
-              Image.network(widget.log.requester.urlPledgeResponse),
+              Image.network(widget.log.recipient.urlPledgeResponse),
             ]
         ),
         );
@@ -274,9 +276,7 @@ class RecordDetailRecipientPage extends StatefulWidget {
   final HelpLog log;
 
 
-
-
-  RecordDetailRecipientPage({required this.log});
+  const RecordDetailRecipientPage({super.key, required this.log});
 
   @override
   State<RecordDetailRecipientPage> createState() => _RecordDetailRecipientPageState();
@@ -284,6 +284,7 @@ class RecordDetailRecipientPage extends StatefulWidget {
 
 class _RecordDetailRecipientPageState extends State<RecordDetailRecipientPage> {
   late String destAddress="";
+  HelpLogController helpLogController = Get.put(HelpLogController());
 
   @override
   void initState() {
@@ -292,7 +293,8 @@ class _RecordDetailRecipientPageState extends State<RecordDetailRecipientPage> {
   }
 
   void getLocation()async{
-    final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${widget.log.location!.latitude.toString()},${widget.log.location!.longitude}&key=${googleApiKey}&language=ko';
+    print("start getting location record");
+    final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${widget.log.latitude},${widget.log.longitude}&key=${googleApiKey}&language=ko';
     var responseAddr=await http.get(Uri.parse(url));
     print("json body(위경도 -> 주소) : ${jsonDecode(responseAddr.body)}");
 
@@ -328,7 +330,7 @@ class _RecordDetailRecipientPageState extends State<RecordDetailRecipientPage> {
               ),
             ),
             const Divider(),
-            Image.network(widget.log.recipient.urlPledgeRequest),
+            Image.network(widget.log.requester.urlPledgeRequest),
             const Divider(),
             Image.network(widget.log.recipient.urlPledgeResponse),
           ]
