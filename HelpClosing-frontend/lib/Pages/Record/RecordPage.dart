@@ -228,7 +228,7 @@ class _RecordDetailRequesterPageState extends State<RecordDetailRequesterPage> {
   }
 
   void getLocation()async{
-    final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${widget.log.latitude},${widget.log.latitude}&key=${googleApiKey}&language=ko';
+    final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${widget.log.latitude},${widget.log.longitude}&key=${googleApiKey}&language=ko';
     var responseAddr=await http.get(Uri.parse(url));
     print("json body(위경도 -> 주소) : ${jsonDecode(responseAddr.body)}");
 

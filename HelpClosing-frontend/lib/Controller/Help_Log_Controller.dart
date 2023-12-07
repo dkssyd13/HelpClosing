@@ -106,6 +106,10 @@ class HelpLogController extends GetxController {
         var jsonString = response.body;
         var jsonMap = json.decode(jsonString);
         requesterHelpLogs.value=List<HelpLog>.from(jsonMap['value'].map((i) => HelpLog.fromJson(i)));
+        for (var o in requesterHelpLogs) {
+          print("=-=-");
+          print(o.longitude);
+        }
       }
     } catch (Exception) {
       print(Exception.toString());

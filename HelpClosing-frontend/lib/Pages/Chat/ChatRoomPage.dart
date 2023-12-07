@@ -21,20 +21,15 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   final ChatRoomController _chatRoomController = Get.put(ChatRoomController());
   final UserController userController = Get.find();
   final ChatController _chatController = Get.put(ChatController());
-  bool _status = false;
   final scrollController = ScrollController();
   
   @override
   void initState() {
-    getStatus();
     // TODO: implement initState
     super.initState();
   }
-  void getStatus()async {
-    _status=await _chatRoomController.getChatRoomStatus(_chatRoomController.currentChatRoomId.value);
-    setState(() {
-    });
-}
+
+
 
 
   @override
@@ -42,15 +37,19 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       endDrawer: Drawer(
-        width: MediaQuery.of(context).size.width * 0.5,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width * 0.5,
         child: ListView(
           children: [
             //DrawerHeader(child: Text("메뉴",))//style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.blue),))
             UserAccountsDrawerHeader(
-                accountName: Text(_chatRoomController.currentPartner.value!.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold,),),
-                accountEmail: Text(_chatRoomController.currentPartner.value!.email,
-                  style: const TextStyle(fontWeight: FontWeight.bold,),),
+              accountName: Text(_chatRoomController.currentPartner.value!.name,
+                style: const TextStyle(fontWeight: FontWeight.bold,),),
+              accountEmail: Text(
+                _chatRoomController.currentPartner.value!.email,
+                style: const TextStyle(fontWeight: FontWeight.bold,),),
               currentAccountPicture: _chatRoomController.getPartnerImage(),
             ),
             ListTile(
@@ -59,11 +58,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               ),
               title: const Text('도움 요청 완료'),
               onTap: () {
-                _chatRoomController.setDone(_chatRoomController.currentChatRoomId.value);
-                setState(() async {
-                  _status=await _chatRoomController.getChatRoomStatus(_chatRoomController.currentChatRoomId.value);
-                });
-
+                _chatRoomController.setDone(
+                    _chatRoomController.currentChatRoomId.value);
               },
             ),
             ListTile(
@@ -72,7 +68,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               ),
               title: const Text('채팅방에서 나가기'),
               onTap: () {
-                _chatRoomController.deleteChatRoom(_chatRoomController.currentChatRoomId.value);
+                _chatRoomController.deleteChatRoom(
+                    _chatRoomController.currentChatRoomId.value);
+                Get.back();
+                Get.back();
               },
             ),
           ],
@@ -105,112 +104,83 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             .width,
         child: Stack(
           children: [
-            Column(
-              children: [
-                Obx((){
-                  print("Current Chat Messages length : ${_chatRoomController.messages.length}");
-                  return Expanded(
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          controller: scrollController,
-                          reverse: true,
-                        itemCount: _chatRoomController.messages.length,
-                          itemBuilder: (context, index){
-                            final message = _chatRoomController.messages[index];
-                            return _buildMessage(message);
-                          }
+            Obx(() =>
+                Column(
+                  children: [
+                    Obx(() {
+                      print(
+                          "Current Chat Messages length : ${_chatRoomController
+                              .messages.length}");
+                      return Expanded(
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              controller: scrollController,
+                              reverse: true,
+                              itemCount: _chatRoomController.messages.length,
+                              itemBuilder: (context, index) {
+                                final message = _chatRoomController
+                                    .messages[index];
+                                return _buildMessage(message);
+                              }
 
-                      )
-                  );
-                }),
-                Align(
-                    alignment: Alignment.bottomCenter,
-                    child : _status ? Container(
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.green,
-                      child: const Text(
-                        "이미 완료된 채팅방입니다",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                        ),
-                      ),
-                    )
-                        :Row(
-                      children: [
-                        Expanded(
-                          child: Card(
-                            margin: const EdgeInsets.all(8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                            child: TextField(
-                              controller: _textController,
-                              decoration: const InputDecoration(
-                                labelText: 'Send a message',
-                                contentPadding: EdgeInsets.all(5),
-                              ),
-                              onSubmitted: (message) {
-                                _sendMessage();
-                                _textController.clear();
-                              },
+                          )
+                      );
+                    }),
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: _chatRoomController.roomStatus.value ? Container(
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          color: Colors.green,
+                          child: const Text(
+                            "이미 완료된 채팅방입니다",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white
                             ),
                           ),
-                        ),
-                        CircleAvatar(
-                          radius: 25,
-                          backgroundColor: Colors.blue[100],
-                          child: IconButton(
-                              onPressed: () {
-                                _sendMessage();
-                                _textController.clear();
-                              },
-                              icon: const Icon(Icons.send)),
                         )
-                      ],
+                            : Row(
+                          children: [
+                            Expanded(
+                              child: Card(
+                                margin: const EdgeInsets.all(8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                child: TextField(
+                                  controller: _textController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Send a message',
+                                    contentPadding: EdgeInsets.all(5),
+                                  ),
+                                  onSubmitted: (message) {
+                                    _sendMessage();
+                                    _textController.clear();
+                                  },
+                                ),
+                              ),
+                            ),
+                            CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.blue[100],
+                              child: IconButton(
+                                  onPressed: () {
+                                    _sendMessage();
+                                    _textController.clear();
+                                  },
+                                  icon: const Icon(Icons.send)),
+                            )
+                          ],
+                        )
                     )
+                  ],
 
-
-                  // child: Row(
-                  //   children: [
-                  //     Expanded(
-                  //       child: Card(
-                  //         margin: const EdgeInsets.all(8),
-                  //         shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(25),
-                  //         ),
-                  //         child: TextField(
-                  //           controller: _textController,
-                  //           decoration: const InputDecoration(
-                  //             labelText: 'Send a message',
-                  //             contentPadding: EdgeInsets.all(5),
-                  //           ),
-                  //           onSubmitted: (message) {
-                  //             _sendMessage();
-                  //             _textController.clear();
-                  //           },
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     CircleAvatar(
-                  //       radius: 25,
-                  //       backgroundColor: Colors.blue[100],
-                  //       child: IconButton(
-                  //           onPressed: () {
-                  //             _sendMessage();
-                  //             _textController.clear();
-                  //           },
-                  //           icon: const Icon(Icons.send)),
-                  //     )
-                  //   ],
-                  // ),
-                )
-              ],
-
-            ),
-
+                )),
           ],
         ),
       ),

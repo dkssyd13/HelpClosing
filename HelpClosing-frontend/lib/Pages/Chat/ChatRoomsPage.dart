@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -7,10 +9,29 @@ import 'package:help_closing_frontend/Domain/UserMailandName.dart';
 
 import '../../Controller/Chat_Room_Controller.dart';
 
-class ChatRoomListPage extends StatelessWidget {
-  final ChatRoomController _chatRoomController = Get.put(ChatRoomController());
+class ChatRoomListPage extends StatefulWidget {
 
   ChatRoomListPage({super.key});
+
+  @override
+  State<ChatRoomListPage> createState() => _ChatRoomListPageState();
+}
+
+class _ChatRoomListPageState extends State<ChatRoomListPage> {
+  final ChatRoomController _chatRoomController = Get.put(ChatRoomController());
+  Timer? _timer;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(mounted);
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async{ // 5초마다 fetchMessageList를 호출합니다.
+      if(mounted){
+        setState(() {});
+      }else{_timer!.cancel();}
+    });
+  }
 
 
 
@@ -69,14 +90,11 @@ class ChatRoomListPage extends StatelessWidget {
                       trailing: FutureBuilder<bool>(
                         future: _chatRoomController.getChatRoomStatus(chatRoom.chatRoomId),
                         builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
+                          if (snapshot.connectionState == ConnectionState.done || snapshot.connectionState==ConnectionState.waiting) {
+                            // return const CircularProgressIndicator();
+                            return (snapshot.data??false) ? const Icon(Icons.check) : const Icon(Icons.directions_run);
                           } else {
-                            if (snapshot.hasError) {
                               return const Icon(Icons.error,color: Colors.red,);
-                            } else {
-                              return (snapshot.data??false) ? const Icon(Icons.check) : const Icon(Icons.directions_run);
-                            }
                           }
                         },
                       ),
@@ -112,7 +130,6 @@ class ChatRoomListPage extends StatelessWidget {
     }
   }
 
-
   String? nameOfOther(UserMailandName user) {
     if (user.email != UserController.to.getUserEmail() &&
         user.nickName != UserController.to.getUserNickname()) {
@@ -126,5 +143,4 @@ class ChatRoomListPage extends StatelessWidget {
       return user.nickName;
     }
   }
-
 }

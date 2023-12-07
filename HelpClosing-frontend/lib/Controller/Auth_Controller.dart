@@ -1,6 +1,7 @@
 // import 'dart:html';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:help_closing_frontend/Controller/Contacts_Controller.dart';
 import 'package:help_closing_frontend/Domain/User.dart';
 import 'package:help_closing_frontend/Fcm/fcmSettings.dart';
 import 'package:help_closing_frontend/ServerUrl.dart';
@@ -23,6 +24,7 @@ class AuthController extends GetxController{
   String registerEmail = "";
   late String myUrlPledgeRequest;
   late String myUrlPledgeResponse;
+  ContactsController contactsController = Get.put(ContactsController());
 
   bool get rememberUser => _rememberUser.value;
 
@@ -45,7 +47,7 @@ class AuthController extends GetxController{
     // user의 정보가 있다면 로그인 후 들어가는 첫 페이지로 넘어가게 합니다.
     if (userInfoJson != null) {
       Map<String, dynamic> userInfo = jsonDecode(userInfoJson);
-      userController.createCurrentUser(userInfo["name"], userInfo["email"], userInfo["nickname"], userInfo["image"], userInfo['userId'], userInfo['urlPledgeRequest'], userInfo['urlPledgeResponse']);
+      UserController.to.createCurrentUser(userInfo["name"], userInfo["email"], userInfo["nickname"], userInfo["image"], userInfo['userId'], userInfo['urlPledgeRequest'], userInfo['urlPledgeResponse']);
       var fcmToken = await storage.read(key: "fcmToken");
       saveFCMToken(userInfo["email"], fcmToken!);
     }
@@ -175,7 +177,7 @@ class AuthController extends GetxController{
       print("token end");
 
       // 로그인이 성공하면 createCurrentUser 메서드를 호출합니다.
-      userController.createCurrentUser(name, email, nickname, image,id, urlPledgeRequest, urlPledgeResponse);
+      UserController.to.createCurrentUser(name, email, nickname, image,id, urlPledgeRequest, urlPledgeResponse);
       print(UserController.currentUser);
       _currentUser.value=UserController.currentUser;
       saveFCMToken(email, token);
@@ -269,7 +271,6 @@ class AuthController extends GetxController{
     //자동 로그인 정보 삭제
     await storage.delete(key: "login");
     _currentUser.value=null;
-    Get.to(const LoginPage());
   }
 
 }

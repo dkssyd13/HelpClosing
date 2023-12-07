@@ -258,8 +258,8 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                       width: MediaQuery.of(context).size.width,
                       child: ListView(
                         children: [
-                          Image.network('https://helpclosing-bucket.s3.ap-northeast-2.amazonaws.com/secondPledge.png'),
-                          Image.network('https://helpclosing-bucket.s3.ap-northeast-2.amazonaws.com/secondPledge.png'),
+                          Image.network(helpController.requesterRequestUrl),
+                          Image.network(helpController.requesterResponseUrl),
                         ],
                       )
                     );

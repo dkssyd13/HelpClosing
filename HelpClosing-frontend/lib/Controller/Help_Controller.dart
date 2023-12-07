@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:help_closing_frontend/Controller/Auth_Controller.dart';
 import 'package:help_closing_frontend/Controller/User_Controller.dart';
 import 'package:help_closing_frontend/Domain/LocationResponse.dart';
+import 'package:help_closing_frontend/Domain/User.dart';
 import 'package:help_closing_frontend/Pages/MainPage.dart';
 import 'package:help_closing_frontend/Pages/Req_Help/GiveHelpPage.dart';
 import 'package:help_closing_frontend/Pages/Req_Help/NeedHelpPage.dart';
@@ -23,6 +24,9 @@ class HelpController extends GetxController {
   late double longitude;
   String requestHelpStateReq = "";
   late LatLng requesterPosition;
+  late String requesterRequestUrl;
+  late String requesterResponseUrl;
+
 
   RxSet<Marker> get markers => _markers;
 

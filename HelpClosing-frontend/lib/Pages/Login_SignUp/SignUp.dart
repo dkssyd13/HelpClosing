@@ -236,7 +236,7 @@ class _PledgeScreenState extends State<PledgeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Pledge Form'),
+          title: const Text('서약서'),
         ),
         body: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -303,11 +303,11 @@ class _PledgeScreenState extends State<PledgeScreen> {
                               Get.snackbar("입력하신 이름,날짜를 확인해주세요", "날짜와 성명을 입력해주셔야됩니다!");
                             }
                           },
-                          child: const Text('Enter')
+                          child: const Text('완료')
                       )
                   ),
                   TextFormField(
-                      decoration: InputDecoration(labelText: 'EnterYourName'),
+                      decoration: const InputDecoration(labelText: '이름을 입력해주세요'),
                       keyboardType: TextInputType.text,
                       onChanged: (value) {
                         setState(() {
@@ -316,7 +316,7 @@ class _PledgeScreenState extends State<PledgeScreen> {
                       }
                   ),
                   TextFormField(
-                      decoration: InputDecoration(labelText: 'Enter the date'),
+                      decoration: const InputDecoration(labelText: '날짜를 입력해주세요'),
                       onChanged: (value) {
                         setState(() {
                           date = value;
@@ -365,7 +365,7 @@ class _PledgeSecondScreenState extends State<PledgeSecondScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Pledge Form'),
+          title: const Text('서약서'),
         ),
         body: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -429,11 +429,11 @@ class _PledgeSecondScreenState extends State<PledgeSecondScreen> {
                               Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
                             }
                           },
-                          child: Text('Enter')
+                          child: const Text('완료')
                       )
                   ),
                   TextFormField(
-                      decoration: InputDecoration(labelText: 'EnterYourName'),
+                      decoration: const InputDecoration(labelText: '이름을 입력해주세요'),
                       keyboardType: TextInputType.text,
                       onChanged: (value) {
                         setState(() {
@@ -442,7 +442,7 @@ class _PledgeSecondScreenState extends State<PledgeSecondScreen> {
                       }
                   ),
                   TextFormField(
-                      decoration: InputDecoration(labelText: 'Enter the date'),
+                      decoration: const InputDecoration(labelText: '날짜를 입력해주세요'),
                       onChanged: (value) {
                         setState(() {
                           date = value;

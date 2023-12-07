@@ -55,9 +55,9 @@ class AddContactPage extends StatelessWidget {
             name: name,
             email: '',
             nickname: name,
-            image: null,
-            location: null,
-            address: null)
+          urlPledgeResponse: '',
+          urlPledgeRequest: ''
+            )
     );
 
     Get.snackbar("긴급 연락처 추가 성공", "${name}님을 긴급연락처에 저장했습니다!",backgroundColor: Colors.green);

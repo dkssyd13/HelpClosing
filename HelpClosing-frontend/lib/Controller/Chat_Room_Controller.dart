@@ -23,6 +23,7 @@ class ChatRoomController extends GetxController {
   Timer get timer => _timer!;
   late RxList<ChatMessageResponse> messages;
   final _baseUrl=ServerUrl.baseUrl;
+  var roomStatus = false.obs;
 
   ChatService chatService = ChatService();
 
@@ -41,17 +42,19 @@ class ChatRoomController extends GetxController {
 
   @override
   void onClose() {
-    // _timer?.cancel(); // 타이머를 종료합니다.
+    _timer?.cancel(); // 타이머를 종료합니다.
     super.onClose();
   }
 
   void startUpdatingMessageList() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) { // 5초마다 fetchMessageList를 호출합니다.
+    _timer = Timer.periodic(Duration(milliseconds: 50), (timer) async{ // 5초마다 fetchMessageList를 호출합니다.
       fetchMessageList();
+      roomStatus.value = await getChatRoomStatus(currentChatRoomId.value);
     });
   }
   void stopUpdatingMessageList(){
     _timer?.cancel();
+    roomStatus.value=false;
   }
 
 
@@ -82,7 +85,10 @@ class ChatRoomController extends GetxController {
           chatList.add(ChatMessageResponse.fromJson(item));
         }
         messages.value = List.from(chatList.reversed);
-      } else {
+      } else if (response.statusCode == 500){
+        Get.back();
+        Get.snackbar("상대방이 나갔습니다", "상대방이 채팅방에서 나갔습니다!");
+      } else{
         throw Exception('Failed to fetch chat list');
       }
     } catch (e) {
@@ -122,7 +128,7 @@ class ChatRoomController extends GetxController {
 
     if (response.statusCode == 200) {
       Get.snackbar("채팅방 나가기 완료", "채팅방에서 나가셨습니다",backgroundColor: Colors.green);
-      fetchChatRoomList();
+      stopUpdatingMessageList();
     } else {
       Get.snackbar("채팅방 나가기 실패", "오류가 발생했습니다");
     }
@@ -182,6 +188,7 @@ class ChatRoomController extends GetxController {
   void goToChat(UserMailandName user, String chatRoomID){
     currentPartner.value = user;
     currentChatRoomId.value = chatRoomID;
+    startUpdatingMessageList();
     Get.to(const ChatRoomPage());
   }
 

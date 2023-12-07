@@ -51,6 +51,58 @@ class NotificationController extends GetxController{
     }
   }
 
+  void urlPledgeRequest(String email) async{
+    print("Invitation start getting user profile");
+    var jwtToken = await AuthController.to.storage.read(key: 'jwtToken');
+    final response = await http.get(Uri.parse("${ServerUrl.baseUrl}/user/get/?email=$email"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': "Bearer " + jwtToken!,
+      },
+    );
+
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      HelpController hc = Get.put(HelpController());
+      // If the server returns a 200 OK response, then parse the JSON.
+      print(response.body);
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      print(jsonResponse['urlPledgeRequest'].runtimeType);
+      hc.requesterRequestUrl=jsonResponse['urlPledgeRequest'];
+    } else {
+      // If the server did not return a 200 OK response, then throw an exception.
+      throw Exception('Failed to load user profile');
+    }
+  }
+
+  void urlPledgeResponse(String email) async{
+    print("Invitation start getting user profile");
+    var jwtToken = await AuthController.to.storage.read(key: 'jwtToken');
+    final response = await http.get(Uri.parse("${ServerUrl.baseUrl}/user/get/?email=$email"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': "Bearer " + jwtToken!,
+      },
+    );
+
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      HelpController hc = Get.put(HelpController());
+      // If the server returns a 200 OK response, then parse the JSON.
+      print(response.body);
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      print(jsonResponse['urlPledgeResponse'].runtimeType);
+      hc.requesterResponseUrl=jsonResponse['urlPledgeResponse'];
+    } else {
+      // If the server did not return a 200 OK response, then throw an exception.
+      throw Exception('Failed to load user profile');
+    }
+  }
+
   Future<String> getUserProfile(String email) async{
     print("Invitation start getting user profile");
     var jwtToken = await AuthController.to.storage.read(key: 'jwtToken');

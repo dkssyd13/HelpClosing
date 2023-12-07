@@ -51,6 +51,7 @@ class EmergencyContactsPage extends StatelessWidget {
   }
 
   Widget buildUserListTile(User contactByIndex) {
+    print(contactByIndex.image.runtimeType);
     return Builder(builder: (context) =>
         ListTile(
           contentPadding: EdgeInsets.all(15),

@@ -66,6 +66,8 @@ class _NotificationPageState extends State<NotificationPage> {
                               var senderEmail = notificationController.notifications.value[index].inviteEmail;
                               var recipientEmail = AuthController.to.userController.getUserEmail();
                               helpController.requesterPosition=LatLng(notificationController.notifications.value[index].latitude, notificationController.notifications.value[index].longitude);
+                              notificationController.urlPledgeRequest(senderEmail);
+                              notificationController.urlPledgeResponse(senderEmail);
                               notificationController.acceptInvitation(senderEmail, recipientEmail!, 0,notificationController.notifications.value[index]);
                               helpController.giveHelp();
                               Get.back();

@@ -33,4 +33,10 @@ class ContactsController extends GetxController{
   }
 
 
+  sendHelpReqToContacts(){
+    for (Contact o in contacts.value) {
+      print(o.phones);
+    }
+  }
+
 }
