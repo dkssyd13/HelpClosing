@@ -26,6 +26,8 @@ class _NotificationPageState extends State<NotificationPage> {
     notificationController.fetchInvitationList();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

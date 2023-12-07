@@ -137,6 +137,7 @@ class HelpController extends GetxController {
   void sendMessageFCM(String targetToken,closenessRank) async{
     print("sendMessageFCM Starting...");
     var jwtToken = await AuthController.to.storage.read(key: 'jwtToken');
+    closenessRank +=1;
     final response = await http.post(
       Uri.parse('${ServerUrl.baseUrl}/fb/fcm'),
       headers: <String, String>{
@@ -146,7 +147,7 @@ class HelpController extends GetxController {
       body: jsonEncode(<String, String>{
         'targetToken': targetToken,
         'title': "도움 요청 도착",
-        'body': "당신은 ${int.parse(closenessRank)+1}번째 가까운 사람입니다",
+        'body': "당신은 ${closenessRank.toString()}번째 가까운 사람입니다",
       }),
     );
     print(response.statusCode);

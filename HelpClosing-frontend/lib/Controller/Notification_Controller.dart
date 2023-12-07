@@ -42,20 +42,19 @@ class NotificationController extends GetxController{
       print(response.body);
       List<dynamic> invitations = jsonResponse['value'];
       _notifications.value = invitations.map((item) => Invitation.fromJson(Map<String, dynamic>.from(item))).toList();
+      for (int i =0 ; i<_notifications.length; i++){
+        _notifications.value[i].inviteName=await getUserProfile(_notifications.value[i].inviteEmail);
+        _notifications.refresh();
+      }
     } else {
       throw Exception('Failed to load invitation list');
-    }
-
-    for (var o in _notifications) {
-      o.inviteName= await getUserProfile(o.inviteEmail);
-      print(o.inviteName);
     }
   }
 
   Future<String> getUserProfile(String email) async{
     print("Invitation start getting user profile");
     var jwtToken = await AuthController.to.storage.read(key: 'jwtToken');
-    final response = await http.get(Uri.parse("${ServerUrl.baseUrl}/profile/$email"),
+    final response = await http.get(Uri.parse("${ServerUrl.baseUrl}/user/get/?email=$email"),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -63,16 +62,14 @@ class NotificationController extends GetxController{
       },
     );
 
+    print(response.body);
+
     if (response.statusCode == 200) {
       // If the server returns a 200 OK response, then parse the JSON.
       print(response.body);
       Map<String, dynamic> jsonResponse = json.decode(response.body);
-      print(jsonResponse['value']['name'].runtimeType);
-      if(jsonResponse['value']['name']== Null || jsonResponse['value']['name']==null){
-        print("true");
-        return jsonResponse['value']['nickName'];
-      }
-      return jsonResponse['value']['name'];
+      print(jsonResponse['name'].runtimeType);
+      return jsonResponse['name'];
     } else {
       // If the server did not return a 200 OK response, then throw an exception.
       throw Exception('Failed to load user profile');
