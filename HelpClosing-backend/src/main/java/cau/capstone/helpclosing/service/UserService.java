@@ -55,6 +55,8 @@ public class UserService {
                 .nickName(user.getNickName())
                 .name(user.getName())
                 .jwtToken(jwtProvider.createToken(user.getEmail(), user.getRoles()))
+                .urlPledgeRequest(user.getUrlPledgeRequest())
+                .urlPledgeResponse(user.getUrlPledgeResponse())
                 .build();
     }
 
