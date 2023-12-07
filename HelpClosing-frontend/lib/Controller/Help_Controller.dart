@@ -146,7 +146,7 @@ class HelpController extends GetxController {
       body: jsonEncode(<String, String>{
         'targetToken': targetToken,
         'title': "도움 요청 도착",
-        'body': "당신은 $closenessRank번째 가까운 사람입니다",
+        'body': "당신은 ${int.parse(closenessRank)+1}번째 가까운 사람입니다",
       }),
     );
     print(response.statusCode);

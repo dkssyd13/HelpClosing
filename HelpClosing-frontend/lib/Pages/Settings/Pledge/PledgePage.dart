@@ -1,10 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:help_closing_frontend/Controller/Auth_Controller.dart';
 
-class PledgePage extends StatelessWidget {
+class PledgePage extends StatefulWidget {
   const PledgePage({super.key});
 
   @override
+  State<PledgePage> createState() => _PledgePageState();
+}
+
+class _PledgePageState extends State<PledgePage> {
+  var reqPledge;
+  var respPledge;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getImgs();
+  }
+
+  getImgs()async{
+    reqPledge = AuthController.to.userController.getUserRequestPledge();
+    respPledge = AuthController.to.userController.getUserResponsePledge();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -13,9 +35,9 @@ class PledgePage extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          Image.network("https://helpclosing-bucket.s3.ap-northeast-2.amazonaws.com/secondPledge.png"),
+          Image.network(reqPledge),
           const Divider(),
-          Image.network("https://helpclosing-bucket.s3.ap-northeast-2.amazonaws.com/secondPledge.png")
+          Image.network(respPledge)
         ],
       )
     );

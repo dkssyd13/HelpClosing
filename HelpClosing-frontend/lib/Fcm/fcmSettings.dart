@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:help_closing_frontend/ServerUrl.dart';
 import 'package:help_closing_frontend/firebase_options.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -17,7 +18,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void saveFCMToken(String email, String token) async {
   if(token != null) {
-    var url = Uri.parse('https://your-server.com/fb/saveFCMToken'); // 실제 서버 URL
+    var url = Uri.parse('${ServerUrl.baseUrl}/fb/saveFCMToken'); // 실제 서버 URL
 
     Map<String, String> headers = {"Content-type": "application/json"};
 

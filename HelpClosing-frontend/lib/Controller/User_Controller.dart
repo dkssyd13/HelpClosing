@@ -45,7 +45,7 @@ class UserController extends GetxController{
     }
   }
 
-  void createCurrentUser(String name, String email, String nickname,String image, String id){
+  void createCurrentUser(String name, String email, String nickname,String image, String id, String urlPledgeRequest, String urlPledgeResponse){
     _currentUser = User(
         name: name,
         email: email,
@@ -54,6 +54,8 @@ class UserController extends GetxController{
         id: id,
         location: null,
         address: '',
+        urlPledgeRequest:urlPledgeRequest,
+      urlPledgeResponse:urlPledgeResponse
     );
   }
 
@@ -83,6 +85,14 @@ class UserController extends GetxController{
   }
   String? getUserNickname(){
     return _currentUser?.nickname;
+  }
+
+  String? getUserRequestPledge(){
+    return _currentUser?.urlPledgeRequest;
+  }
+
+  String? getUserResponsePledge(){
+    return _currentUser?.urlPledgeResponse;
   }
 
 

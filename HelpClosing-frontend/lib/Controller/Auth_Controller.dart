@@ -21,6 +21,8 @@ class AuthController extends GetxController{
   final RxBool _rememberUser=false.obs;
   final storage = const FlutterSecureStorage();
   String registerEmail = "";
+  late String myUrlPledgeRequest;
+  late String myUrlPledgeResponse;
 
   bool get rememberUser => _rememberUser.value;
 
@@ -43,7 +45,7 @@ class AuthController extends GetxController{
     // user의 정보가 있다면 로그인 후 들어가는 첫 페이지로 넘어가게 합니다.
     if (userInfoJson != null) {
       Map<String, dynamic> userInfo = jsonDecode(userInfoJson);
-      userController.createCurrentUser(userInfo["name"], userInfo["email"], userInfo["nickname"], userInfo["image"], userInfo['userId']);
+      userController.createCurrentUser(userInfo["name"], userInfo["email"], userInfo["nickname"], userInfo["image"], userInfo['userId'], userInfo['urlPledgeRequest'], userInfo['urlPledgeResponse']);
       var fcmToken = await storage.read(key: "fcmToken");
       saveFCMToken(userInfo["email"], fcmToken!);
     }
@@ -130,6 +132,7 @@ class AuthController extends GetxController{
   }
 
   void login(String email, String password) async {
+    print("Start logging");
     final response = await http.post(
       Uri.parse('${ServerUrl.baseUrl}/login'),
       headers: <String, String>{
@@ -140,6 +143,8 @@ class AuthController extends GetxController{
         'email': email,
       }),
     );
+    print(response.statusCode);
+    print(response.body);
 
 
     if (response.statusCode == 200) {
@@ -154,6 +159,8 @@ class AuthController extends GetxController{
       String id = responseJson['userId'].toString();
       String name = responseJson['name'];
       String nickname = responseJson['nickName'];
+      String urlPledgeRequest= responseJson['urlPledgeRequest'];
+      String urlPledgeResponse = responseJson['urlPledgeResponse'];
       String image;
       if(responseJson['image'] == null){
         image = '';
@@ -168,7 +175,7 @@ class AuthController extends GetxController{
       print("token end");
 
       // 로그인이 성공하면 createCurrentUser 메서드를 호출합니다.
-      userController.createCurrentUser(name, email, nickname, image,id);
+      userController.createCurrentUser(name, email, nickname, image,id, urlPledgeRequest, urlPledgeResponse);
       print(UserController.currentUser);
       _currentUser.value=UserController.currentUser;
       saveFCMToken(email, token);

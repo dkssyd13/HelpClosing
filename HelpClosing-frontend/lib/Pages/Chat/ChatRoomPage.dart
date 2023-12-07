@@ -222,6 +222,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     //       backgroundImage: NetworkImage(message.image),
     //     ));
 
+    DateTime parsedDate = DateTime.parse(message.chatDate.toString());
+
+    print(message.chatDate);
     return Row(
       mainAxisAlignment: flag ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
@@ -238,7 +241,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               children: [
                 Text(message.message),
                 Text(
-                    message.chatDate.toString(),
+                    "${parsedDate.year}-${parsedDate.month.toString().padLeft(2, '0')}-${parsedDate.day.toString().padLeft(2, '0')} ${parsedDate.hour.toString().padLeft(2, '0')}:${parsedDate.minute.toString().padLeft(2, '0')}:${parsedDate.second.toString().padLeft(2, '0')}",
                     style: const TextStyle(
                       fontSize: 10.0,
                       color: Colors.black54,))
