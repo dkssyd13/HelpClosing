@@ -26,6 +26,10 @@ class HelpController extends GetxController {
   late LatLng requesterPosition;
   late String requesterRequestUrl;
   late String requesterResponseUrl;
+  late String invitedName;
+  late double nearLat;
+  late double nearLong;
+  int nearRank = 99999;
 
 
   RxSet<Marker> get markers => _markers;
@@ -73,6 +77,13 @@ class HelpController extends GetxController {
   void convertLocationResponse(List<LocationResponse> locationsList){
     print("Start Making Markers");
     for (var locationResponse in locationsList) {
+      print(locationResponse.closenessRank);
+      if(locationResponse.closenessRank < nearRank){
+        print("$nearRank -> ${locationResponse.closenessRank}" );
+        nearLat = locationResponse.latitude;
+        nearLong = locationResponse.longitude;
+        nearRank = locationResponse.closenessRank;
+      }
       _locations.add(LatLng(locationResponse.latitude, locationResponse.longitude));
       _markers.add(Marker(
           markerId: MarkerId(locationResponse.userEmail),
@@ -94,6 +105,8 @@ class HelpController extends GetxController {
     var url = Uri.parse('${ServerUrl.baseUrl}/matching/invite');
     var headers = {'Content-Type': 'application/json','Authorization': "Bearer " + jwtToken!,};
 
+    print(UserController.to.getUser(invitedEmail));
+
     print("invitePerson : ${UserController.to.getUserEmail()}");
     print("invitedPerson : $invitedEmail");
     print("closenessRank : $closenessRank");
@@ -107,12 +120,41 @@ class HelpController extends GetxController {
     });
     var response = await http.post(url, headers: headers, body: body);
     print(response.statusCode);
+
+    getUserProfile(invitedEmail);
+
     if(response.statusCode==200){
       print("response body = ${response.body}");
-      Get.snackbar("도움 요청을 보냈습니다!", "${response.body}", backgroundColor: Colors.green);
+      Get.snackbar("도움 요청을 보냈습니다!", '$invitedName님에게 도움 요청을 보냈습니다!', backgroundColor: Colors.green);
       getFcm(invitedEmail,closenessRank);
     }else{
-      Get.snackbar("도움 요청을 실패했습니다!", "${response.body}", backgroundColor: Colors.red);
+      Get.snackbar("도움 요청을 실패했습니다!", "도움을 요청하는 과정에서 문제가 발생했습니다", backgroundColor: Colors.red);
+    }
+  }
+
+  void getUserProfile(String email) async{
+    print("Help Notification start getting user profile");
+    var jwtToken = await AuthController.to.storage.read(key: 'jwtToken');
+    final response = await http.get(Uri.parse("${ServerUrl.baseUrl}/user/get/?email=$email"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': "Bearer " + jwtToken!,
+      },
+    );
+
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response, then parse the JSON.
+      print(response.body);
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      print(jsonResponse['name']);
+      invitedName =  jsonResponse['name'];
+      print("요청한 사람의 이름은 $invitedName");
+    } else {
+      // If the server did not return a 200 OK response, then throw an exception.
+      throw Exception('Failed to load user profile');
     }
   }
 

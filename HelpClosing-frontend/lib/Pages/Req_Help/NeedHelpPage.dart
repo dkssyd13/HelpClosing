@@ -27,6 +27,22 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
   final TextEditingController _currentStateController = TextEditingController();
   final EmergencyContactsController ecc = Get.put(EmergencyContactsController());
   String myAddr = "";
+  late final destAddress;
+
+
+  _launchNaverMap() async{
+    print("가장 가까운 랭크는 ${_helpController.nearRank}");
+    var encodedData = utf8.encode("목적지");
+    var decodedData = "";
+    for (int i = 0; i < encodedData.length; i++) {
+      decodedData += '%' + encodedData[i].toRadixString(16);
+    }
+    var url = "nmap://route/walk?dlat=${_helpController.nearLat}&dlng=${_helpController.nearLong}&dname=$decodedData&appname=com.example.help_closing_frontend";
+    // var url = "nmap://route/walk?dlat=${helpController.requesterPosition.latitude}&dlng=${helpController.requesterPosition.longitude}&appname=com.example.help_closing_frontend";
+
+    await canLaunchUrl(Uri.parse(url)) ? await launchUrl(Uri.parse(url)) : Get.snackbar("지도 앱 오류", "네이버 지도 앱을 여는데 실패했습니다",backgroundColor: Colors.red);
+  }
+
 
   //위치 예시
   List<LatLng> points = [
@@ -136,6 +152,16 @@ class _NeedHelpBodyState extends State<NeedHelpBody> {
                 },
               )
           ),
+          Positioned(
+            left: 10,
+            bottom: 10,
+            child: FloatingActionButton(
+              onPressed: (){
+                _launchNaverMap();
+              },
+              child: const Icon(Icons.map_outlined),
+            ),
+          )
         ],
       ),
     );

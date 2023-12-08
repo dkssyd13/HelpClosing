@@ -84,7 +84,7 @@ Future<String?> fcmSetting() async {
       'high_importance_channel_id',
       'High Importance Notification',
       description: 'This channel is used for important notifications.',
-      importance: Importance.high
+      importance: Importance.high,
   );
 
   // foreground 에서의 푸시 알림 표시를 위한 local notifications 설정
@@ -117,7 +117,8 @@ Future<String?> fcmSetting() async {
               channel.id,
               channel.name,
               channelDescription: channel.description,
-              icon: android.smallIcon,
+              // icon: android.smallIcon,
+              icon: 'not_icon',
             ),
           ));
 
