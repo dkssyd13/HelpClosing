@@ -258,7 +258,7 @@ class _RecordDetailRequesterPageState extends State<RecordDetailRequesterPage> {
               Text("장소 : $destAddress",style: const TextStyle(fontSize: 15)),
               const Divider(),
               const Center(
-                child: Text("상대방의 서약서",
+                child: Text("서약서",
                   style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.blue),
                 ),
               ),
@@ -325,7 +325,7 @@ class _RecordDetailRecipientPageState extends State<RecordDetailRecipientPage> {
             Text("장소 : $destAddress",style: const TextStyle(fontSize: 15)),
             const Divider(),
             const Center(
-              child: Text("상대방의 서약서",
+              child: Text("서약서",
               style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.blue),
               ),
             ),

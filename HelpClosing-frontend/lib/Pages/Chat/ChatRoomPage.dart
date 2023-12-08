@@ -249,6 +249,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   void dispose() {
     // _channel.sink.close();
     // _controller.dispose();
+    _chatRoomController.stopUpdatingMessageList();
     super.dispose();
   }
 }

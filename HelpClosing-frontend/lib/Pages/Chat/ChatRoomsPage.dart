@@ -109,8 +109,7 @@ class _ChatRoomListPageState extends State<ChatRoomListPage> {
 
   UserMailandName? getOtherUser(List<UserMailandName> userList) {
     for (var user in userList) {
-      if (user.email != UserController.to.getUserEmail() &&
-          user.nickName != UserController.to.getUserNickname()) {
+      if (user.email != UserController.to.getUserEmail()) {
         return user;
       }
     }
@@ -131,15 +130,13 @@ class _ChatRoomListPageState extends State<ChatRoomListPage> {
   }
 
   String? nameOfOther(UserMailandName user) {
-    if (user.email != UserController.to.getUserEmail() &&
-        user.nickName != UserController.to.getUserNickname()) {
+    if (user.email != UserController.to.getUserEmail()) {
       return user.name;
     }
   }
 
   String? nickNameOfOther(UserMailandName user) {
-    if (user.email != UserController.to.getUserEmail() &&
-        user.nickName != UserController.to.getUserNickname()) {
+    if (user.email != UserController.to.getUserEmail()) {
       return user.nickName;
     }
   }
