@@ -1,13 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:help_closing_frontend/Controller/Help_Controller.dart';
 import 'package:help_closing_frontend/GoogleApiKey.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_routes/google_maps_routes.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'temp/temp.dart';
 
 class GiveHelpBody extends StatefulWidget {
   const GiveHelpBody({super.key});
@@ -17,14 +23,35 @@ class GiveHelpBody extends StatefulWidget {
 }
 
 class _GiveHelpBodyState extends State<GiveHelpBody> {
+  bool flagPoliceSound=false;
   late GoogleMapController mapController;
+  final AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+  HelpController helpController = Get.put(HelpController());
+  late final destAddress;
+
+
+  _launchNaverMap(String lat, String long) async{
+    var encodedData = utf8.encode("목적지");
+    var decodedData = "";
+    for (int i = 0; i < encodedData.length; i++) {
+      decodedData += '%' + encodedData[i].toRadixString(16);
+    }
+    var url = "nmap://route/walk?dlat=${lat}&dlng=${long}&dname=$decodedData&appname=com.example.help_closing_frontend";
+    // var url = "nmap://route/walk?dlat=${helpController.requesterPosition.latitude}&dlng=${helpController.requesterPosition.longitude}&appname=com.example.help_closing_frontend";
+
+    await canLaunchUrl(Uri.parse(url)) ? await launchUrl(Uri.parse(url)) : Get.snackbar("지도 앱 오류", "네이버 지도 앱을 여는데 실패했습니다",backgroundColor: Colors.red);
+  }
+
+
+  void togglePoliceSoundFlag(){
+    flagPoliceSound=!flagPoliceSound;
+}
 
   //위치 예시
-  List<LatLng> points = [
-    const LatLng(37.499449, 126.971902),
-  ];
+  List<LatLng> points = [];
 
   MapsRoutes route = MapsRoutes();
+
 
   //거리 계산기??암튼
   DistanceCalculator distanceCalculator = DistanceCalculator();
@@ -37,17 +64,29 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
   void initState() {
     super.initState();
     getLocation();
+
+
+    _assetsAudioPlayer.open(
+      Audio("assets/audios/police.mp3"),
+      loopMode: LoopMode.single, //반복 여부 (LoopMode.none : 없음)
+      autoStart: false, //자동 시작 여부
+      showNotification: false, //스마트폰 알림 창에 띄울지 여부
+    );
   }
 
   getAddr(lat,long) async{
     //google api 위도 경도 -> 주소
-    final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyAVkF1MVwblmaf6a8hfP3aXDgtrS6V7UMI';
+    final url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${googleApiKey}&language=ko';
     var responseAddr=await http.get(Uri.parse(url));
     print("json body(위경도 -> 주소) : ${jsonDecode(responseAddr.body)}");
+    destAddress = jsonDecode(responseAddr.body)['results'][0]['formatted_address'];
 
-    var addr='130-1+Cheongna-dong,+Seo-gu,+Incheon,+South+Korea';
-    var responseLatLong=await  http.get(Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?address=${addr}&key=AIzaSyAVkF1MVwblmaf6a8hfP3aXDgtrS6V7UMI'));
-    print("json body(주소 -> 위도 경도) : ${jsonDecode(responseLatLong.body)}");
+
+
+
+    // var addr='130-1+Cheongna-dong,+Seo-gu,+Incheon,+South+Korea';
+    // var responseLatLong=await  http.get(Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?address=${addr}&key=$googleApiKey&language=ko'));
+    // print("json body(주소 -> 위도 경도) : ${jsonDecode(responseLatLong.body)}");
   }
 
   getLocation() async {
@@ -58,9 +97,12 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
         desiredAccuracy: LocationAccuracy.high);
     double lat = position.latitude;
     double long = position.longitude;
-    await getAddr(lat, long);
+    await getAddr(helpController.requesterPosition.latitude.toString(), helpController.requesterPosition.longitude.toString());
 
     LatLng location = LatLng(lat, long);
+
+    points.add(location);
+    points.add(LatLng(helpController.requesterPosition.latitude, helpController.requesterPosition.longitude));
 
     setState((){
       _currentPosition = location;
@@ -89,11 +131,9 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
     return SafeArea(
       child: Stack(
         children: [
-          _isLoading ? const Center(child: CircularProgressIndicator()) :
           _currentPosition != null ? GoogleMap(
               zoomControlsEnabled: false,
               onMapCreated: _onMapCreated,
-              polylines: route.routes,
               //
               markers: {
                 Marker(
@@ -101,8 +141,8 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                   position: _currentPosition!,
                 ),
                 Marker(
-                    markerId: const MarkerId("중앙대학교 310관"),
-                    position: const LatLng(37.504815334545874, 126.95534935119163),
+                    markerId: const MarkerId("도움 요청한 사람"),
+                    position: helpController.requesterPosition,
                     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen)
                 ),
               },
@@ -110,7 +150,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                 target: _currentPosition!,
                 zoom: 16.0,
               )
-          ) : Container(),
+          ) : const Center(child: CircularProgressIndicator()),
           Positioned(
             right: 10,
             bottom: 10,
@@ -130,7 +170,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
               )
           ),
           Positioned(
-            right: 10,
+              right: 10,
               bottom: 130,
               child: FloatingActionButton(
                 onPressed: () {
@@ -138,11 +178,22 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                 },
                 child: const Icon(Icons.add_alert_sharp),
               )
+          ),
+          Positioned(
+            left: 10,
+            bottom: 10,
+            child: FloatingActionButton(
+              onPressed: (){
+                _launchNaverMap(helpController.requesterPosition.latitude.toString(),helpController.requesterPosition.longitude.toString());
+              },
+              child: const Icon(Icons.map_outlined),
+            ),
           )
         ],
       ),
     );
   }
+  
   Future _showMenu(){
     return showModalBottomSheet(context: context, builder: (context){
       return SizedBox(
@@ -154,10 +205,10 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
           children: [
             const Divider(indent: 200, endIndent: 200, thickness: 5,),
             const SizedBox(height: 20,),
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text("사고 발생 위치 : ",
                     style: TextStyle(
@@ -168,18 +219,18 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                   ),
                 ),
                 Expanded(
-                    child: Text("서울 동작구 흑석로 84 중앙대학교",
-                    style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                    child: Text("$destAddress",
+                    style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
                     )
 
                 ),
               ],
             ),
             const SizedBox(height: 20,),
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text("거리 : ",
                     style: TextStyle(
@@ -190,8 +241,8 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                   ),
                 ),
                 Expanded(
-                    child: Text("400m",
-                      style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                    child: Text(distanceCalculator.calculateRouteDistance(points),
+                      style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
                     )
 
                 ),
@@ -200,7 +251,20 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: (){},
+                TextButton(onPressed: (){
+                  showModalBottomSheet(context: context,isScrollControlled: true ,builder: (context) {
+                    return SizedBox(
+                      height: 400,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView(
+                        children: [
+                          Image.network(helpController.requesterRequestUrl),
+                          Image.network(helpController.requesterResponseUrl),
+                        ],
+                      )
+                    );
+                  });
+                },
                     child: const Text("계약서 확인하기",style: TextStyle(color: Colors.blue, fontSize: 16),))
               ],
             )
@@ -223,7 +287,7 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text("신고 접수 위치", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.blue[300]),),
-              Text("서울특별시 동작구 흑석로 84", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.blue[400]),),
+              Text("$destAddress", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.blue[400]),),
               const SizedBox(height: 40,),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -233,11 +297,13 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                             elevation: 50,
                             child: Column(
                               children: [
-                                IconButton(onPressed: () {},
+                                IconButton(onPressed: () {
+                                  _assetsAudioPlayer.playOrPause();
+                                },
                                     icon: const Icon(Icons.local_police),
                                   iconSize: 150,
                                 ),
-                                Text("경찰에 신고하기",style: TextStyle(fontSize: 20, color: Colors.blue[600]),)
+                                Text("사이렌 올리기",style: TextStyle(fontSize: 20, color: Colors.blue[600]),)
                               ],
                             )),
                         const SizedBox(width: 30,),
@@ -245,11 +311,14 @@ class _GiveHelpBodyState extends State<GiveHelpBody> {
                             elevation: 50,
                             child: Column(
                               children: [
-                                IconButton(onPressed: () {},
-                                    icon: const Icon(Icons.notifications_active_sharp),
+                                IconButton(onPressed: () async{
+                                  final policeNumber = "112";
+                                  await FlutterPhoneDirectCaller.callNumber(policeNumber);
+                                },
+                                    icon: const Icon(Icons.call),
                                   iconSize: 150,
                                 ),
-                                Text("간접 도움 주기",style: TextStyle(fontSize: 20, color: Colors.blue[600]),)
+                                Text("경찰(112) 신고하기",style: TextStyle(fontSize: 20, color: Colors.blue[600]),)
                               ],
                             )),
                         const SizedBox(width: 30,),

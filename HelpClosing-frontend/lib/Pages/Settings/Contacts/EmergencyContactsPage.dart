@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:help_closing_frontend/Controller/EmergencyContactsController.dart';
 import 'package:help_closing_frontend/Domain/User.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:help_closing_frontend/Pages/Settings/Contacts/AddContactPage.dart';
 
 class EmergencyContactsPage extends StatelessWidget {
   EmergencyContactsPage({super.key});
@@ -15,6 +16,13 @@ class EmergencyContactsPage extends StatelessWidget {
         centerTitle: true,
         title: Text("긴급 연락처"),
         titleTextStyle: const TextStyle(fontSize: 40,fontWeight: FontWeight.bold,color: Colors.blue),
+      ),
+      floatingActionButton: IconButton(
+        icon: const Icon(Icons.add),
+        color: Colors.blue,
+        onPressed: (){
+          Get.to(const AddContactPage());
+        },
       ),
       body: Obx( () => ListView.builder(
         itemCount: ecc.getContactLength(),
@@ -43,6 +51,7 @@ class EmergencyContactsPage extends StatelessWidget {
   }
 
   Widget buildUserListTile(User contactByIndex) {
+    print(contactByIndex.image.runtimeType);
     return Builder(builder: (context) =>
         ListTile(
           contentPadding: EdgeInsets.all(15),

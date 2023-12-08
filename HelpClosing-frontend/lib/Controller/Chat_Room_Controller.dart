@@ -2,11 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:help_closing_frontend/ChatService/ChatService.dart';
+import 'package:help_closing_frontend/Controller/Auth_Controller.dart';
+import 'package:help_closing_frontend/Controller/User_Controller.dart';
 import 'package:help_closing_frontend/Domain/ChatMessageResponse.dart';
 import 'package:help_closing_frontend/Domain/ChatRoom.dart';
 import 'dart:convert';
 import 'package:help_closing_frontend/Domain/UserMailandName.dart';
 import 'package:help_closing_frontend/Pages/Chat/ChatRoomPage.dart';
+import 'package:help_closing_frontend/ServerUrl.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -17,7 +20,10 @@ class ChatRoomController extends GetxController {
   late Rx<UserMailandName?> currentPartner;
   late Rx<String> currentChatRoomId;
   Timer? _timer;
+  Timer get timer => _timer!;
   late RxList<ChatMessageResponse> messages;
+  final _baseUrl=ServerUrl.baseUrl;
+  var roomStatus = false.obs;
 
   ChatService chatService = ChatService();
 
@@ -27,146 +33,162 @@ class ChatRoomController extends GetxController {
     currentChatRoomId = Rx<String>(''); // 초기화 추가
     fetchChatRoomList();
 
-    //직접
-    // startUpdatingMessageList();
     messages=RxList<ChatMessageResponse>([]);
+
+
+
     super.onInit();
   }
 
   @override
   void onClose() {
-    // _timer?.cancel(); // 타이머를 종료합니다.
+    _timer?.cancel(); // 타이머를 종료합니다.
     super.onClose();
   }
 
   void startUpdatingMessageList() {
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) { // 5초마다 fetchMessageList를 호출합니다.
+    _timer = Timer.periodic(Duration(milliseconds: 50), (timer) async{ // 5초마다 fetchMessageList를 호출합니다.
       fetchMessageList();
+      roomStatus.value = await getChatRoomStatus(currentChatRoomId.value);
     });
   }
-
-  void sendMessage(String message){
-    // messages.add(message);
+  void stopUpdatingMessageList(){
+    _timer?.cancel();
+    roomStatus.value=false;
   }
 
 
   void fetchMessageList() async {
-    // try {
-    //   final response = await http.get(
-    //       Uri.parse('/chat/chatList?chatRoomId=${currentChatRoomId.value}'));
-    //   if (response.statusCode == 200) {
-    //     final jsonData = json.decode(response.body);
-    //     List<ChatMessageResponse> chatList = [];
-    //     for (var item in jsonData['data']) {
-    //       chatList.add(ChatMessageResponse.fromJson(item));
-    //     }
-    //     messages.value = chatList;
-    //   } else {
-    //     throw Exception('Failed to fetch chat list');
-    //   }
-    // } catch (e) {
-    //   throw Exception('Error: $e');
-    // }
-
-
-    const response = '''
-{
-  "status": "200",
-  "message": "Success",
-  "data": [
-    {
-      "message": "Hello, world!",
-      "chatDate": "2023-11-26T15:36:21",
-      "chatRoomId": 1,
-      "name": "User 2",
-      "nickName": "user2",
-      "email": "user2@example.com",
-      "image": "https://cdn-icons-png.flaticon.com/256/190/190648.png"
-    },
-    {
-      "message": "Hi, there!",
-      "chatDate": "2023-11-26T15:37:21",
-      "chatRoomId": 1,
-      "name": "User 1-현재 사용자",
-      "nickName": "user1",
-      "email": "123",
-      "image": "null"
+    print("Start Fetching Message List");
+    var jwtToken = await AuthController.to.storage.read(key: 'jwtToken');
+    try{
+      int.parse(currentChatRoomId.value);
+    }catch(e){
+      stopUpdatingMessageList();
     }
-  ]
-}
-    ''';
-
-    final jsonData = json.decode(response);
-    List<ChatMessageResponse> chatList = [];
-    for (var item in jsonData['data']) {
-      chatList.add(ChatMessageResponse.fromJson(item));
+    try {
+      final response = await http.get(
+          Uri.parse('$_baseUrl/chat/chatList?chatRoomId=${currentChatRoomId.value}'),
+          // Uri.parse('$_baseUrl/chat/chatList?chatRoomId=9'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': "Bearer " + jwtToken!,
+        }
+      );
+      print("status code = ${response.statusCode}");
+      print("fetch Message List response body : ${response.body}");
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        List<ChatMessageResponse> chatList = [];
+        for (var item in jsonData['value']) {
+          chatList.add(ChatMessageResponse.fromJson(item));
+        }
+        messages.value = List.from(chatList.reversed);
+      } else if (response.statusCode == 500){
+        Get.back();
+        Get.snackbar("상대방이 나갔습니다", "상대방이 채팅방에서 나갔습니다!");
+      } else{
+        throw Exception('Failed to fetch chat list');
+      }
+    } catch (e) {
+      throw Exception('Error: $e');
     }
-    messages.value = chatList;
   }
 
+  void setDone(String chatRoomId)async{
+    var jwtToken=await AuthController.to.storage.read(key: 'jwtToken');
+    print("Starting setDone chatRoomId = $chatRoomId");
+    final response = await http.put(
+      Uri.parse('${ServerUrl.baseUrl}/chatRoom/$chatRoomId/done'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': "Bearer " + jwtToken!,
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      Get.snackbar("도움 완료 성공", "$chatRoomId번 채팅이 완료",backgroundColor: Colors.green);
+      fetchChatRoomList();
+    } else {
+      Get.snackbar("도움 완료 실패", "$chatRoomId번 채팅이 완료 실패",backgroundColor: Colors.red);
+    }
+  }
+
+  void deleteChatRoom(String chatRoomId) async {
+    String? userEmail = AuthController.to.userController.getUserEmail();
+    var jwtToken=await AuthController.to.storage.read(key: 'jwtToken');
+    final response = await http.delete(
+      Uri.parse('${ServerUrl.baseUrl}/chatRoom/exit?userEmail=$userEmail&chatRoomId=$chatRoomId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': "Bearer " + jwtToken!,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      Get.snackbar("채팅방 나가기 완료", "채팅방에서 나가셨습니다",backgroundColor: Colors.green);
+      stopUpdatingMessageList();
+    } else {
+      Get.snackbar("채팅방 나가기 실패", "오류가 발생했습니다");
+    }
+  }
+
+  Future<bool> getChatRoomStatus(String chatRoomId) async {
+    var jwtToken=await AuthController.to.storage.read(key: 'jwtToken');
+    print("start getting chat room status");
+    final response = await http.get(
+      Uri.parse('${ServerUrl.baseUrl}/chatRoom/$chatRoomId/status'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': "Bearer " + jwtToken!,
+      },
+    );
+    print("status code : ${response.statusCode}");
+    print("body : ${response.body}");
+    print("type : ${response.body.runtimeType}");
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to get chat room status.');
+    }
+  }
 
   void fetchChatRoomList() async {
-    //   try {
-    //     isLoading(true);
-    //     var response = await http.get(Uri.parse('http://yourserver.com/chatRoomList'));
-    //     if (response.statusCode == 200) {
-    //       var jsonString = response.body;
-    //       var jsonMap = json.decode(jsonString);
-    //       chatRoomList.value = List<ChatRoom>.from(jsonMap['data'].map((i) => ChatRoom.fromJson(i)));
-    //     }
-    //   } catch (Exception) {
-    //     print('Need to login for seeing chat room list');
-    //   } finally {
-    //     isLoading(false);
-    //   }
-    // }
-    var jsonString = '''{
-  "data": [
-    {
-      "chatRoomId": "room1",
-      "userList": [
-        {
-          "email": "123",
-          "name": "User 1-현재 사용자",
-          "nickName": "user1",
-          "image": "null"
-        },
-        {
-          "email": "user2@example.com",
-          "name": "User 2",
-          "nickName": "user2",
-          "image": "https://cdn-icons-png.flaticon.com/256/190/190648.png"
+    var jwtToken=await AuthController.to.storage.read(key: 'jwtToken');
+    print("Start fetchChatRoomList");
+    if(jwtToken != null){
+      try {
+        isLoading(true);
+        var response = await http.get(Uri.parse('$_baseUrl/chatRoom/chatRoomList?email=${UserController.to.getUserEmail()}'),
+          // JWT를 포함한 헤더
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': "Bearer " + jwtToken,  // 여기에 실제 토큰 값이 들어가야 합니다.
+          },
+        );
+        print("status code : ${response.statusCode}");
+        if (response.statusCode == 200) {
+          print("response body : ${response.body}");
+          var jsonString = response.body;
+          var jsonMap = json.decode(jsonString);
+          chatRoomList.value = List<ChatRoom>.from(jsonMap['value'].map((i) => ChatRoom.fromJson(i)));
         }
-      ]
-    },
-    {
-      "chatRoomId": "room2",
-      "userList": [
-        {
-          "email": "user3@example.com",
-          "name": "User 3",
-          "nickName": "user3",
-          "image": "https://cdn-icons-png.flaticon.com/512/219/219969.png"
-        },
-        {
-          "email": "123",
-          "name": "User 1-현재 사용자",
-          "nickName": "user1",
-          "image": "null"
-        }
-      ]
+      } catch (Exception) {
+        print("fetch Chatroom error");
+        print(Exception.toString());
+      } finally {
+        isLoading(false);
+      }
     }
-  ]
-}
-''';
-    var jsonMap = json.decode(jsonString);
-    chatRoomList.value =List<ChatRoom>.from(jsonMap['data'].map((i) => ChatRoom.fromJson(i)));
-    print("abc ${chatRoomList.value}");
-  }
 
+
+    }
   void goToChat(UserMailandName user, String chatRoomID){
     currentPartner.value = user;
     currentChatRoomId.value = chatRoomID;
+    startUpdatingMessageList();
     Get.to(const ChatRoomPage());
   }
 

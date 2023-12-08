@@ -5,9 +5,9 @@ import 'package:http/http.dart' as http;
 
 class ChatService {
   // static const String _uri = 'ws://서버 url';
-  static const String _uri = 'wss://echo.websocket.events';
+  static const String _uri = 'wss://10.0.2.2:8080/ws_stomp';
   // final IOWebSocketChannel _channel = IOWebSocketChannel.connect(Uri.parse(_uri));
-  final WebSocketChannel _channel = WebSocketChannel.connect(Uri.parse(_uri));
+  final WebSocketChannel _channel = WebSocketChannel.connect(Uri.parse(_uri),);
 
 
   // void send(String message, int chatRoomId, String email, String name, String nickName, DateTime time) {
